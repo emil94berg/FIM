@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="fim.client/fim.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="FIM.Server/FIM.Server.csproj" />
+</Solution>
