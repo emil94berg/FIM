@@ -1,15 +1,13 @@
+import type { components } from "../types/schema"
 import { useState, useEffect, useCallback } from "react";
 import SideBar from "../Components/SidebarMenu";
 
 type SideBarLayoutProps = {
     component: React.ReactNode;
 }
-interface WeatherForecast {
-    date: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
-}
+
+type WeatherForecast = components["schemas"]["WeatherForecast"];
+
 
 
 export default function SideBarLayout(props: SideBarLayoutProps) {
@@ -36,7 +34,7 @@ export default function SideBarLayout(props: SideBarLayoutProps) {
                 if (!response.ok) throw new Error("Failed to fetch API");
                 const data: WeatherForecast[] = await response.json();
                 setWeather(data);
-                console.log(weather);
+                console.log(data);
             } catch (error) {
                 console.error("Error fetching weather:", error);
             }

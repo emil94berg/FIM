@@ -5,6 +5,8 @@ namespace FIM.Server
         public DateOnly Date { get; set; }
 
         public int TemperatureC { get; set; }
+        public int TemperatureK => TemperatureC + 273;
+        
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
