@@ -6,7 +6,7 @@ export default function SideBar() {
         <div style={{ maxWidth: "200px", height: "100%" }}>
             <button onClick={() => setOpen(!open)}>☰</button>
             {open && (
-                <nav>
+                <nav style={{ border: "1px solid black", margin: "5px", padding: "5px", backgroundColor: "beige" }}>
                     <ul>
                         <li>Home</li>
                         <li>About</li>
