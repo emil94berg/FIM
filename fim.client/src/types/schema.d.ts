@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/Spool": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetSpools"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/WeatherForecast": {
         parameters: {
             query?: never;
@@ -24,16 +40,31 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Spool: {
+            /** Format: int32 */
+            id?: number | string;
+            userId?: string;
+            material?: string;
+            color?: string;
+            /** Format: double */
+            totalWeight?: number | string;
+            /** Format: double */
+            remainingWeight?: number | string;
+            /** Format: double */
+            spoolCost?: number | string;
+            /** Format: date-time */
+            createdAt?: string;
+        };
         WeatherForecast: {
             /** Format: date */
             date?: string;
             /** Format: int32 */
             temperatureC?: number | string;
             /** Format: int32 */
+            temperatureK?: number | string;
+            /** Format: int32 */
             temperatureF?: number | string;
             summary?: null | string;
-            /** Format: int32 */
-            temperatureK?: number | string;
         };
     };
     responses: never;
@@ -44,6 +75,28 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    GetSpools: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": components["schemas"]["Spool"][];
+                    "application/json": components["schemas"]["Spool"][];
+                    "text/json": components["schemas"]["Spool"][];
+                };
+            };
+        };
+    };
     GetWeatherForecast: {
         parameters: {
             query?: never;
