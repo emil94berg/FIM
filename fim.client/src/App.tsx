@@ -9,7 +9,7 @@ export default function App() {
         <>
             <Routes>
                 <Route path="/" element={<SideBarLayout component={ <Home /> } />} />
-                <Route path="/create-spool" element={<SideBarLayout component={ <CreateSpool /> } />} />
+<Route path="/create-spool" element={<SideBarLayout component={ <CreateSpool /> } />} />
             </Routes>
         </>
     );
