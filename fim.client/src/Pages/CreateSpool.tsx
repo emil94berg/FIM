@@ -26,9 +26,43 @@ export default function CreateSpool() {
         <div>
             <h1>Create Spool</h1>
             <p>This is the page to create a new spool.</p>
-            <div>
-                 {spools.map(s => <div key={s.id}>{s.totalWeight}</div>)}
-            </div>
+            <table border={1}>
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Color</th>
+                        <th>Total Weight</th>
+                        <th>Created</th>
+                        <th>User Id</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {spools.map(s => (
+                    <tr key={s.id}>
+                        <td>{s.material}</td>
+                        <td>{s.color}</td>
+                        <td>{s.totalWeight}</td>
+                        <td>{s.createdAt}</td>
+                        <td>{s.userId}</td>
+                    </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <form>
+                <label>
+                    Spool Name:
+                    <input type="text" name="name" />
+                </label>
+                <br />
+                <label>
+                    Total Weight:
+                    <input type="number" name="totalWeight" />
+                </label>
+                <br />
+                <button type="submit">Create Spool</button>
+            </form>
         </div>
     )
 }
