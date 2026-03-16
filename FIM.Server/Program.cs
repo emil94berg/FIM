@@ -37,6 +37,7 @@ builder.Services.AddCors(options =>
                       });
 });
 
+builder.Services.AddScoped<FIM.Server.Services.Interfaces.ISpoolService, FIM.Server.Services.SpoolService>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
