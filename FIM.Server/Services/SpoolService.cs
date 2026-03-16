@@ -31,7 +31,8 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             Diameter = dto.Diameter,
             TotalWeight = dto.TotalWeight,
             RemainingWeight = dto.TotalWeight,
-            SpoolCost = dto.SpoolCost
+            SpoolCost = dto.SpoolCost,
+            CreatedAt = DateTime.UtcNow
         };
         dbContext.Spools.Add(spool);
         await dbContext.SaveChangesAsync();
