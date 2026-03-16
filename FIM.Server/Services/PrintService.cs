@@ -38,12 +38,16 @@ namespace FIM.Server.Services
             }
             return false;
         }
-        public async Task<bool> UpdatePrintAsync(int id)
+        public async Task<bool> UpdatePrintAsync(int id, Print updatedPrint)
         {
             var update = await _context.Prints.Where(p => p.Id == id).FirstOrDefaultAsync();
             if(update != null)
             {
-                _context.Prints.Update(update);
+                update.Name = updatedPrint.Name;
+                update.GramsUsed = updatedPrint.GramsUsed;
+                update.Status = updatedPrint.Status;
+                update.SpoolId = updatedPrint.SpoolId;
+
                 await _context.SaveChangesAsync();
                 return true;
             }

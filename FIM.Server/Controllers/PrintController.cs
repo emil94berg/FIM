@@ -40,9 +40,9 @@ namespace FIM.Server.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdatePrint")]
-        public async Task<IActionResult> UpdatePrintAsync(int id)
+        public async Task<IActionResult> UpdatePrintAsync(int id, [FromBody] Print print)
         {
-            var update = await _printService.UpdatePrintAsync(id);
+            var update = await _printService.UpdatePrintAsync(id, print);
             if (update == false)
             {
                 return NotFound();

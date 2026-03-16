@@ -7,6 +7,6 @@ namespace FIM.Server.Services.Interfaces
         Task<List<Print>> GetAllPrintsAsync();
         Task<Print> CreatePrintAsync(Print print);
         Task<bool> DeletePrintAsync(int id);
-        Task<bool> UpdatePrintAsync(int id);
+        Task<bool> UpdatePrintAsync(int id, Print updatedPrint);
     }
 }

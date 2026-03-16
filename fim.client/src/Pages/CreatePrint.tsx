@@ -76,7 +76,8 @@ export default function CreatePrint() {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
-                }
+                },
+                body: JSON.stringify(print)
             });
             if (!response.ok) throw new Error("Failed to update print");
 
