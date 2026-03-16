@@ -7,4 +7,6 @@ public interface ISpoolService
     Task<IEnumerable<SpoolDto>> GetAllSpoolsAsync();
     Task<SpoolDto?> GetSpoolByIdAsync(int id);
     Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto);
+    Task<bool> DeleteSpoolAsync(int id);
+    Task<SpoolDto?> UpdateSpoolAsync(int id, UpdateSpoolDto dto);
 }

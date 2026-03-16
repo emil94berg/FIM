@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { components } from "../types/schema";
 import { AddSpoolForm } from '../Components/spools/AddSpoolForm';
+import { EditSpoolForm } from '../Components/spools/EditSpoolForm';
 
 type Spool = components["schemas"]["Spool"];
 
@@ -21,6 +22,7 @@ export const CreateSpool = async (spool: Spool): Promise<Spool> => {
 
 export default function GetSpools() {
     const [spools, setSpools] = useState<Spool[]>([]);
+    const [editingSpool, setEditingSpool] = useState<Spool | null>(null);
 
     useEffect(() => {
         const loadSpools = async () => {
@@ -43,6 +45,35 @@ export default function GetSpools() {
         setSpools(prev => [...prev, newSpool]);
     }
 
+    const handleUpdateSpool = async (id: number | string, updated: Partial<Spool>) => {
+        try {
+            const response = await fetch(`https://localhost:7035/spool/${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updated)
+            });
+            if (!response.ok) throw new Error("Failed to update spool");
+            const updatedSpool: Spool = await response.json();
+            setSpools(prev => prev.map(s => s.id === id ? updatedSpool : s));
+            setEditingSpool(null);
+        } catch (error) {
+            console.error("Error updating spool", error);
+        }
+    }
+
+    const handleDeleteSpool = async (id: number | string) => {
+        try {
+            const response = await fetch(`https://localhost:7035/spool/${id}`, {
+            method: "DELETE"
+            });
+        if (!response.ok) throw new Error("Failed to delete spool");
+        setSpools(prev => prev.filter(s => s.id !== id));
+        }
+        catch (error) {
+                console.error("Error deleting spool", error);
+        }
+    }
+
     return (
         <div>
             <h1>Create Spool</h1>
@@ -58,6 +89,7 @@ export default function GetSpools() {
                         <th>Remaining Weight</th>
                         <th>Created</th>
                         <th>User Id</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -72,11 +104,23 @@ export default function GetSpools() {
                         <td>{s.remainingWeight}</td>
                         <td>{s.createdAt}</td>
                         <td>{s.userId}</td>
+                        <td>
+                            <button onClick={() => setEditingSpool(s)}>Edit</button>
+                            <button onClick={() => handleDeleteSpool(s.id!)}>Delete</button>
+                        </td>
                     </tr>
                     ))}
                 </tbody>
             </table>
-            <AddSpoolForm onSubmit={handleCreateSpool} />
+            {editingSpool ? (
+                <EditSpoolForm
+                    spool={editingSpool}
+                    onSubmit={handleUpdateSpool}
+                    onCancel={() => setEditingSpool(null)}
+                />
+            ) : (
+                <AddSpoolForm onSubmit={handleCreateSpool} />
+            )}
         </div>
     )
 }

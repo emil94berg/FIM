@@ -32,5 +32,33 @@ namespace FIM.Server.Controllers
             var created = await spoolService.CreateSpoolAsync(dto);
             return CreatedAtAction(nameof(GetSpoolById), new { id = created.Id }, created);
         }
+
+        [HttpDelete("{id}", Name = "DeleteSpool")]
+        public async Task<IActionResult> DeleteSpool(int id)
+        {
+            var deleted = await spoolService.DeleteSpoolAsync(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+        [HttpPatch("{id}", Name = "UpdateSpool")]
+        public async Task<ActionResult<SpoolDto>> UpdateSpool(int id, UpdateSpoolDto dto)
+        {
+            try
+            {
+                var updated = await spoolService.UpdateSpoolAsync(id, dto);
+                if (updated == null)
+                {
+                    return NotFound();
+                }
+                return Ok(updated);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
