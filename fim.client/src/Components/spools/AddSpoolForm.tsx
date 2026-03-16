@@ -1,14 +1,14 @@
 import { useState } from "react";
 import type { components } from "../../types/schema";
 
-type Spool = components["schemas"]["Spool"];
+type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
 type AddSpoolFormProps = {
-    onSubmit: (spool: Spool) => Promise<void>;
+    onSubmit: (spool: CreateSpoolDto) => Promise<void>;
 }
 
 export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
-    const [formData, setFormData] = useState<Spool>({
+    const [formData, setFormData] = useState<CreateSpoolDto>({
         brand: "",
         material: "",
         color: "",
