@@ -1,22 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FIM.Server.Models;
+using FIM.Server.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FIM.Server.Controllers
 {
+    
     [ApiController]
     [Route("[controller]")]
     public class PrintController : ControllerBase
     {
-        [HttpGet(Name = "GetPrints")]
-        public IEnumerable<Print> Get()
+        private readonly ApplicationDbContext _context;
+
+        public PrintController(ApplicationDbContext dbContext)
         {
-            // This is just a placeholder. You would typically fetch this data from a database.
-            return new List<Print>
-            {
-                new Print { Id = 1, Name = "Test Print 1", SpoolId = 1, GramsUsed = 50, Status = Models.PrintStatus.Completed },
-                new Print { Id = 2, Name = "Test Print 2", SpoolId = 2, GramsUsed = 100, Status = Models.PrintStatus.Printing }
-            }
-            .ToArray();
+            _context = dbContext;
+        }
+
+        [HttpGet(Name = "GetPrints")]
+        public async Task<IEnumerable<Print>> Get()
+        {
+            //return await _context.Prints.ToListAsync();
+            return await _context.Prints.Include(p => p.Spool).ToListAsync();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateChat([FromBody] Models.Print print)
+        {
+            await _context.Prints.AddAsync(print);
+            await _context.SaveChangesAsync();
+
+            return Ok(print);
         }
     }
 }
