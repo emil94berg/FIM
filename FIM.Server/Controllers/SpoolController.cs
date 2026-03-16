@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using FIM.Server.Models;
 using FIM.Server.DTOs;
 using FIM.Server.Services.Interfaces;
 
@@ -28,9 +27,9 @@ namespace FIM.Server.Controllers
         }
 
         [HttpPost(Name = "CreateSpool")]
-        public async Task<ActionResult<SpoolDto>> CreateSpool(Spool spool)
+        public async Task<ActionResult<SpoolDto>> CreateSpool(CreateSpoolDto dto)
         {
-            var created = await spoolService.CreateSpoolAsync(spool);
+            var created = await spoolService.CreateSpoolAsync(dto);
             return CreatedAtAction(nameof(GetSpoolById), new { id = created.Id }, created);
         }
     }

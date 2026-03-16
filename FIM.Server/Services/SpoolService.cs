@@ -21,9 +21,18 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         return spool is null ? null : SpoolDto.FromSpool(spool);
     }
 
-    public async Task<SpoolDto> CreateSpoolAsync(Spool spool)
+    public async Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto)
     {
-        spool.RemainingWeight = spool.TotalWeight;
+        var spool = new Spool
+        {
+            Brand = dto.Brand,
+            Material = dto.Material,
+            Color = dto.Color,
+            Diameter = dto.Diameter,
+            TotalWeight = dto.TotalWeight,
+            RemainingWeight = dto.TotalWeight,
+            SpoolCost = dto.SpoolCost
+        };
         dbContext.Spools.Add(spool);
         await dbContext.SaveChangesAsync();
         return SpoolDto.FromSpool(spool);
