@@ -53,6 +53,7 @@ export default function GetSpools() {
                         <th>Brand</th>
                         <th>Material</th>
                         <th>Color</th>
+                        <th>Diameter</th>
                         <th>Total Weight</th>
                         <th>Remaining Weight</th>
                         <th>Created</th>
@@ -66,6 +67,7 @@ export default function GetSpools() {
                         <td>{s.brand}</td>
                         <td>{s.material}</td>
                         <td>{s.color}</td>
+                        <td>{s.diameter}</td>
                         <td>{s.totalWeight}</td>
                         <td>{s.remainingWeight}</td>
                         <td>{s.createdAt}</td>

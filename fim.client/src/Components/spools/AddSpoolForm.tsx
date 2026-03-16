@@ -12,6 +12,7 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
         brand: "",
         material: "",
         color: "",
+        diameter: 1.75,
         totalWeight: 0,
         spoolCost: 0
     })
@@ -19,7 +20,7 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setFormData(prev => ({ ...prev, [name]: name === "totalWeight" || name === "spoolCost" ? parseFloat(value) : value }));
+        setFormData(prev => ({ ...prev, [name]: name === "totalWeight" || name === "spoolCost" || name === "diameter" ? parseFloat(value) : value }));
     }
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -44,6 +45,11 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
                 <label>
                     Color:
                     <input type="text" name="color" value={formData.color} onChange={handleChange} />
+                </label>
+                <br />
+                <label>
+                    Diameter (mm):
+                    <input type="number" name="diameter" step="0.01" value={formData.diameter} onChange={handleChange} />
                 </label>
                 <br />
                 <label>
