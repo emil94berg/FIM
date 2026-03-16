@@ -48,6 +48,8 @@ export interface components {
             material?: string;
             color?: string;
             /** Format: double */
+            diameter?: number | string;
+            /** Format: double */
             totalWeight?: number | string;
             /** Format: double */
             remainingWeight?: number | string;

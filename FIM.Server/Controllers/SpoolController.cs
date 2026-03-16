@@ -1,38 +1,36 @@
 using Microsoft.AspNetCore.Mvc;
-using FIM.Server.Models;
-using Microsoft.EntityFrameworkCore;
-using FIM.Server.Data;
+using FIM.Server.DTOs;
+using FIM.Server.Services.Interfaces;
 
 namespace FIM.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SpoolController(ApplicationDbContext dbContext) : ControllerBase
+    public class SpoolController(ISpoolService spoolService) : ControllerBase
     {
         [HttpGet(Name = "GetAllSpools")]
-        public async Task<ActionResult<IEnumerable<Spool>>> GetAllSpools()
+        public async Task<ActionResult<IEnumerable<SpoolDto>>> GetAllSpools()
         {
-            var spools = await dbContext.Spools.ToListAsync();
-            return spools;
+            var spools = await spoolService.GetAllSpoolsAsync();
+            return Ok(spools);
         }
 
         [HttpGet("{id}", Name = "GetSpoolById")]
-        public async Task<ActionResult<Spool>> GetSpoolById(int id)
+        public async Task<ActionResult<SpoolDto>> GetSpoolById(int id)
         {
-            var spool = await dbContext.Spools.FindAsync(id);
+            var spool = await spoolService.GetSpoolByIdAsync(id);
             if (spool == null)
             {
                 return NotFound();
             }
-            return spool;
+            return Ok(spool);
         }
 
         [HttpPost(Name = "CreateSpool")]
-        public async Task<ActionResult<Spool>> CreateSpool(Spool spool)
+        public async Task<ActionResult<SpoolDto>> CreateSpool(CreateSpoolDto dto)
         {
-            dbContext.Spools.Add(spool);
-            await dbContext.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetSpoolById), new { id = spool.Id }, spool);
+            var created = await spoolService.CreateSpoolAsync(dto);
+            return CreatedAtAction(nameof(GetSpoolById), new { id = created.Id }, created);
         }
     }
 }
