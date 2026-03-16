@@ -2,6 +2,7 @@
 using FIM.Server.Models;
 using FIM.Server.Data;
 using Microsoft.EntityFrameworkCore;
+using FIM.Server.Services.Interfaces;
 
 namespace FIM.Server.Controllers
 {
@@ -10,27 +11,43 @@ namespace FIM.Server.Controllers
     [Route("[controller]")]
     public class PrintController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPrintService _printService;
 
-        public PrintController(ApplicationDbContext dbContext)
+        public PrintController(IPrintService printService)
         {
-            _context = dbContext;
+            _printService = printService;
         }
 
         [HttpGet(Name = "GetPrints")]
         public async Task<IEnumerable<Print>> Get()
         {
-            //return await _context.Prints.ToListAsync();
-            return await _context.Prints.Include(p => p.Spool).ToListAsync();
+            return await _printService.GetAllPrintsAsync();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateChat([FromBody] Models.Print print)
+        [HttpPost(Name = "CreatePrint")]
+        public async Task<IActionResult> CreatePrintAsync([FromBody] Models.Print print)
         {
-            await _context.Prints.AddAsync(print);
-            await _context.SaveChangesAsync();
+            var created = await _printService.CreatePrintAsync(print);
+            return Ok(created);
+        }
 
-            return Ok(print);
+        [HttpDelete("{id}", Name = "DeletePrint")]
+        public async Task<IActionResult> DeletePrintAsync(int id)
+        {
+            var deleted = await _printService.DeletePrintAsync(id);
+            if (!deleted) return NotFound();
+            else return NoContent();
+        }
+
+        [HttpPut("{id}", Name = "UpdatePrint")]
+        public async Task<IActionResult> UpdatePrintAsync(int id)
+        {
+            var update = await _printService.UpdatePrintAsync(id);
+            if (update == false)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
     }
 }

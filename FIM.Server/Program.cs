@@ -1,4 +1,6 @@
 using FIM.Server.Data;
+using FIM.Server.Services;
+using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -40,6 +42,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+//DI
+builder.Services.AddScoped<IPrintService, PrintService>();
 
 var app = builder.Build();
 
