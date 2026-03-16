@@ -74,6 +74,7 @@ export interface components {
             /** Format: int32 */
             id?: number | string;
             userId?: string;
+            brand?: string;
             material?: string;
             color?: string;
             /** Format: double */
