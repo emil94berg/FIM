@@ -3,9 +3,10 @@ import type { components } from "../types/schema";
 import { AddSpoolForm } from '../Components/spools/AddSpoolForm';
 import { EditSpoolForm } from '../Components/spools/EditSpoolForm';
 
-type Spool = components["schemas"]["Spool"];
+type Spool = components["schemas"]["SpoolDto"];
+type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
-export const CreateSpool = async (spool: Spool): Promise<Spool> => {
+export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
     const response = await fetch("https://localhost:7035/spool", {
         method: "POST",
         headers: {
@@ -40,7 +41,7 @@ export default function GetSpools() {
         loadSpools();
     }, []);
 
-    const handleCreateSpool = async (spool: Spool) => {
+    const handleCreateSpool = async (spool: CreateSpoolDto) => {
         const newSpool = await CreateSpool(spool);
         setSpools(prev => [...prev, newSpool]);
     }

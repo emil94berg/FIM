@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { components } from "../../types/schema";
 
-type Spool = components["schemas"]["Spool"];
+type Spool = components["schemas"]["SpoolDto"];
 
 type EditSpoolFormProps = {
     spool: Spool;
