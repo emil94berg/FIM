@@ -4,7 +4,7 @@ import { AddSpoolForm } from '../Components/spools/AddSpoolForm';
 
 type Spool = components["schemas"]["Spool"];
 
-export const createSpool = async (spool: Spool): Promise<Spool> => {
+export const CreateSpool = async (spool: Spool): Promise<Spool> => {
     const response = await fetch("https://localhost:7035/spool", {
         method: "POST",
         headers: {
@@ -19,7 +19,7 @@ export const createSpool = async (spool: Spool): Promise<Spool> => {
     return await response.json() as Spool;
 }
 
-export default function CreateSpool() {
+export default function GetSpools() {
     const [spools, setSpools] = useState<Spool[]>([]);
 
     useEffect(() => {
@@ -39,7 +39,7 @@ export default function CreateSpool() {
     }, []);
 
     const handleCreateSpool = async (spool: Spool) => {
-        const newSpool = await createSpool(spool);
+        const newSpool = await CreateSpool(spool);
         setSpools(prev => [...prev, newSpool]);
     }
 

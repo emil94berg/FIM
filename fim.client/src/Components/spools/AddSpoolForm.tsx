@@ -19,10 +19,10 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setFormData(prev => ({ ...prev, [name]: name === "totalWeight" || name === "cost" ? parseFloat(value) : value }));
+        setFormData(prev => ({ ...prev, [name]: name === "totalWeight" || name === "spoolCost" ? parseFloat(value) : value }));
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         await onSubmit(formData);
     }
@@ -53,7 +53,7 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
                 <br />
                 <label>
                     Cost: 
-                    <input type="number" name="cost" step="10" value={formData.cost} onChange={handleChange} />
+                    <input type="number" name="spoolCost" step="10" value={formData.spoolCost} onChange={handleChange} />
                 </label>
                 <br />
                 <button type="submit">Create Spool</button>
