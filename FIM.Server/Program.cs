@@ -20,8 +20,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Supabase:Url"] + "/auth/v1",
             ValidateAudience = true,
             ValidAudience = "authenticated",
-            ValidateLifetime = true
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true
         };
+        options.MetadataAddress = builder.Configuration["Supabase:Url"] + "/auth/v1/.well-known/openid-configuration";
         options.MapInboundClaims = false;
     });
 

@@ -1,8 +1,9 @@
+using FIM.Server.Models;
+
 namespace FIM.Server.DTOs;
 
 public record SpoolDto(
     int Id,
-    string UserId,
     string Brand,
     string Material,
     string Color,
@@ -13,10 +14,9 @@ public record SpoolDto(
     DateTime CreatedAt
 )
 {
-    public static SpoolDto FromSpool(Models.Spool spool) =>
+    public static SpoolDto FromSpool(Spool spool) =>
         new(
             spool.Id,
-            spool.UserId,
             spool.Brand,
             spool.Material,
             spool.Color,
