@@ -1,3 +1,4 @@
+import { Button } from "@/Components/ui/button";
 import type { components } from "../../types/schema"
 import { useState, useEffect } from "react";
 /*import SideBar from "../Components/SidebarMenu";*/
@@ -100,7 +101,7 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
                     ))}
                 </select>
             </div>
-            <button type="submit">Create print</button>
+            <Button variant="ghost" type="submit">Create print</Button>
         </form>
     )
 }

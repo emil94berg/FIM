@@ -1,3 +1,4 @@
+import { Button } from "@/Components/ui/button"
 import type { components } from "../types/schema" 
 import { useState, useEffect } from "react";
 import { AddPrintForm } from "../Components/prints/AddPrintForm";
@@ -28,6 +29,7 @@ const handleSubmit = async (print: Print): Promise<Print> => {
             throw new Error("Failed to create print");
         return await response.json() as Print;
 };
+
 
 
 
@@ -121,10 +123,10 @@ export default function CreatePrint() {
                             <td>{p.createdAt}</td>
                             <td>
                                 {p.id !== undefined && (
-                                    <button onClick={() => setEditingPrint(p)}>Edit</button>
+                                    <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
                                 )}
                                 {p.id !== undefined && (
-                                    <button onClick={() => handleDeletePrint(p.id!)}>Delete</button>
+                                    <Button variant="destructive" className="bg-red-500 text-white" onClick={() => handleDeletePrint(p.id!)}>Delete</Button>
                                 )}
                             </td>
                         </tr>
