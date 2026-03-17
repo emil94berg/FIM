@@ -2,23 +2,16 @@ import { useState, useEffect } from 'react';
 import type { components } from "../types/schema";
 import { AddSpoolForm } from '../Components/spools/AddSpoolForm';
 import { EditSpoolForm } from '../Components/spools/EditSpoolForm';
+import { authFetch } from '../auth/authFetch';
 
 type Spool = components["schemas"]["SpoolDto"];
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
 export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
-    const response = await fetch("https://localhost:7035/spool", {
+    return await authFetch("https://localhost:7035/spool", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
         body: JSON.stringify(spool)
     });
-
-    if (!response.ok) {
-        throw new Error("Failed to create spool");
-    }
-    return await response.json() as Spool;
 }
 
 export default function GetSpools() {
@@ -28,11 +21,8 @@ export default function GetSpools() {
     useEffect(() => {
         const loadSpools = async () => {
             try {
-                const response = await fetch("https://localhost:7035/spool");
-                if (!response.ok) throw new Error("Failed to fetch API");
-                const data: Spool[] = await response.json();
+                const data: Spool[] = await authFetch("https://localhost:7035/spool");
                 setSpools(data);
-                console.log(data);
             } catch (error) {
                 console.error("Error fetching spools:", error);
             }
@@ -48,14 +38,11 @@ export default function GetSpools() {
 
     const handleUpdateSpool = async (id: number | string, updated: Partial<Spool>) => {
         try {
-            const response = await fetch(`https://localhost:7035/spool/${id}`, {
+            const updateSpool: Spool = await authFetch(`https://localhost:7035/spool/${id}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updated)
             });
-            if (!response.ok) throw new Error("Failed to update spool");
-            const updatedSpool: Spool = await response.json();
-            setSpools(prev => prev.map(s => s.id === id ? updatedSpool : s));
+            setSpools(prev => prev.map(s => s.id === id ? updateSpool : s));
             setEditingSpool(null);
         } catch (error) {
             console.error("Error updating spool", error);
@@ -64,11 +51,10 @@ export default function GetSpools() {
 
     const handleDeleteSpool = async (id: number | string) => {
         try {
-            const response = await fetch(`https://localhost:7035/spool/${id}`, {
-            method: "DELETE"
+            await authFetch(`https://localhost:7035/spool/${id}`, {
+                method: "DELETE"
             });
-        if (!response.ok) throw new Error("Failed to delete spool");
-        setSpools(prev => prev.filter(s => s.id !== id));
+            setSpools(prev => prev.filter(s => s.id !== id));
         }
         catch (error) {
                 console.error("Error deleting spool", error);
@@ -89,7 +75,6 @@ export default function GetSpools() {
                         <th>Total Weight</th>
                         <th>Remaining Weight</th>
                         <th>Created</th>
-                        <th>User Id</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -104,7 +89,6 @@ export default function GetSpools() {
                         <td>{s.totalWeight}</td>
                         <td>{s.remainingWeight}</td>
                         <td>{s.createdAt}</td>
-                        <td>{s.userId}</td>
                         <td>
                             <button onClick={() => setEditingSpool(s)}>Edit</button>
                             <button onClick={() => handleDeleteSpool(s.id!)}>Delete</button>

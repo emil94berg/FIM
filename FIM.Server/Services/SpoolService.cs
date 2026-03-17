@@ -9,22 +9,23 @@ namespace FIM.Server.Services;
 
 public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
 {
-    public async Task<IEnumerable<SpoolDto>> GetAllSpoolsAsync()
+    public async Task<IEnumerable<SpoolDto>> GetAllSpoolsAsync(string userId)
     {
-        var spools = await dbContext.Spools.ToListAsync();
+        var spools = await dbContext.Spools.Where(s => s.UserId == userId).ToListAsync();
         return spools.Select(SpoolDto.FromSpool);
     }
 
-    public async Task<SpoolDto?> GetSpoolByIdAsync(int id)
+    public async Task<SpoolDto?> GetSpoolByIdAsync(int id, string userId)
     {
-        var spool = await dbContext.Spools.FindAsync(id);
+        var spool = await dbContext.Spools.FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
         return spool is null ? null : SpoolDto.FromSpool(spool);
     }
 
-    public async Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto)
+    public async Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto, string userId)
     {
         var spool = new Spool
         {
+            UserId = userId,
             Brand = dto.Brand,
             Material = dto.Material,
             Color = dto.Color,
@@ -39,9 +40,9 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         return SpoolDto.FromSpool(spool);
     }
 
-    public async Task<bool> DeleteSpoolAsync(int id)
+    public async Task<bool> DeleteSpoolAsync(int id, string userId)
     {
-        var spool = await dbContext.Spools.FindAsync(id);
+         var spool = await dbContext.Spools.FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
         if (spool == null)
         {
             return false;
@@ -51,9 +52,9 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         return true;
     }
 
-    public async Task<SpoolDto?> UpdateSpoolAsync(int id, UpdateSpoolDto dto)
+    public async Task<SpoolDto?> UpdateSpoolAsync(int id, UpdateSpoolDto dto, string userId)
     {
-        var spool = await dbContext.Spools.FindAsync(id);
+        var spool = await dbContext.Spools.FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
         if (spool == null)
         {
             return null;
