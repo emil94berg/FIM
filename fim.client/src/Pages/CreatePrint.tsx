@@ -81,7 +81,9 @@ export default function CreatePrint() {
             });
             if (!response.ok) throw new Error("Failed to update print");
 
-            setPrint(prev => prev.map(p => (p.id === print.id ? print : p)));
+            const updatedPrint = await response.json();
+
+            setPrint(prev => prev.map(p => (p.id === updatedPrint.id ? updatedPrint : p)));
 
             setEditingPrint(null);
         }
@@ -133,8 +135,7 @@ export default function CreatePrint() {
                 <EditPrintForm
                     print={editingPrint}
                     onSubmit={handleUpdatePrint}
-                    onCancel={() => setEditingPrint(null)}
-                ></EditPrintForm>
+                    onCancel={() => setEditingPrint(null)}></EditPrintForm>
             ) : (
                     <AddPrintForm onSubmit={handleCreatePrint}></AddPrintForm>
             )}

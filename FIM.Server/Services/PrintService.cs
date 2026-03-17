@@ -38,9 +38,9 @@ namespace FIM.Server.Services
             }
             return false;
         }
-        public async Task<bool> UpdatePrintAsync(int id, Print updatedPrint)
+        public async Task<Print?> UpdatePrintAsync(int id, Print updatedPrint)
         {
-            var update = await _context.Prints.Where(p => p.Id == id).FirstOrDefaultAsync();
+            var update = await _context.Prints.Include(p => p.Spool).FirstOrDefaultAsync(p => p.Id == id);
             if(update != null)
             {
                 update.Name = updatedPrint.Name;
@@ -49,11 +49,11 @@ namespace FIM.Server.Services
                 update.SpoolId = updatedPrint.SpoolId;
 
                 await _context.SaveChangesAsync();
-                return true;
+                return await _context.Prints.Include(p => p.Spool).FirstAsync(p => p.Id == id);
             }
             else
             {
-                return false;
+                return null;
             }
         }
 

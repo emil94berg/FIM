@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 type Print = components["schemas"]["Print"];
 type Spool = components["schemas"]["Spool"];
+
 type AddPrintFormProps = {
     onSubmit: (print: Print) => Promise<void>;
 }

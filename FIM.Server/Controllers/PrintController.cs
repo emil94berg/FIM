@@ -43,11 +43,11 @@ namespace FIM.Server.Controllers
         public async Task<IActionResult> UpdatePrintAsync(int id, [FromBody] Print print)
         {
             var update = await _printService.UpdatePrintAsync(id, print);
-            if (update == false)
+            if (update == null)
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok(update);
         }
     }
 }
