@@ -7,7 +7,11 @@
   "compilerOptions": {
     "module": "ESNext", // or "NodeNext"
     "moduleResolution": "Bundler", // or "NodeNext"
-    "noUncheckedIndexedAccess": true
-  }
+    "noUncheckedIndexedAccess": true,
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [ "src/*" ]
+    }
+  }
 }

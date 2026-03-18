@@ -5,6 +5,7 @@ import CreateSpool from './Pages/CreateSpool';
 import Login from './Pages/Login';
 import { ProtectedRoute } from './Components/ProtectedRoute';
 import Signup from './Pages/Signup';
+import CreatePrint from './Pages/CreatePrint';
 
 export default function App() {
     return (
@@ -14,7 +15,8 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/create-spool" element={<SideBarLayout component={ <CreateSpool /> } />} />
+                    <Route path="/create-spool" element={<SideBarLayout component={<CreateSpool />} />} />
+                    <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
                 </Route>
             </Routes>
         </>
