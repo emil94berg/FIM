@@ -3,6 +3,13 @@ import type { components } from "../types/schema"
 import { useState, useEffect } from "react";
 import { AddPrintForm } from "../Components/prints/AddPrintForm";
 import { EditPrintForm } from "../Components/prints/EditPrintForm";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow, } from "@/Components/ui/table"
 /*import SideBar from "../Components/SidebarMenu";*/
 
 
@@ -102,37 +109,37 @@ export default function CreatePrint() {
     return (
         
         <div style={{ display: "flex", flexDirection: "column" }}>
-            <table border={1}>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Spool-Brand</th>
-                        <th>Grams Used</th>
-                        <th>Status</th>
-                        <th>Created at</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table border={1}>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Spool-Brand</TableHead>
+                        <TableHead>Grams Used</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Created at</TableHead>
+                        <TableHead>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
                     {Print.map(p => (
-                        <tr key={ p.id }>
-                            <td>{ p.name }</td>
-                            <td>{ p.spool?.brand }</td>
-                            <td>{ p.gramsUsed }</td>
-                            <td>{statusMap[p.status] }</td>
-                            <td>{p.createdAt}</td>
-                            <td>
+                        <TableRow key={ p.id }>
+                            <TableCell>{ p.name }</TableCell>
+                            <TableCell>{ p.spool?.brand }</TableCell>
+                            <TableCell>{ p.gramsUsed }</TableCell>
+                            <TableCell>{statusMap[p.status] }</TableCell>
+                            <TableCell>{p.createdAt}</TableCell>
+                            <TableCell>
                                 {p.id !== undefined && (
                                     <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
                                 )}
                                 {p.id !== undefined && (
                                     <Button variant="destructive" className="bg-red-500 text-white" onClick={() => handleDeletePrint(p.id!)}>Delete</Button>
                                 )}
-                            </td>
-                        </tr>
+                            </TableCell>
+                        </TableRow>
                     ))}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
             {editingPrint ? (
                 <EditPrintForm
                     print={editingPrint}

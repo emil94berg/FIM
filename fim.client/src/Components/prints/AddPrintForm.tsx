@@ -1,4 +1,7 @@
 import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/Components/ui/select";
 import type { components } from "../../types/schema"
 import { useState, useEffect } from "react";
 /*import SideBar from "../Components/SidebarMenu";*/
@@ -68,40 +71,73 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex flex-col gap-1">
                 <label>Print Name: </label>
-                <input type="text" name="name" value={formData.name} onChange={handleChange} />
+                <Input type="text" name="name" value={formData.name} onChange={handleChange} />
             </div>
-            <div>
-                <label>Spool: </label>
-                {/*<input type="number" name="spoolId" value={formData.spoolId} onChange={handleChange} />*/}
-                <select name="spoolId" value={formData.spoolId} onChange={handleChange}>
-                    <option value={0}>-- Select Spool --</option>
-                    {Spool.map(s => (
-                        <option key={s.id} value={s.id}>{s.brand}, {s.color}, {s.material}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label>Grams used: </label>
-                <input type="number" name="gramsUsed" value={formData.gramsUsed} onChange={handleChange} />
-            </div>
-            <div>
-                <label>Status: </label>
-                <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
+            <div className="flex flex-col gap-1">
+                <Label htmlFor="SpoolId">Spool: </Label>
+                <Select
+                    value={String(formData.spoolId)}
+                    onValueChange={(value) => 
+                        setFormData(prev => ({
+                            ...prev, spoolId: Number(value)
+                        }))}
+                    name="SpoolId"
+                        
                 >
-                    {Object.entries(statusMap).map(([key, value]) => (
-                        <option key={key} value={ Number(key)}>
-                            { value}
-                        </option>
-                    ))}
-                </select>
+                    <SelectTrigger className="w-full max-w-48">
+                        <SelectValue placeholder="Select a spool"></SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border shadow-md">
+                        <SelectGroup>
+                            <SelectLabel>Spools</SelectLabel>
+                            {Spool.map(s => (
+                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.color}</SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </div>
-            <Button variant="ghost" type="submit">Create print</Button>
+            <div className="flex flex-col gap-1">
+                <label>Grams used: </label>
+                <Input type="number" name="gramsUsed" value={formData.gramsUsed} onChange={handleChange} />
+            </div>
+            <div className="flex flex-col gap-1">
+                <Label htmlFor="Status">Status: </Label>
+                <Select value={String(formData.status)}
+                    onValueChange={(value) =>
+                        setFormData(prev => ({
+                            ...prev, status: Number(value)
+                        }))}
+                    name="Status"
+                >
+                    <SelectTrigger className="w-full max-w-48">
+                        <SelectValue placeholder="Select a status"></SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border shadow-md">
+                        <SelectGroup>
+                            <SelectLabel>Status</SelectLabel>
+                            {Object.entries(statusMap).map(([key, value]) => (
+                                <SelectItem key={key} value={String(key)}>{value}</SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                {/*<select*/}
+                {/*    name="status"*/}
+                {/*    value={formData.status}*/}
+                {/*    onChange={handleChange}*/}
+                {/*>*/}
+                {/*    {Object.entries(statusMap).map(([key, value]) => (*/}
+                {/*        <option key={key} value={ Number(key)}>*/}
+                {/*            { value}*/}
+                {/*        </option>*/}
+                {/*    ))}*/}
+                {/*</select>*/}
+            </div>
+            <Button className="bg-blue-500 text-black" variant="ghost" type="submit">Create print</Button>
         </form>
     )
 }
