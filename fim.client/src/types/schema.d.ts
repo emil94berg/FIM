@@ -13,8 +13,24 @@ export interface paths {
         };
         get: operations["GetPrints"];
         put?: never;
-        post?: never;
+        post: operations["CreatePrint"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Print/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdatePrint"];
+        post?: never;
+        delete: operations["DeletePrint"];
         options?: never;
         head?: never;
         patch?: never;
@@ -56,6 +72,17 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CreateSpoolDto: {
+            brand: string;
+            material: string;
+            color: string;
+            /** Format: double */
+            diameter: number | string;
+            /** Format: double */
+            totalWeight: number | string;
+            /** Format: double */
+            spoolCost: number | string;
+        };
         Print: {
             /** Format: int32 */
             id?: number | string;
@@ -71,7 +98,9 @@ export interface components {
         };
         PrintStatus: number;
         Spool: {
-        CreateSpoolDto: {
+            /** Format: int32 */
+            id?: number | string;
+            userId: string;
             brand: string;
             material: string;
             color: string;
@@ -80,12 +109,15 @@ export interface components {
             /** Format: double */
             totalWeight: number | string;
             /** Format: double */
+            remainingWeight?: number | string;
+            /** Format: double */
             spoolCost: number | string;
+            /** Format: date-time */
+            createdAt: string;
         };
         SpoolDto: {
             /** Format: int32 */
             id: number | string;
-            userId: string;
             brand: string;
             material: string;
             color: string;
@@ -142,7 +174,76 @@ export interface operations {
             };
         };
     };
-    GetSpools: {
+    CreatePrint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Print"];
+                "text/json": components["schemas"]["Print"];
+                "application/*+json": components["schemas"]["Print"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UpdatePrint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number | string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Print"];
+                "text/json": components["schemas"]["Print"];
+                "application/*+json": components["schemas"]["Print"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DeletePrint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number | string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     GetAllSpools: {
         parameters: {
             query?: never;
