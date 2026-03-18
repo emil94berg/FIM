@@ -27,29 +27,29 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["GetSpools"];
+        get: operations["GetAllSpools"];
         put?: never;
-        post?: never;
+        post: operations["CreateSpool"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/WeatherForecast": {
+    "/Spool/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["GetWeatherForecast"];
+        get: operations["GetSpoolById"];
         put?: never;
         post?: never;
-        delete?: never;
+        delete: operations["DeleteSpool"];
         options?: never;
         head?: never;
-        patch?: never;
+        patch: operations["UpdateSpool"];
         trace?: never;
     };
 }
@@ -71,31 +71,45 @@ export interface components {
         };
         PrintStatus: number;
         Spool: {
-            /** Format: int32 */
-            id?: number | string;
-            userId?: string;
-            brand?: string;
-            material?: string;
-            color?: string;
+        CreateSpoolDto: {
+            brand: string;
+            material: string;
+            color: string;
             /** Format: double */
-            totalWeight?: number | string;
+            diameter: number | string;
             /** Format: double */
-            remainingWeight?: number | string;
+            totalWeight: number | string;
             /** Format: double */
-            spoolCost?: number | string;
-            /** Format: date-time */
-            createdAt?: string;
+            spoolCost: number | string;
         };
-        WeatherForecast: {
-            /** Format: date */
-            date?: string;
+        SpoolDto: {
             /** Format: int32 */
-            temperatureC?: number | string;
-            /** Format: int32 */
-            temperatureK?: number | string;
-            /** Format: int32 */
-            temperatureF?: number | string;
-            summary?: null | string;
+            id: number | string;
+            userId: string;
+            brand: string;
+            material: string;
+            color: string;
+            /** Format: double */
+            diameter: number | string;
+            /** Format: double */
+            totalWeight: number | string;
+            /** Format: double */
+            remainingWeight: number | string;
+            /** Format: double */
+            spoolCost: number | string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        UpdateSpoolDto: {
+            brand: null | string;
+            material: null | string;
+            color: null | string;
+            /** Format: double */
+            diameter: null | number | string;
+            /** Format: double */
+            totalWeight: null | number | string;
+            /** Format: double */
+            spoolCost: null | number | string;
         };
     };
     responses: never;
@@ -129,6 +143,7 @@ export interface operations {
         };
     };
     GetSpools: {
+    GetAllSpools: {
         parameters: {
             query?: never;
             header?: never;
@@ -143,18 +158,48 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/plain": components["schemas"]["Spool"][];
-                    "application/json": components["schemas"]["Spool"][];
-                    "text/json": components["schemas"]["Spool"][];
+                    "text/plain": components["schemas"]["SpoolDto"][];
+                    "application/json": components["schemas"]["SpoolDto"][];
+                    "text/json": components["schemas"]["SpoolDto"][];
                 };
             };
         };
     };
-    GetWeatherForecast: {
+    CreateSpool: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSpoolDto"];
+                "text/json": components["schemas"]["CreateSpoolDto"];
+                "application/*+json": components["schemas"]["CreateSpoolDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": components["schemas"]["SpoolDto"];
+                    "application/json": components["schemas"]["SpoolDto"];
+                    "text/json": components["schemas"]["SpoolDto"];
+                };
+            };
+        };
+    };
+    GetSpoolById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number | string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -165,9 +210,59 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/plain": components["schemas"]["WeatherForecast"][];
-                    "application/json": components["schemas"]["WeatherForecast"][];
-                    "text/json": components["schemas"]["WeatherForecast"][];
+                    "text/plain": components["schemas"]["SpoolDto"];
+                    "application/json": components["schemas"]["SpoolDto"];
+                    "text/json": components["schemas"]["SpoolDto"];
+                };
+            };
+        };
+    };
+    DeleteSpool: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number | string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UpdateSpool: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number | string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSpoolDto"];
+                "text/json": components["schemas"]["UpdateSpoolDto"];
+                "application/*+json": components["schemas"]["UpdateSpoolDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": components["schemas"]["SpoolDto"];
+                    "application/json": components["schemas"]["SpoolDto"];
+                    "text/json": components["schemas"]["SpoolDto"];
                 };
             };
         };

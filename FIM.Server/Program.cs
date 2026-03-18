@@ -22,8 +22,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Supabase:Url"] + "/auth/v1",
             ValidateAudience = true,
             ValidAudience = "authenticated",
-            ValidateLifetime = true
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true
         };
+        options.MetadataAddress = builder.Configuration["Supabase:Url"] + "/auth/v1/.well-known/openid-configuration";
         options.MapInboundClaims = false;
     });
 
@@ -39,6 +41,7 @@ builder.Services.AddCors(options =>
                       });
 });
 
+builder.Services.AddScoped<FIM.Server.Services.Interfaces.ISpoolService, FIM.Server.Services.SpoolService>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

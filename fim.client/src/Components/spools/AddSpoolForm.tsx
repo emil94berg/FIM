@@ -1,17 +1,18 @@
 import { useState } from "react";
 import type { components } from "../../types/schema";
 
-type Spool = components["schemas"]["Spool"];
+type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
 type AddSpoolFormProps = {
-    onSubmit: (spool: Spool) => Promise<void>;
+    onSubmit: (spool: CreateSpoolDto) => Promise<void>;
 }
 
 export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
-    const [formData, setFormData] = useState<Spool>({
+    const [formData, setFormData] = useState<CreateSpoolDto>({
         brand: "",
         material: "",
         color: "",
+        diameter: 1.75,
         totalWeight: 0,
         spoolCost: 0
     })
@@ -19,7 +20,7 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setFormData(prev => ({ ...prev, [name]: name === "totalWeight" || name === "spoolCost" ? parseFloat(value) : value }));
+        setFormData(prev => ({ ...prev, [name]: name === "totalWeight" || name === "spoolCost" || name === "diameter" ? parseFloat(value) : value }));
     }
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -44,6 +45,11 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
                 <label>
                     Color:
                     <input type="text" name="color" value={formData.color} onChange={handleChange} />
+                </label>
+                <br />
+                <label>
+                    Diameter (mm):
+                    <input type="number" name="diameter" step="0.01" value={formData.diameter} onChange={handleChange} />
                 </label>
                 <br />
                 <label>
