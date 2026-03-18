@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace FIM.Server.Models;
 
 public class Print
 {
     public int Id { get; set; }
+    public string UserId { get; set; }
     [Required(ErrorMessage = "Question text is required")]
     [StringLength(100, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 100 characters")]
     public string Name { get; set; } = string.Empty;
@@ -18,3 +20,4 @@ public class Print
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public Spool? Spool { get; set; }
 }
+

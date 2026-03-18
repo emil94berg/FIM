@@ -1,9 +1,10 @@
 import type { components } from "../../types/schema"
 import { useState, useEffect } from "react";
+import { authFetch } from "@/auth/authFetch"
 
 
-type Print = components["schemas"]["Print"];
-type Spool = components["schemas"]["Spool"];
+type Print = components["schemas"]["PrintDto"];
+type Spool = components["schemas"]["SpoolDto"];
 
 type EditPrintFormProps = {
     print: Print;
@@ -12,8 +13,13 @@ type EditPrintFormProps = {
 }
 
 export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps) => {
-    const [formData, setFormData] = useState(print);
+
+    const [formData, setFormData] = useState<Print>(print);
+
+
     const [allSpools, setAllSpools] = useState<Spool[]>([]);
+
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         await onSubmit(formData);
@@ -28,10 +34,13 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
 
     useEffect(() => {
         const loadSpools = async () => {
-            const response = await fetch("https://localhost:7035/Spool");
-            if (!response) throw new Error("Failed to fetch from spool");
-            const data: Spool[] = await response.json();
-            setAllSpools(data);
+            try {
+                const data: Spool[] = await authFetch("https://localhost:7035/Spool")
+                setAllSpools(data);
+            }
+            catch (error) {
+                console.error(error);
+            }
         };
         loadSpools();
     }, []);

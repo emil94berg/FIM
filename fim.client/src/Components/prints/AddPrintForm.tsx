@@ -4,11 +4,12 @@ import { Label } from "@/Components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/Components/ui/select";
 import type { components } from "../../types/schema"
 import { useState, useEffect } from "react";
+import { authFetch } from "@/auth/authFetch"
 /*import SideBar from "../Components/SidebarMenu";*/
 
 
 
-type Print = components["schemas"]["Print"];
+type Print = components["schemas"]["CreatePrintDto"];
 type Spool = components["schemas"]["Spool"];
 
 type AddPrintFormProps = {
@@ -25,8 +26,7 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
         name: "",
         spoolId: 0,
         gramsUsed: 0,
-        status: 0,
-        createdAt: new Date().toISOString()
+        status: 0
     });
 
     const handleChange = (
@@ -45,11 +45,8 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
     useEffect(() => {
         const loadSpools = async () => {
             try {
-                const response = await fetch("https://localhost:7035/Spool")
-                if (!response.ok) throw new Error("Failed to fetch from Spool")
-                const data: Spool[] = await response.json();
+                const data:Spool[] = await authFetch("https://localhost:7035/Spool")
                 setSpools(data);
-                console.log(data);
             }
             catch (error) {
                 console.error(error);
@@ -125,17 +122,6 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                {/*<select*/}
-                {/*    name="status"*/}
-                {/*    value={formData.status}*/}
-                {/*    onChange={handleChange}*/}
-                {/*>*/}
-                {/*    {Object.entries(statusMap).map(([key, value]) => (*/}
-                {/*        <option key={key} value={ Number(key)}>*/}
-                {/*            { value}*/}
-                {/*        </option>*/}
-                {/*    ))}*/}
-                {/*</select>*/}
             </div>
             <Button className="bg-blue-500 text-black" variant="ghost" type="submit">Create print</Button>
         </form>

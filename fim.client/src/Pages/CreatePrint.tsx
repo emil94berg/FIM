@@ -9,32 +9,28 @@ import {
     TableCell,
     TableHead,
     TableHeader,
-    TableRow, } from "@/Components/ui/table"
+    TableRow,
+} from "@/Components/ui/table";
+import { authFetch } from "../auth/authFetch" 
 /*import SideBar from "../Components/SidebarMenu";*/
 
 
 
-type Print = components["schemas"]["Print"];    
+type Print = components["schemas"]["PrintDto"];  
+type CreatePrindDto = components["schemas"]["CreatePrintDto"]; 
 
 
 
-const handleSubmit = async (print: Print): Promise<Print> => {
+const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
     
     if (print.spoolId === 0) {
         alert("Please select a valid spool");
     }
 
-   
-        const response = await fetch("https://localhost:7035/Print", {
+    return await authFetch("https://localhost:7035/Print", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify(print)
         });
-        if (!response.ok)
-            throw new Error("Failed to create print");
-        return await response.json() as Print;
 };
 
 
@@ -48,9 +44,7 @@ export default function CreatePrint() {
     useEffect(() => {
         const loadPrint = async () => {
             try {
-                const response = await fetch("https://localhost:7035/Print")
-                if (!response.ok) throw new Error("Failed to fetch from Print API");
-                const data: Print[] = await response.json();
+                const data: Print[] = await authFetch("https://localhost:7035/Print");
                 setPrint(data);
             }
             catch (error) {
@@ -59,7 +53,8 @@ export default function CreatePrint() {
         };
         loadPrint();
     }, []);
-    
+
+
     const statusMap: Record<number, string> = {
         0: "Pending",
         1: "Printing",
@@ -68,11 +63,10 @@ export default function CreatePrint() {
     }
     const handleDeletePrint = async (id: number | string) => {
         try {
-            const response = await fetch(`https://localhost:7035/Print/${id}`, {
+            await authFetch(`https://localhost:7035/Print/${id}`, {
                 method: "DELETE"
             });
-            if (!response.ok) throw new Error("Failed to delete print");
-
+            
             setPrint(prev => prev.filter(p => p.id !== id));
         }
         catch (error) {
@@ -80,27 +74,20 @@ export default function CreatePrint() {
         }
     }
     const handleUpdatePrint = async (print: Print) => {
-        try {
-            const response = await fetch(`https://localhost:7035/Print/${print.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+        try { 
+            const data: Print = await authFetch(`https://localhost:7035/Print/${print.id}`, {
+                method: "PATCH",
                 body: JSON.stringify(print)
             });
-            if (!response.ok) throw new Error("Failed to update print");
 
-            const updatedPrint = await response.json();
-
-            setPrint(prev => prev.map(p => (p.id === updatedPrint.id ? updatedPrint : p)));
-
+            setPrint(prev => prev.map(p => (p.id === data.id ? data : p)));
             setEditingPrint(null);
         }
         catch (error) {
             console.error("Error updating print: ", error);
         }
     }
-    const handleCreatePrint = async (print: Print) => {
+    const handleCreatePrint = async (print: CreatePrindDto) => {
         const newPrint = await handleSubmit(print);
         setPrint(prev => [...prev, newPrint]);
     }
