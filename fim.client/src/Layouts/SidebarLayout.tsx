@@ -1,5 +1,5 @@
 import type { components } from "../types/schema"
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import SideBar from "../Components/SidebarMenu";
 
 type SideBarLayoutProps = {
