@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/Notification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/Print": {
         parameters: {
             query?: never;
@@ -76,7 +92,7 @@ export interface components {
             name: string;
             /** Format: int32 */
             spoolId: number | string;
-            /** Format: int32 */
+            /** Format: double */
             gramsUsed: number | string;
             status: components["schemas"]["PrintStatus"];
         };
@@ -90,6 +106,16 @@ export interface components {
             totalWeight: number | string;
             /** Format: double */
             spoolCost: number | string;
+        };
+        Notification: {
+            /** Format: int32 */
+            id?: number | string;
+            userId?: string;
+            type?: string;
+            message?: string;
+            isRead?: boolean;
+            /** Format: date-time */
+            createdAt?: string;
         };
         PrintDto: {
             /** Format: int32 */
@@ -168,6 +194,28 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    GetNotifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": components["schemas"]["Notification"][];
+                    "application/json": components["schemas"]["Notification"][];
+                    "text/json": components["schemas"]["Notification"][];
+                };
+            };
+        };
+    };
     GetPrints: {
         parameters: {
             query?: never;

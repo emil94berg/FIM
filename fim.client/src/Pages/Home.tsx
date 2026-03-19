@@ -2,6 +2,7 @@ import { Button } from "@/Components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { signOut } from "../auth/authService";
+import { NotificationList } from "@/Components/notifications/NotificationList";
 
 export default function Home() {
     const { user } = useAuth();
@@ -23,8 +24,10 @@ export default function Home() {
             ) : (
                 <div>
                     <p>Logged in as: {user.email}!</p>
-                        <Button className="bg-blue-500 text-black" onClick={handleSignOut}>Sign Out</Button>
+                    <Button className="bg-blue-500 text-black" onClick={handleSignOut}>Sign Out</Button>
+                    <NotificationList />
                 </div>
+
             )}
         </div>
     )
