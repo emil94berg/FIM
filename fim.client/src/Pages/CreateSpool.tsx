@@ -1,3 +1,12 @@
+import { Button } from "@/Components/ui/button";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/Components/ui/table";
 import { useState, useEffect } from 'react';
 import type { components } from "../types/schema";
 import { AddSpoolForm } from '../Components/spools/AddSpoolForm';
@@ -65,38 +74,38 @@ export default function GetSpools() {
         <div>
             <h1>Create Spool</h1>
             <p>This is the page to create a new spool.</p>
-            <table border={1}>
-                <thead>
-                    <tr>
-                        <th>Brand</th>
-                        <th>Material</th>
-                        <th>Color</th>
-                        <th>Diameter</th>
-                        <th>Total Weight</th>
-                        <th>Remaining Weight</th>
-                        <th>Created</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+            <Table border={1}>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Brand</TableHead>
+                        <TableHead>Material</TableHead>
+                        <TableHead>Color</TableHead>
+                        <TableHead>Diameter</TableHead>
+                        <TableHead>Total Weight</TableHead>
+                        <TableHead>Remaining Weight</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
 
-                <tbody>
+                <TableBody>
                     {spools.map(s => (
-                    <tr key={s.id}>
-                        <td>{s.brand}</td>
-                        <td>{s.material}</td>
-                        <td>{s.color}</td>
-                        <td>{s.diameter}</td>
-                        <td>{s.totalWeight}</td>
-                        <td>{s.remainingWeight}</td>
-                        <td>{s.createdAt}</td>
-                        <td>
-                            <button onClick={() => setEditingSpool(s)}>Edit</button>
-                            <button onClick={() => handleDeleteSpool(s.id!)}>Delete</button>
-                        </td>
-                    </tr>
+                        <TableRow key={s.id}>
+                            <TableCell>{s.brand}</TableCell>
+                            <TableCell>{s.material}</TableCell>
+                            <TableCell>{s.color}</TableCell>
+                            <TableCell>{s.diameter}</TableCell>
+                            <TableCell>{s.totalWeight}</TableCell>
+                            <TableCell>{s.remainingWeight}</TableCell>
+                            <TableCell>{s.createdAt}</TableCell>
+                            <TableCell>
+                                <Button className="bg-blue-500 text-black" onClick={() => setEditingSpool(s)}>Edit</Button>
+                                <Button className="bg-red-500 text-white" onClick={() => handleDeleteSpool(s.id!)}>Delete</Button>
+                        </TableCell>
+                    </TableRow>
                     ))}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
             {editingSpool ? (
                 <EditSpoolForm
                     spool={editingSpool}

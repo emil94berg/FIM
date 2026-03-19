@@ -1,3 +1,6 @@
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
 import { useState } from "react";
 import type { components } from "../../types/schema";
 
@@ -31,38 +34,32 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
     return (
         <div>
             <h1>Add a New Spool</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <Label>
                     Spool Brand:
-                    <input type="text" name="brand" value={formData.brand} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
+                    <Input type="text" name="brand" value={formData.brand} onChange={handleChange} />
+                </Label>
+                <Label>
                     Material: 
-                    <input type="text" name="material" value={formData.material} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
+                    <Input type="text" name="material" value={formData.material} onChange={handleChange} />
+                </Label>
+                <Label>
                     Color:
-                    <input type="text" name="color" value={formData.color} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
+                    <Input type="text" name="color" value={formData.color} onChange={handleChange} />
+                </Label>
+                <Label>
                     Diameter (mm):
-                    <input type="number" name="diameter" step="0.01" value={formData.diameter} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
+                    <Input type="number" name="diameter" step="0.01" value={formData.diameter} onChange={handleChange} />
+                </Label>
+                <Label>
                     Total Weight:
-                    <input type="number" name="totalWeight" value={formData.totalWeight} onChange={handleChange} />
-                </label>
-                <br />
-                <label>
+                    <Input type="number" name="totalWeight" value={formData.totalWeight} onChange={handleChange} />
+                </Label>
+                <Label>
                     Cost: 
-                    <input type="number" name="spoolCost" step="10" value={formData.spoolCost} onChange={handleChange} />
-                </label>
-                <br />
-                <button type="submit">Create Spool</button>
+                    <Input type="number" name="spoolCost" step="10" value={formData.spoolCost} onChange={handleChange} />
+                </Label>
+                <Button className="bg-blue-500 text-black" type="submit">Create Spool</Button>
             </form>
         </div>
     )

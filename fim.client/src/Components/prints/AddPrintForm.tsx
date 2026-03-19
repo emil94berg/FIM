@@ -70,7 +70,7 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col gap-1">
-                <label>Print Name: </label>
+                <Label>Print Name: </Label>
                 <Input type="text" name="name" value={formData.name} onChange={handleChange} />
             </div>
             <div className="flex flex-col gap-1">
