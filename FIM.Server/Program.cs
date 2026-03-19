@@ -1,6 +1,7 @@
 using FIM.Server.Data;
 using FIM.Server.Services;
 using FIM.Server.Services.Interfaces;
+using FIM.Server.BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -41,7 +42,8 @@ builder.Services.AddCors(options =>
                       });
 });
 
-builder.Services.AddScoped<FIM.Server.Services.Interfaces.ISpoolService, FIM.Server.Services.SpoolService>();
+builder.Services.AddScoped<ISpoolService,SpoolService>();
+builder.Services.AddHostedService<NotificationService>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
