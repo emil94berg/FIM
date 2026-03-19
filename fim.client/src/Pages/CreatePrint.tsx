@@ -11,7 +11,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
-import { authFetch } from "../auth/authFetch" 
+import { authFetch } from "../auth/authFetch"
+import { ConfirmDialog } from "@/Components/PopUp/ConfirmPopup"
 /*import SideBar from "../Components/SidebarMenu";*/
 
 
@@ -120,7 +121,14 @@ export default function CreatePrint() {
                                     <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
                                 )}
                                 {p.id !== undefined && (
-                                    <Button variant="destructive" className="bg-red-500 text-white" onClick={() => handleDeletePrint(p.id!)}>Delete</Button>
+                                    <ConfirmDialog title="Delete Print"
+                                        description={`Are you sure you want to delete ${p.name ?? "this item"}?`} 
+                                        confirmText="Delete"
+                                        confirmButtonClassName="bg-red-500 text-white"
+                                        cancelButtonClassName="bg-blue-500 text-black"
+                                        onConfirm={() => handleDeletePrint(p.id)}>
+                                        <Button variant="destructive" className="bg-red-500 text-white">Delete</Button>
+                                    </ConfirmDialog>
                                 )}
                             </TableCell>
                         </TableRow>
