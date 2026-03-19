@@ -1,8 +1,8 @@
-import { Button } from "@/Components/ui/button"
+import { Button } from "@/components/ui/button"
 import type { components } from "../types/schema" 
 import { useState, useEffect } from "react";
-import { AddPrintForm } from "../Components/prints/AddPrintForm";
-import { EditPrintForm } from "../Components/prints/EditPrintForm";
+import { AddPrintForm } from "../components/prints/AddPrintForm";
+import { EditPrintForm } from "../components/prints/EditPrintForm";
 import {
     Table,
     TableBody,
@@ -10,10 +10,10 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/Components/ui/table";
+} from "@/components/ui/table";
 import { authFetch } from "../auth/authFetch"
-import { ConfirmDialog } from "@/Components/PopUp/ConfirmPopup"
-/*import SideBar from "../Components/SidebarMenu";*/
+import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+/*import SideBar from "../components/SidebarMenu";*/
 
 
 

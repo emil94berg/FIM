@@ -1,8 +1,8 @@
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { signOut } from "../auth/authService";
-import { NotificationList } from "@/Components/notifications/NotificationList";
+import { NotificationList } from "@/components/notifications/NotificationList";
 
 export default function Home() {
     const { user } = useAuth();

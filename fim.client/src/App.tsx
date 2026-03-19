@@ -1,11 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from './Pages/Home';
-import SideBarLayout from './Layouts/SidebarLayout';
-import CreateSpool from './Pages/CreateSpool';
-import Login from './Pages/Login';
-import { ProtectedRoute } from './Components/ProtectedRoute';
-import Signup from './Pages/Signup';
-import CreatePrint from './Pages/CreatePrint';
+import Home from './pages/Home';
+import SideBarLayout from './layouts/SidebarLayout';
+import CreateSpool from './pages/CreateSpool';
+import Login from './pages/Login';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import Signup from './pages/Signup';
+import CreatePrint from './pages/CreatePrint';
 
 export default function App() {
     return (

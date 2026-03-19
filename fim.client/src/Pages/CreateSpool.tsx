@@ -1,4 +1,4 @@
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -6,11 +6,11 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/Components/ui/table";
+} from "@/components/ui/table";
 import { useState, useEffect } from 'react';
 import type { components } from "../types/schema";
-import { AddSpoolForm } from '../Components/spools/AddSpoolForm';
-import { EditSpoolForm } from '../Components/spools/EditSpoolForm';
+import { AddSpoolForm } from '../components/spools/AddSpoolForm';
+import { EditSpoolForm } from '../components/spools/EditSpoolForm';
 import { authFetch } from '../auth/authFetch';
 
 type Spool = components["schemas"]["SpoolDto"];

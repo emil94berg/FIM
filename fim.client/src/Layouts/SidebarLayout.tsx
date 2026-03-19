@@ -1,4 +1,4 @@
-import SideBar from "../Components/SidebarMenu";
+import SideBar from "../components/SidebarMenu";
 
 type SideBarLayoutProps = {
     component: React.ReactNode;

@@ -1,7 +1,7 @@
-import { Button } from "@/Components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { useState } from "react";
-import { HomeIcon } from "@/Components/icons/mynaui-home"
+import { HomeIcon } from "@/components/icons/mynaui-home"
 
 const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
