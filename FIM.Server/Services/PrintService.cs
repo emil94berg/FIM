@@ -74,12 +74,11 @@ namespace FIM.Server.Services
             if(dto.GramsUsed != null) update.GramsUsed = dto.GramsUsed.Value;
             if(dto.Status != null) update.Status = dto.Status.Value;
 
-            var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
-
             await _context.SaveChangesAsync();
+
+            var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
+           
             return new PrintDto(updateDto.Id, updateDto.Name, updateDto.SpoolId, updateDto.GramsUsed, updateDto.Status, updateDto.CreatedAt, updateDto.Spool);
-
         }
-
     }
 }
