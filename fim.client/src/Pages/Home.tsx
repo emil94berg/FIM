@@ -1,3 +1,4 @@
+import { Button } from "@/Components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { signOut } from "../auth/authService";
@@ -18,12 +19,12 @@ export default function Home() {
             <p>Welcome to the home page!</p>
             {!user ? (
                 <div>
-                    <button onClick={() => navigate("/login")}>Go to Login</button>
+                    <Button className="bg-blue-500 text-black" onClick={() => navigate("/login")}>Go to Login</Button>
                 </div>
             ) : (
                 <div>
                     <p>Logged in as: {user.email}!</p>
-                    <button onClick={handleSignOut}>Sign Out</button>
+                    <Button className="bg-blue-500 text-black" onClick={handleSignOut}>Sign Out</Button>
                     <NotificationList />
                 </div>
 
