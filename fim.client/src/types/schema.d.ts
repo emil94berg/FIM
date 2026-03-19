@@ -28,12 +28,12 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["UpdatePrint"];
+        put?: never;
         post?: never;
         delete: operations["DeletePrint"];
         options?: never;
         head?: never;
-        patch?: never;
+        patch: operations["UpdatePrint"];
         trace?: never;
     };
     "/Spool": {
@@ -72,6 +72,14 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CreatePrintDto: {
+            name: string;
+            /** Format: int32 */
+            spoolId: number | string;
+            /** Format: int32 */
+            gramsUsed: number | string;
+            status: components["schemas"]["PrintStatus"];
+        };
         CreateSpoolDto: {
             brand: string;
             material: string;
@@ -83,9 +91,9 @@ export interface components {
             /** Format: double */
             spoolCost: number | string;
         };
-        Print: {
+        PrintDto: {
             /** Format: int32 */
-            id?: number | string;
+            id: number | string;
             name: string;
             /** Format: int32 */
             spoolId: number | string;
@@ -94,7 +102,7 @@ export interface components {
             status: components["schemas"]["PrintStatus"];
             /** Format: date-time */
             createdAt: string;
-            spool?: null | components["schemas"]["Spool"];
+            spool: components["schemas"]["Spool"];
         };
         PrintStatus: number;
         Spool: {
@@ -132,6 +140,14 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
         };
+        UpdatePrintDto: {
+            name: null | string;
+            /** Format: int32 */
+            spoolId: null | number | string;
+            /** Format: double */
+            gramsUsed: null | number | string;
+            status: null | components["schemas"]["PrintStatus"];
+        };
         UpdateSpoolDto: {
             brand: null | string;
             material: null | string;
@@ -167,9 +183,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/plain": components["schemas"]["Print"][];
-                    "application/json": components["schemas"]["Print"][];
-                    "text/json": components["schemas"]["Print"][];
+                    "text/plain": components["schemas"]["PrintDto"][];
+                    "application/json": components["schemas"]["PrintDto"][];
+                    "text/json": components["schemas"]["PrintDto"][];
                 };
             };
         };
@@ -183,35 +199,9 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Print"];
-                "text/json": components["schemas"]["Print"];
-                "application/*+json": components["schemas"]["Print"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UpdatePrint: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number | string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["Print"];
-                "text/json": components["schemas"]["Print"];
-                "application/*+json": components["schemas"]["Print"];
+                "application/json": components["schemas"]["CreatePrintDto"];
+                "text/json": components["schemas"]["CreatePrintDto"];
+                "application/*+json": components["schemas"]["CreatePrintDto"];
             };
         };
         responses: {
@@ -234,6 +224,32 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UpdatePrint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number | string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePrintDto"];
+                "text/json": components["schemas"]["UpdatePrintDto"];
+                "application/*+json": components["schemas"]["UpdatePrintDto"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {

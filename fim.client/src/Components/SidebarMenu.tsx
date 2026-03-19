@@ -1,11 +1,13 @@
 import { Button } from "@/Components/ui/button"
 import { Link } from "react-router-dom"
 import { useState } from "react";
+import { HomeIcon } from "@/Components/icons/mynaui-home"
 
-const components: { title: string; href: string; }[] = [
+const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
         title: "Home",
-        href: "/"
+        href: "/",
+        icon: <HomeIcon className="w-5 h-5" ></HomeIcon>
     },
     {
         title: "Create Print",
@@ -47,7 +49,7 @@ export default function SideBar() {
                             className={`block px-4 py-2 text-sm font-medium rounded hover:bg-gray-200 transition ${
                                 !open ? "text-center" : ""
                             }` }               
-                        >{open ? c.title : c.title[0]}</Link>
+                        >{open ? <span className="flex flex-row">{c.icon} {c.title}</span> : c.icon}</Link>
                     ))}
                 </nav>
             </div>

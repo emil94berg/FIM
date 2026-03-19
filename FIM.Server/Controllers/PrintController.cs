@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FIM.Server.Models;
-using FIM.Server.Data;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using FIM.Server.Services.Interfaces;
+using FIM.Server.DTOs.PrintDtos;
 
 namespace FIM.Server.Controllers
 {
-    
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class PrintController : ControllerBase
     {
+        private string UserId => User.FindFirst("sub")!.Value;
+
         private readonly IPrintService _printService;
 
         public PrintController(IPrintService printService)
@@ -19,30 +21,30 @@ namespace FIM.Server.Controllers
         }
 
         [HttpGet(Name = "GetPrints")]
-        public async Task<IEnumerable<Print>> Get()
+        public async Task<IEnumerable<PrintDto>> GetAllPrints()
         {
-            return await _printService.GetAllPrintsAsync();
+            return await _printService.GetAllPrintsAsync(UserId);
         }
 
         [HttpPost(Name = "CreatePrint")]
-        public async Task<IActionResult> CreatePrintAsync([FromBody] Models.Print print)
+        public async Task<IActionResult> CreatePrintAsync([FromBody] CreatePrintDto createPrintDto)
         {
-            var created = await _printService.CreatePrintAsync(print);
+            var created = await _printService.CreatePrintAsync(createPrintDto, UserId);
             return Ok(created);
         }
 
         [HttpDelete("{id}", Name = "DeletePrint")]
         public async Task<IActionResult> DeletePrintAsync(int id)
         {
-            var deleted = await _printService.DeletePrintAsync(id);
+            var deleted = await _printService.DeletePrintAsync(id, UserId);
             if (!deleted) return NotFound();
-            else return NoContent();
+            else return Ok();
         }
 
-        [HttpPut("{id}", Name = "UpdatePrint")]
-        public async Task<IActionResult> UpdatePrintAsync(int id, [FromBody] Print print)
+        [HttpPatch("{id}", Name = "UpdatePrint")]
+        public async Task<IActionResult> UpdatePrintAsync(int id, [FromBody] UpdatePrintDto updatePrintDto)
         {
-            var update = await _printService.UpdatePrintAsync(id, print);
+            var update = await _printService.UpdatePrintAsync(id, updatePrintDto, UserId);
             if (update == null)
             {
                 return NotFound();
