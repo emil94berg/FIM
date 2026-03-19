@@ -5,7 +5,7 @@ namespace FIM.Server.DTOs.PrintDtos;
 public record CreatePrintDto(
     string Name,
     int SpoolId, 
-    int GramsUsed,
+    double GramsUsed,
     PrintStatus Status
 );
 

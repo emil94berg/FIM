@@ -1,5 +1,6 @@
 ﻿using FIM.Server.Data;
 using FIM.Server.DTOs.PrintDtos;
+using FIM.Server.Helpers.DTOMapper;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -48,7 +49,8 @@ namespace FIM.Server.Services
             };
             await _context.Prints.AddAsync(print);
             await _context.SaveChangesAsync();
-            return new PrintDto(print.Id, print.Name, print.SpoolId, print.GramsUsed, print.Status, print.CreatedAt, print.Spool);
+            var returnPrint = await _context.Prints.Where(p => p.Id == print.Id).Include(p => p.Spool).FirstOrDefaultAsync();
+            return returnPrint.ToPrintDto();
         }
 
         public async Task<bool> DeletePrintAsync(int id, string userId)
@@ -66,8 +68,8 @@ namespace FIM.Server.Services
         public async Task<PrintDto?> UpdatePrintAsync(int id, UpdatePrintDto dto, string userId)
         {
             var update = await _context.Prints.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+
             if (update == null) return null;
-            
 
             if(dto.Name != null) update.Name = dto.Name;
             if(dto.SpoolId != null) update.SpoolId = dto.SpoolId.Value;
@@ -77,8 +79,8 @@ namespace FIM.Server.Services
             await _context.SaveChangesAsync();
 
             var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
-           
-            return new PrintDto(updateDto.Id, updateDto.Name, updateDto.SpoolId, updateDto.GramsUsed, updateDto.Status, updateDto.CreatedAt, updateDto.Spool);
+
+            return updateDto.ToPrintDto();
         }
     }
 }

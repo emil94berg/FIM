@@ -2,7 +2,6 @@
 using FIM.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using FIM.Server.Services.Interfaces;
-using FIM.Server.Services.Helpers;
 using FIM.Server.DTOs.PrintDtos;
 
 namespace FIM.Server.Controllers
