@@ -53,7 +53,7 @@ export default function PrintsChart(){
         loadPrints();
     }, []);
 
-    const charData = Object.values(
+    const chartData = Object.values(
         allPrints.reduce((acc, print) => {
             const date = new Date(print.createdAt).toISOString().split("T")[0];
 
@@ -68,8 +68,8 @@ export default function PrintsChart(){
 
     return (
     
-        <Card className="m-4">
-            <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
+        <Card >
+            <CardHeader className="flex flex-col items-stretch border-b p-0 sm:flex-row">
                 <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3">
                     <CardTitle>Bar Chart - Interactive</CardTitle>
                     <CardDescription>Show number of prints per day</CardDescription>
@@ -79,8 +79,8 @@ export default function PrintsChart(){
                 <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
                     <BarChart
                         accessibilityLayer
-                        data={charData}
-                        margin={{left:12, right:12,}}
+                        data={chartData}
+                        margin={{ left: 12, right: 12, }}
                     >
                         <CartesianGrid vertical={false} />
                         <XAxis
@@ -101,7 +101,7 @@ export default function PrintsChart(){
                             content={
                                 <ChartTooltipContent
                                     className="w-[150px]"
-                                    nameKey="views"
+                                    nameKey="count"
                                     labelFormatter={(value) => {
                                         return new Date(value).toLocaleDateString("en-US", {
                                             month: "short",

@@ -32,9 +32,9 @@ type DashboardCardProps<T> = {
 
 export default function DashCard<T>({title, typeName, items, renderItem }: DashboardCardProps<T>) {
     return (
-        <Card className="bg-gray-200 max-h-min">
+        <Card className="bg-gray-200 max-h-min w-fit">
                 <CardHeader className="text-center bg-gray-100">{title}</CardHeader>
-            <CardContent>
+            <CardContent className="flex gap-4 flex-wrap">
                 {items.map((item, index) => (
                     <div key={index}>{renderItem(item)}</div>
                 ))}

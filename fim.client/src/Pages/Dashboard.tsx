@@ -80,40 +80,49 @@ export default function DashboardHome() {
                     <h1 className="text-3x1 font-bold">Dashboard</h1>
                     <Input placeholder="Search" type="search" id="input-field-search" ></Input>
                 </div>
-                
             </div>
+
+
+
             {/*<div className="flex-1 border"></div>*/}
             {/*<div className="flex-1 p-4">*/}
-                <div className="grid grid-cols-3 gap-10">
-                    <DashCard<PrintDto>
-                        title="Pending prints"
-                        items={pendingPrints}
-                        typeName="prints"
-                        renderItem={(p) => (
-                            <p className="text-xl" >
-                                {p.name}, {new Date(p.createdAt).toLocaleString("sv-SE", {
-                                    year: "numeric",
-                                    month: "2-digit",
-                                    day: "2-digit",
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-                                })}
-                            </p>
-                        )}
-                    ></DashCard>
-                    <DashCard<SpoolDto>
-                        title="Low spools"
-                        items={allLowSpools}
-                        typeName="spools"
-                        renderItem={(s) => <p className="text-xl" >{s.brand} {s.material} {s.color}</p>}
-                    ></DashCard>
-                    <DashCard
-                        title="Live prints"
-                        items={printingPrints}
-                        typeName="prints"
-                        renderItem={(p) => <p className="text-xl">{ p.name}</p> }
-                    ></DashCard>
-                </div>          
+            <div className="flex gap-4 mb-6">
+                <div className="w-1/2">
+                    <div className="grid grid-cols-3 gap-10">
+                        <DashCard<PrintDto>
+                            title="Pending prints"
+                            items={pendingPrints}
+                            typeName="prints"
+                            renderItem={(p) => (
+                                <span className="text-xl" >
+                                    {p.name}, {new Date(p.createdAt).toLocaleString("sv-SE", {
+                                        year: "numeric",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                        hour: "2-digit",
+                                        minute: "2-digit"
+                                    })}
+                                </span>
+                            )}
+                        ></DashCard>
+                        <DashCard<SpoolDto>
+                            title="Low spools"
+                            items={allLowSpools}
+                            typeName="spools"
+                            renderItem={(s) => <span className="text-xl" >{s.brand} {s.material} {s.color}</span>}
+                        ></DashCard>
+                        <DashCard
+                            title="Live prints"
+                            items={printingPrints}
+                            typeName="prints"
+                            renderItem={(p) => <span className="text-xl">{p.name}</span>}
+                        ></DashCard>
+                    </div>
+                </div>
+                <div className="bg-blue-200 w-1/2">Något annat content</div>
+            </div>
+            
+                
             {/*    </div>*/}
             <PrintsChart></PrintsChart>
         </div>
