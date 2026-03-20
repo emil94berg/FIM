@@ -1,6 +1,7 @@
 ﻿using FIM.Server.Data;
 using FIM.Server.DTOs.PrintDtos;
 using FIM.Server.Helpers.DTOMapper;
+using FIM.Server.Migrations;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -81,6 +82,27 @@ namespace FIM.Server.Services
             var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
 
             return updateDto.ToPrintDto();
+        }
+
+        public async Task<List<PrintDto>> AllPendingPrintsAsync(string userId)
+        {
+            var pendingPrints = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Pending).ToListAsync();
+            var returnList = new List<PrintDto>();
+            foreach (var p in pendingPrints)
+            {
+                returnList.Add(p.ToPrintDto());
+            }
+            return returnList;
+        }
+        public async Task <List<PrintDto>> AllPrintingPrintsAsync(string userId)
+        {
+            var printing = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Printing).ToListAsync();
+            var returnList = new List<PrintDto>();
+            foreach (var p in printing)
+            {
+                returnList.Add(p.ToPrintDto());
+            }
+            return returnList;
         }
     }
 }

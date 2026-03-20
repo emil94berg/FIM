@@ -64,5 +64,11 @@ namespace FIM.Server.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpGet("GetLowSpools")]
+        public async Task<IActionResult> GetLowSpools()
+        {
+            var returnList = await spoolService.GetLowSpools(UserId);
+            return Ok(returnList);
+        }
     }
 }

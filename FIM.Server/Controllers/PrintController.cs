@@ -51,5 +51,31 @@ namespace FIM.Server.Controllers
             }
             return Ok(update);
         }
+        [HttpGet("pending")]
+        public async Task<IActionResult> GetPendingPrints()
+        {
+            var list = await _printService.AllPendingPrintsAsync(UserId);
+            if(list != null)
+            {
+                return Ok(list);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("printing")]
+        public async Task<IActionResult> GetPrintingPrints()
+        {
+            var list = await _printService.AllPrintingPrintsAsync(UserId);
+            if(list != null)
+            {
+                return Ok(list);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
