@@ -8,15 +8,15 @@ namespace FIM.Server.Helpers.DTOMapper
     {
         public static PrintDto ToPrintDto(this Print print)
         {
-            return new PrintDto(print.Id, print.Name, print.SpoolId, print.GramsUsed, print.Status, print.CreatedAt, print.Spool);
+            return new PrintDto(print.Id, print.Name, print.SpoolId, print.GramsUsed, print.Status, print.CreatedAt, print.EstimatedEndTime, print.Spool);
         }
         public static CreatePrintDto ToCreatePrintDto(this Print print)
         {
-            return new CreatePrintDto(print.Name, print.SpoolId, print.GramsUsed, print.Status);
+            return new CreatePrintDto(print.Name, print.SpoolId, print.GramsUsed);
         }
         public static UpdatePrintDto ToUpdatePrintDto(this Print print)
         {
-            return new UpdatePrintDto(print.Name, print.SpoolId, print.GramsUsed, print.Status);
+            return new UpdatePrintDto(print.Name, print.SpoolId, print.GramsUsed, print.Status, null);
         }
     }
 }

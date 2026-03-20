@@ -44,11 +44,11 @@ namespace FIM.Server.Controllers
         [HttpPatch("{id}", Name = "UpdatePrint")]
         public async Task<IActionResult> UpdatePrintAsync(int id, [FromBody] UpdatePrintDto updatePrintDto)
         {
-            var update = await _printService.UpdatePrintAsync(id, updatePrintDto, UserId);
+            var (update, warning) = await _printService.UpdatePrintAsync(id, updatePrintDto, UserId);
+            if (warning != null)
+                return BadRequest(new { message = warning });
             if (update == null)
-            {
                 return NotFound();
-            }
             return Ok(update);
         }
     }

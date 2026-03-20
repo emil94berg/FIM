@@ -65,6 +65,16 @@ public class NotificationService : BackgroundService
             }
         }
 
+        // Auto-complete prints whose estimated time has elapsed
+        var overduePrints = await dbContext.Prints
+            .Where(p => p.Status == PrintStatus.Printing && p.EstimatedEndTime != null && p.EstimatedEndTime <= DateTime.UtcNow)
+            .ToListAsync();
+        foreach (var print in overduePrints)
+        {
+            _logger.LogInformation($"Auto-completing print: {print.Name} (ID: {print.Id})");
+            print.Status = PrintStatus.Completed;
+        }
+
         var finishedPrints = await dbContext.Prints
             .Where(p => p.Status == PrintStatus.Completed)
             .ToListAsync();
@@ -80,6 +90,7 @@ public class NotificationService : BackgroundService
                 _logger.LogInformation($"Adding notification for finished print: {print.Name}");
                 dbContext.Notifications.Add(new Notification
                 {
+                    UserId = print.UserId,
                     Message = $"Print '{print.Name}' is finished",
                     Type = "PRINT_FINISHED",
                     IsRead = false,

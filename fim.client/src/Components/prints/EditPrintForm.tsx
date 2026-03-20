@@ -18,7 +18,8 @@ type EditPrintFormProps = {
 
 export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps) => {
 
-    const [formData, setFormData] = useState<Print>(print);
+    const [formData, setFormData] = useState<Print & { estimatedMinutes?: number }>(print);
+    const showTimeInput = Number(formData.status) === 1 && Number(print.status) !== 1;
 
 
     const [allSpools, setAllSpools] = useState<Spool[]>([]);
@@ -114,6 +115,18 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
                     onChange={e => setFormData(prev => ({ ...prev, gramsUsed: Number(e.target.value) }))}
                 ></Input>
             </div>
+            {showTimeInput && (
+                <div className="flex flex-col gap-1">
+                    <Label>Estimated print time (minutes): </Label>
+                    <Input
+                        type="number"
+                        min={1}
+                        value={formData.estimatedMinutes ?? ""}
+                        onChange={e => setFormData(prev => ({ ...prev, estimatedMinutes: Number(e.target.value) }))}
+                        placeholder="e.g. 120"
+                    />
+                </div>
+            )}
             <Button className="bg-blue-500 text-black" type="submit">Save</Button>
             <Button className="bg-red-500 text-white" type="button" onClick={onCancel} >Cancel</Button>
         </form>

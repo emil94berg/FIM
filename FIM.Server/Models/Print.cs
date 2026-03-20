@@ -18,6 +18,7 @@ public class Print
     public PrintStatus Status { get; set; }
     [Required(ErrorMessage = "Print creation date is required")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? EstimatedEndTime { get; set; }
     public Spool? Spool { get; set; }
 }
 

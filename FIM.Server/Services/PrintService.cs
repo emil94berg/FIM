@@ -30,6 +30,7 @@ namespace FIM.Server.Services
                         p.GramsUsed,
                         p.Status,
                         p.CreatedAt,
+                        p.EstimatedEndTime,
                         p.Spool
                     );
                 dtoList.Add(dto);
@@ -43,7 +44,7 @@ namespace FIM.Server.Services
                 Name = createPrintDto.Name,
                 SpoolId = createPrintDto.SpoolId,
                 GramsUsed = createPrintDto.GramsUsed,
-                Status = createPrintDto.Status,
+                Status = PrintStatus.Pending,
                 CreatedAt = DateTime.UtcNow,
                 UserId = userId
             };
@@ -65,22 +66,58 @@ namespace FIM.Server.Services
             }
             return false;
         }
-        public async Task<PrintDto?> UpdatePrintAsync(int id, UpdatePrintDto dto, string userId)
+        public async Task<(PrintDto? Print, string? Warning)> UpdatePrintAsync(int id, UpdatePrintDto dto, string userId)
         {
-            var update = await _context.Prints.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var update = await _context.Prints.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+                if (update == null) return (null, null);
 
-            if (update == null) return null;
+                var startingPrint = dto.Status == PrintStatus.Printing && update.Status != PrintStatus.Printing;
 
-            if(dto.Name != null) update.Name = dto.Name;
-            if(dto.SpoolId != null) update.SpoolId = dto.SpoolId.Value;
-            if(dto.GramsUsed != null) update.GramsUsed = dto.GramsUsed.Value;
-            if(dto.Status != null) update.Status = dto.Status.Value;
+                if (startingPrint)
+                {
+                    if (dto.EstimatedMinutes == null || dto.EstimatedMinutes <= 0)
+                    {
+                        await transaction.RollbackAsync();
+                        return (null, "Please provide an estimated print time in minutes.");
+                    }
 
-            await _context.SaveChangesAsync();
+                    var spool = await _context.Spools.FirstOrDefaultAsync(s => s.Id == update.SpoolId && s.UserId == userId);
 
-            var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
+                    if (spool == null)
+                    {
+                        await transaction.RollbackAsync();
+                        return (null, "Spool not found.");
+                    }
 
-            return updateDto.ToPrintDto();
+                    if (spool.RemainingWeight < update.GramsUsed)
+                    {
+                        await transaction.RollbackAsync();
+                        return (null, $"Not enough filament on spool. Remaining: {spool.RemainingWeight}g, Required: {update.GramsUsed}g.");
+                    }
+
+                    spool.RemainingWeight -= update.GramsUsed;
+                    update.EstimatedEndTime = DateTime.UtcNow.AddMinutes(dto.EstimatedMinutes.Value);
+                }
+
+                if (dto.Name != null) update.Name = dto.Name;
+                if (dto.SpoolId != null) update.SpoolId = dto.SpoolId.Value;
+                if (dto.GramsUsed != null) update.GramsUsed = dto.GramsUsed.Value;
+                if (dto.Status != null) update.Status = dto.Status.Value;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
+                return (updateDto.ToPrintDto(), null);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 }

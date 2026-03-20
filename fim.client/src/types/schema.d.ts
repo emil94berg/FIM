@@ -94,7 +94,6 @@ export interface components {
             spoolId: number | string;
             /** Format: double */
             gramsUsed: number | string;
-            status: components["schemas"]["PrintStatus"];
         };
         CreateSpoolDto: {
             brand: string;
@@ -128,6 +127,8 @@ export interface components {
             status: components["schemas"]["PrintStatus"];
             /** Format: date-time */
             createdAt: string;
+            /** Format: date-time */
+            estimatedEndTime: null | string;
             spool: components["schemas"]["Spool"];
         };
         PrintStatus: number;
@@ -173,6 +174,8 @@ export interface components {
             /** Format: double */
             gramsUsed: null | number | string;
             status: null | components["schemas"]["PrintStatus"];
+            /** Format: int32 */
+            estimatedMinutes: null | number;
         };
         UpdateSpoolDto: {
             brand: null | string;
