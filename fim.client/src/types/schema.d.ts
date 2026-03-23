@@ -106,15 +106,14 @@ export interface components {
             /** Format: double */
             spoolCost: number | string;
         };
-        Notification: {
+        NotificationDto: {
             /** Format: int32 */
-            id?: number | string;
-            userId?: string;
-            type?: string;
-            message?: string;
-            isRead?: boolean;
+            id: number | string;
+            message: string;
+            type: string;
+            isRead: boolean;
             /** Format: date-time */
-            createdAt?: string;
+            createdAt: string;
         };
         PrintDto: {
             /** Format: int32 */
@@ -129,7 +128,7 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             estimatedEndTime: null | string;
-            spool: components["schemas"]["Spool"];
+            spool: null | components["schemas"]["Spool"];
         };
         PrintStatus: number;
         Spool: {
@@ -175,7 +174,7 @@ export interface components {
             gramsUsed: null | number | string;
             status: null | components["schemas"]["PrintStatus"];
             /** Format: int32 */
-            estimatedMinutes: null | number;
+            estimatedMinutes: null | number | string;
         };
         UpdateSpoolDto: {
             brand: null | string;
@@ -212,9 +211,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/plain": components["schemas"]["Notification"][];
-                    "application/json": components["schemas"]["Notification"][];
-                    "text/json": components["schemas"]["Notification"][];
+                    "text/plain": components["schemas"]["NotificationDto"][];
+                    "application/json": components["schemas"]["NotificationDto"][];
+                    "text/json": components["schemas"]["NotificationDto"][];
                 };
             };
         };

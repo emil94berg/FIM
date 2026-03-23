@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FIM.Server.BackgroundServices;
 
-public class NotificationService : BackgroundService
+public class NotificationBackgroundService : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<NotificationService> _logger;
+    private readonly ILogger<NotificationBackgroundService> _logger;
 
-    public NotificationService(IServiceScopeFactory scopeFactory, ILogger<NotificationService> logger)
+    public NotificationBackgroundService(IServiceScopeFactory scopeFactory, ILogger<NotificationBackgroundService> logger)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
