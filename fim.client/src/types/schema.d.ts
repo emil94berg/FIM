@@ -94,7 +94,6 @@ export interface components {
             spoolId: number | string;
             /** Format: double */
             gramsUsed: number | string;
-            status: components["schemas"]["PrintStatus"];
         };
         CreateSpoolDto: {
             brand: string;
@@ -107,15 +106,14 @@ export interface components {
             /** Format: double */
             spoolCost: number | string;
         };
-        Notification: {
+        NotificationDto: {
             /** Format: int32 */
-            id?: number | string;
-            userId?: string;
-            type?: string;
-            message?: string;
-            isRead?: boolean;
+            id: number | string;
+            message: string;
+            type: string;
+            isRead: boolean;
             /** Format: date-time */
-            createdAt?: string;
+            createdAt: string;
         };
         PrintDto: {
             /** Format: int32 */
@@ -128,7 +126,9 @@ export interface components {
             status: components["schemas"]["PrintStatus"];
             /** Format: date-time */
             createdAt: string;
-            spool: components["schemas"]["Spool"];
+            /** Format: date-time */
+            estimatedEndTime: null | string;
+            spool: null | components["schemas"]["Spool"];
         };
         PrintStatus: number;
         Spool: {
@@ -173,6 +173,8 @@ export interface components {
             /** Format: double */
             gramsUsed: null | number | string;
             status: null | components["schemas"]["PrintStatus"];
+            /** Format: int32 */
+            estimatedMinutes: null | number | string;
         };
         UpdateSpoolDto: {
             brand: null | string;
@@ -209,9 +211,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/plain": components["schemas"]["Notification"][];
-                    "application/json": components["schemas"]["Notification"][];
-                    "text/json": components["schemas"]["Notification"][];
+                    "text/plain": components["schemas"]["NotificationDto"][];
+                    "application/json": components["schemas"]["NotificationDto"][];
+                    "text/json": components["schemas"]["NotificationDto"][];
                 };
             };
         };

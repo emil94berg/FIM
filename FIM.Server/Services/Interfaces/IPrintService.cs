@@ -8,6 +8,6 @@ namespace FIM.Server.Services.Interfaces
         Task<List<PrintDto>> GetAllPrintsAsync(string userId);
         Task<PrintDto> CreatePrintAsync(CreatePrintDto createPrintDto, string userId);
         Task<bool> DeletePrintAsync(int id , string userId);
-        Task<PrintDto?> UpdatePrintAsync(int id, UpdatePrintDto dto, string userId);
+        Task<(PrintDto? Print, string? Warning)> UpdatePrintAsync(int id, UpdatePrintDto dto, string userId);
     }
 }

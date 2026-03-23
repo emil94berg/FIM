@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import { authFetch } from "../auth/authFetch";
+import type { components } from "../types/schema";
 
-type Notification = {
-  id: number;
-  message: string;
-  type: string;
-  isRead: boolean;
-  createdAt: string;
-};
+type NotificationDto = components["schemas"]["NotificationDto"];
 
 export const useNotifications = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationDto[]>([]);
 
   useEffect(() => {
     const fetchNotifications = async () => {
