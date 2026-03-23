@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using FIM.Server.DTOs;
+using FIM.Server.DTOs.SpoolDtos;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
@@ -47,6 +47,7 @@ namespace FIM.Server.Controllers
             }
             return Ok();
         }
+        
         [HttpPatch("{id}", Name = "UpdateSpool")]
         public async Task<ActionResult<SpoolDto>> UpdateSpool(int id, UpdateSpoolDto dto)
         {

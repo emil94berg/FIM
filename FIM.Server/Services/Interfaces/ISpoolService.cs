@@ -1,4 +1,4 @@
-using FIM.Server.DTOs;
+using FIM.Server.DTOs.SpoolDtos;
 
 namespace FIM.Server.Services.Interfaces;
 

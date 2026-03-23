@@ -65,7 +65,6 @@ public class NotificationService : BackgroundService
             }
         }
 
-        // Auto-complete prints whose estimated time has elapsed
         var overduePrints = await dbContext.Prints
             .Where(p => p.Status == PrintStatus.Printing && p.EstimatedEndTime != null && p.EstimatedEndTime <= DateTime.UtcNow)
             .ToListAsync();

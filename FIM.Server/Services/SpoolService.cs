@@ -1,5 +1,5 @@
 using FIM.Server.Data;
-using FIM.Server.DTOs;
+using FIM.Server.DTOs.SpoolDtos;
 using FIM.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
