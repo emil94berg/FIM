@@ -10,18 +10,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { authFetch } from "../auth/authFetch"
 
-type Print = components["schemas"]["PrintDto"];
-type Spool = components["schemas"]["SpoolDto"];
+
+
 
 type DashboardCardProps<T> = {
     title: string

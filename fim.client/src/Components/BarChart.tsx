@@ -2,7 +2,7 @@
 import type { components } from "@/types/schema"
 import { useState, useEffect } from 'react'
 import * as React from "react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
     Card,
     CardContent,
@@ -19,7 +19,6 @@ import {
 import { authFetch } from "../auth/authFetch"
 
 type Print = components["schemas"]["PrintDto"];
-
 
 const chartConfig = {
     views: {
@@ -53,17 +52,36 @@ export default function PrintsChart(){
         loadPrints();
     }, []);
 
-    const chartData = Object.values(
-        allPrints.reduce((acc, print) => {
-            const date = new Date(print.createdAt).toISOString().split("T")[0];
+    //const chartData = Object.values(
+    //    allPrints.reduce((acc, print) => {
+    //        const date = new Date(print.createdAt).toISOString().split("T")[0];
 
-            if (!acc[date]) {
-                acc[date] = { date, count: 0 };
-            }
-            acc[date].count++;
-            return acc;
-        }, {} as Record<string, { date: string; count: number }>)
-    );
+    //        if (!acc[date]) {
+    //            acc[date] = { date, count: 0 };
+    //        }
+    //        acc[date].count++;
+    //        return acc;
+    //    }, {} as Record<string, { date: string; count: number }>)
+    //);
+    const today = new Date();
+    const lastSevenDays = Array.from({ length: 7 }).map((_, i) => {
+        const d = new Date();
+        d.setDate(today.getDate() - i);
+        return d.toISOString().split("T")[0];
+    }).reverse();
+
+    const counts = allPrints.reduce((acc, print) => {
+        const date = new Date(print.createdAt).toISOString().split("T")[0];
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    const chartData = lastSevenDays.map(date => ({
+        date,
+        count: counts[date] || 0
+    }));
+
+    const chartHeight = Math.max(250, chartData.length * 40);
 
 
     return (
@@ -75,10 +93,9 @@ export default function PrintsChart(){
                     <CardDescription>Show number of prints per day</CardDescription>
                 </div>
             </CardHeader>
-            <CardContent className="px-2">
-                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
+            <CardContent className="px-2 overflow-x-auto">
+                <ChartContainer config={chartConfig} className="h-[250px] w-full">
                     <BarChart
-                        accessibilityLayer
                         data={chartData}
                         margin={{ left: 12, right: 12, }}
                     >
@@ -97,6 +114,8 @@ export default function PrintsChart(){
                                 })
                             }}
                         />
+                        <YAxis height={chartHeight}
+                        ></YAxis>
                         <ChartTooltip
                             content={
                                 <ChartTooltipContent
@@ -112,7 +131,9 @@ export default function PrintsChart(){
                                 />
                             }
                         />
-                        <Bar dataKey="count" fill="var(--color-desktop)" />
+                        <Bar dataKey="count"
+                            fill="var(--color-desktop)"
+                            barSize={20} />
                     </BarChart>
                 </ChartContainer>
             </CardContent>
