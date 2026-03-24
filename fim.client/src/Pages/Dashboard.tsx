@@ -92,6 +92,8 @@ export default function DashboardHome() {
         setEditingSpool(s);
     }
 
+    const getRemainingWeightValue = (spool: SpoolDto) => Number(spool.remainingWeight);
+
     
     
     return (
@@ -154,7 +156,12 @@ export default function DashboardHome() {
 
                     <div className="bg-blue-200 w-1/2 p-4 overflow-y-auto max-h-[40vh]">
                         {searchSpools.map(s => (
-                            <button key={s.id} onClick={() => handleSetEdit(s)} className="block bg-blue-300 text-left w-full hover:bg-orange-300 p-1">{s.brand}, {s.material}, {s.color} | -  {s.remainingWeight} grams left</button>
+                            <button key={s.id} onClick={() => handleSetEdit(s)} className="block bg-blue-300 text-left w-full hover:bg-orange-300 p-1">
+                                {s.brand}, {s.material}, {s.color} | - {s.remainingWeight} grams left
+                                {getRemainingWeightValue(s) < 0 ? (
+                                    <span className="ml-2 font-semibold text-red-600">(Warning: Negative)</span>
+                                ) : null}
+                            </button>
                         ))}
                     </div>
                 </div>
