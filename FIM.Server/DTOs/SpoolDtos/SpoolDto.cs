@@ -26,5 +26,16 @@ namespace FIM.Server.DTOs.SpoolDtos
                 spool.SpoolCost,
                 spool.CreatedAt
             );
+        public static List<SpoolDto> ToListSpoolDto(List<Spool> spools)
+        {
+            List<SpoolDto> spoolDtos = new List<SpoolDto>();
+            foreach (var s in spools)
+            {
+                var spoolDto = FromSpool(s);
+                spoolDtos.Add(spoolDto);
+            }
+            return spoolDtos;
+        }
     }
+
 }

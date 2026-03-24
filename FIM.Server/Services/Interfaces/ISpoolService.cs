@@ -9,4 +9,5 @@ public interface ISpoolService
     Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto, string userId);
     Task<bool> DeleteSpoolAsync(int id, string userId);
     Task<SpoolDto?> UpdateSpoolAsync(int id, UpdateSpoolDto dto, string userId);
+    Task<List<SpoolDto>> GetLowSpools(string userId);
 }

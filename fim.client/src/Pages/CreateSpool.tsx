@@ -97,7 +97,15 @@ export default function GetSpools() {
                             <TableCell>{s.diameter}</TableCell>
                             <TableCell>{s.totalWeight}</TableCell>
                             <TableCell>{s.remainingWeight}</TableCell>
-                            <TableCell>{s.createdAt}</TableCell>
+                            <TableCell>
+                                {new Date(s.createdAt).toLocaleString("sv-SE", {
+                                    year: "numeric",
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                    hour: "2-digit",
+                                    minute: "2-digit"
+                                })}
+                            </TableCell>
                             <TableCell>
                                 <Button className="bg-blue-500 text-black" onClick={() => setEditingSpool(s)}>Edit</Button>
                                 <Button className="bg-red-500 text-white" onClick={() => handleDeleteSpool(s.id!)}>Delete</Button>

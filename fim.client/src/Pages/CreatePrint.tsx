@@ -119,7 +119,15 @@ export default function CreatePrint() {
                             <TableCell>{ p.spool?.brand }</TableCell>
                             <TableCell>{ p.gramsUsed }</TableCell>
                             <TableCell>{statusMap[p.status] }</TableCell>
-                            <TableCell>{p.createdAt}</TableCell>
+                            <TableCell>
+                                {new Date(p.createdAt).toLocaleString("sv-SE", {
+                                    year: "numeric",
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                    hour: "2-digit",
+                                    minute: "2-digit"
+                                })}
+                            </TableCell>
                             <TableCell>
                                 {p.id !== undefined && (
                                     <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>

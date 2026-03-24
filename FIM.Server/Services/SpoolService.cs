@@ -82,4 +82,10 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         await dbContext.SaveChangesAsync();
         return SpoolDto.FromSpool(spool);
     }
+    public async Task<List<SpoolDto>> GetLowSpools(string userId)
+    {
+        var list = await dbContext.Spools.Where(s => s.UserId == userId && s.RemainingWeight <= 100).ToListAsync();
+        var dtoList = SpoolDto.ToListSpoolDto(list);
+        return dtoList;
+    }
 }
