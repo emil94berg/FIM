@@ -9,8 +9,7 @@ namespace FIM.Server.DTOs.PrintDtos
         double GramsUsed,
         PrintStatus Status,
         DateTime CreatedAt,
-        Spool Spool
-    );
-
-    
+        DateTime? EstimatedEndTime,
+        Spool? Spool
+    ); 
 }

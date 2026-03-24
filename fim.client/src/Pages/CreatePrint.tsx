@@ -84,13 +84,17 @@ export default function CreatePrint() {
             setPrint(prev => prev.map(p => (p.id === data.id ? data : p)));
             setEditingPrint(null);
         }
-        catch (error) {
-            console.error("Error updating print: ", error);
+        catch (error: unknown) {
+            alert(error instanceof Error ? error.message : "Error updating print.");
         }
     }
     const handleCreatePrint = async (print: CreatePrindDto) => {
-        const newPrint = await handleSubmit(print);
-        setPrint(prev => [...prev, newPrint]);
+        try {
+            const newPrint = await handleSubmit(print);
+            setPrint(prev => [...prev, newPrint]);
+        } catch (error: unknown) {
+            alert(error instanceof Error ? error.message : "Failed to create print.");
+        }
     }
     
 

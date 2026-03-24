@@ -26,7 +26,6 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
         name: "",
         spoolId: 0,
         gramsUsed: 0,
-        status: 0
     });
 
     const handleChange = (
@@ -36,8 +35,7 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
             ...prev,
             [name]:
                 name === "spoolId" ||
-                    name === "gramsUsed" ||
-                    name === "status" ? Number(value) : value
+                    name === "gramsUsed" ? Number(value) : value
 
         }));
     };
@@ -55,12 +53,6 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
         loadSpools();
     }, []);
 
-    const statusMap: Record<number, string> = {
-        0: "Pending",
-        1: "Printing",
-        2: "Done",
-        3: "Failed"
-    }
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         await onSubmit(formData);
@@ -84,14 +76,14 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
                     name="SpoolId"
                         
                 >
-                    <SelectTrigger className="w-full max-w-48">
+                    <SelectTrigger className="w-full max-w-min">
                         <SelectValue placeholder="Select a spool"></SelectValue>
                     </SelectTrigger>
                     <SelectContent className="bg-white border shadow-md">
                         <SelectGroup>
                             <SelectLabel>Spools</SelectLabel>
                             {Spool.map(s => (
-                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.color}</SelectItem>
+                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.color}, {s.diameter}mm, {s.remainingWeight}g left</SelectItem>
                             ))}
                         </SelectGroup>
                     </SelectContent>
@@ -100,28 +92,6 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
             <div className="flex flex-col gap-1">
                 <label>Grams used: </label>
                 <Input type="number" name="gramsUsed" value={formData.gramsUsed} onChange={handleChange} />
-            </div>
-            <div className="flex flex-col gap-1">
-                <Label htmlFor="Status">Status: </Label>
-                <Select value={String(formData.status)}
-                    onValueChange={(value) =>
-                        setFormData(prev => ({
-                            ...prev, status: Number(value)
-                        }))}
-                    name="Status"
-                >
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select a status"></SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border shadow-md">
-                        <SelectGroup>
-                            <SelectLabel>Status</SelectLabel>
-                            {Object.entries(statusMap).map(([key, value]) => (
-                                <SelectItem key={key} value={String(key)}>{value}</SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
             </div>
             <Button className="bg-blue-500 text-black" variant="ghost" type="submit">Create print</Button>
         </form>

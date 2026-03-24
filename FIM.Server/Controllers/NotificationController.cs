@@ -1,8 +1,7 @@
-using FIM.Server.Data;
-using FIM.Server.Models;
+using FIM.Server.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using FIM.Server.Services.Interfaces;
 
 namespace FIM.Server.Controllers
 {
@@ -12,22 +11,18 @@ namespace FIM.Server.Controllers
     public class NotificationController : ControllerBase
     {
         private string UserId => User.FindFirst("sub")!.Value;
-        private readonly ApplicationDbContext _dbContext;
+        private readonly INotificationService _notificationService;
 
-        public NotificationController(ApplicationDbContext dbContext)
+        public NotificationController(INotificationService notificationService)
         {
-            _dbContext = dbContext;
+            _notificationService = notificationService;
         }
 
         
         [HttpGet(Name = "GetNotifications")]
-        public async Task<ActionResult<List<Notification>>> GetNotifications()
+        public async Task<ActionResult<List<NotificationDto>>> GetNotifications()
         {
-            var notifications = await _dbContext.Notifications
-                .Where(n => n.UserId == UserId)
-                .OrderByDescending(n => n.CreatedAt)
-                .ToListAsync();
-
+            var notifications = await _notificationService.GetNotificationsForUserAsync(UserId);
             return Ok(notifications);
         }
     }

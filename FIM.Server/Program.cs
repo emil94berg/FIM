@@ -42,14 +42,16 @@ builder.Services.AddCors(options =>
                       });
 });
 
-builder.Services.AddScoped<ISpoolService,SpoolService>();
-builder.Services.AddHostedService<NotificationService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 //DI
 builder.Services.AddScoped<IPrintService, PrintService>();
+builder.Services.AddScoped<ISpoolService,SpoolService>();
+builder.Services.AddHostedService<NotificationBackgroundService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 
