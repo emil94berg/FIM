@@ -1,14 +1,9 @@
-import { Button } from "@/components/ui/button"
-import type { components } from "../types/schema"
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
     Card,
-    CardAction,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
-    CardTitle,
 } from "@/components/ui/card"
 
 

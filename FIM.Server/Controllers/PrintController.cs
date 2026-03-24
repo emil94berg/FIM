@@ -45,10 +45,12 @@ namespace FIM.Server.Controllers
         public async Task<IActionResult> UpdatePrintAsync(int id, [FromBody] UpdatePrintDto updatePrintDto)
         {
             var (update, warning) = await _printService.UpdatePrintAsync(id, updatePrintDto, UserId);
-            if (warning != null)
+            if (warning != null && update == null)
                 return BadRequest(new { message = warning });
             if (update == null)
                 return NotFound();
+            if (warning != null)
+                return Ok(new { print = update, warning });
             return Ok(update);
         }
         [HttpGet("pending")]

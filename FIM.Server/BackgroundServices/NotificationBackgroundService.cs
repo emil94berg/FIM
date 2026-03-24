@@ -1,5 +1,6 @@
 using FIM.Server.Data;
 using FIM.Server.Models;
+using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FIM.Server.BackgroundServices;
@@ -38,6 +39,7 @@ public class NotificationBackgroundService : BackgroundService
     {
         using var scope = _scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var printService = scope.ServiceProvider.GetRequiredService<IPrintService>();
 
         var lowSpools = await dbContext.Spools
             .Where(s => s.RemainingWeight < 100)
@@ -68,15 +70,18 @@ public class NotificationBackgroundService : BackgroundService
         var overduePrints = await dbContext.Prints
             .Where(p => p.Status == PrintStatus.Printing && p.EstimatedEndTime != null && p.EstimatedEndTime <= DateTime.UtcNow)
             .ToListAsync();
+            
         foreach (var print in overduePrints)
         {
             _logger.LogInformation($"Auto-completing print: {print.Name} (ID: {print.Id})");
             print.Status = PrintStatus.Completed;
+            await printService.DeductSpoolForCompletedPrintAsync(print.Id);
         }
 
         var finishedPrints = await dbContext.Prints
             .Where(p => p.Status == PrintStatus.Completed)
             .ToListAsync();
+
         foreach (var print in finishedPrints)
         {
             var exists = await dbContext.Notifications.AnyAsync(n =>
