@@ -1,7 +1,6 @@
 "use client"
 import type { components } from "@/types/schema"
 import { useState, useEffect } from 'react'
-import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
     Card,

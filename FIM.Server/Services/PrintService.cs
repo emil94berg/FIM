@@ -75,7 +75,9 @@ namespace FIM.Server.Services
                 var update = await _context.Prints.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
                 if (update == null) return (null, null);
 
+                string? warning = null;
                 var startingPrint = dto.Status == PrintStatus.Printing && update.Status != PrintStatus.Printing;
+                var completingPrint = dto.Status == PrintStatus.Completed && update.Status == PrintStatus.Printing;
 
                 if (startingPrint)
                 {
@@ -85,7 +87,9 @@ namespace FIM.Server.Services
                         return (null, "Please provide an estimated print time in minutes.");
                     }
 
-                    var spool = await _context.Spools.FirstOrDefaultAsync(s => s.Id == update.SpoolId && s.UserId == userId);
+                    var spoolIdForCheck = dto.SpoolId ?? update.SpoolId;
+                    var gramsUsedForCheck = dto.GramsUsed ?? update.GramsUsed;
+                    var spool = await _context.Spools.FirstOrDefaultAsync(s => s.Id == spoolIdForCheck && s.UserId == userId);
 
                     if (spool == null)
                     {
@@ -93,14 +97,33 @@ namespace FIM.Server.Services
                         return (null, "Spool not found.");
                     }
 
-                    if (spool.RemainingWeight < update.GramsUsed)
+                    if (spool.RemainingWeight < gramsUsedForCheck)
                     {
-                        await transaction.RollbackAsync();
-                        return (null, $"Not enough filament on spool. Remaining: {spool.RemainingWeight}g, Required: {update.GramsUsed}g.");
+                        warning = $"Warning: Not enough filament on spool. Remaining: {spool.RemainingWeight}g, Required: {gramsUsedForCheck}g. Spool will go negative when completed.";
                     }
 
-                    spool.RemainingWeight -= update.GramsUsed;
                     update.EstimatedEndTime = DateTime.UtcNow.AddMinutes(dto.EstimatedMinutes.Value);
+                }
+
+                if (completingPrint)
+                {
+                    var spoolIdForDeduction = dto.SpoolId ?? update.SpoolId;
+                    var gramsUsedForDeduction = dto.GramsUsed ?? update.GramsUsed;
+                    var spool = await _context.Spools.FirstOrDefaultAsync(s => s.Id == spoolIdForDeduction && s.UserId == userId);
+
+                    if (spool == null)
+                    {
+                        await transaction.RollbackAsync();
+                        return (null, "Spool not found.");
+                    }
+
+                    if (spool.RemainingWeight < gramsUsedForDeduction)
+                    {
+                        warning = $"Warning: Not enough filament on spool. Remaining: {spool.RemainingWeight}g, Required: {gramsUsedForDeduction}g. Spool will go negative.";
+                    }
+
+                    spool.RemainingWeight -= gramsUsedForDeduction;
+                    _context.Spools.Update(spool);
                 }
 
                 if (dto.Name != null) update.Name = dto.Name;
@@ -112,7 +135,7 @@ namespace FIM.Server.Services
                 await transaction.CommitAsync();
 
                 var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
-                return (updateDto.ToPrintDto(), null);
+                return (updateDto.ToPrintDto(), warning);
             }
             catch
             {
@@ -140,6 +163,22 @@ namespace FIM.Server.Services
                 returnList.Add(p.ToPrintDto());
             }
             return returnList;
+        }
+
+        public async Task DeductSpoolForCompletedPrintAsync(int printId)
+        {
+            var print = await _context.Prints.FirstOrDefaultAsync(p => p.Id == printId);
+            if (print == null) return;
+
+            var spool = await _context.Spools.FirstOrDefaultAsync(s => s.Id == print.SpoolId && s.UserId == print.UserId);
+            if (spool == null) return;
+
+            if (print.GramsUsed > 0)
+            {
+                spool.RemainingWeight -= print.GramsUsed;
+                _context.Spools.Update(spool);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
