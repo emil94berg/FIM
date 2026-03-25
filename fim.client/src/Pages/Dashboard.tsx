@@ -5,6 +5,7 @@ import { authFetch } from "../auth/authFetch"
 import DashCard from "@/components/DashboardCard"
 import PrintsChart from "@/components/BarChart"
 import { EditSpoolForm } from "@/components/spools/EditSpoolForm"
+import { Bold } from "lucide-react";
 
 type PrintDto = components["schemas"]["PrintDto"];
 type SpoolDto = components["schemas"]["SpoolDto"];
@@ -93,6 +94,32 @@ export default function DashboardHome() {
     }
 
     const getRemainingWeightValue = (spool: SpoolDto) => Number(spool.remainingWeight);
+    const getTotalWeightValue = (spool: SpoolDto) => Number(spool.totalWeight);
+    const getRemainingPercentage = (spool: SpoolDto) => {
+        const totalWeight = getTotalWeightValue(spool);
+        const remainingWeight = getRemainingWeightValue(spool);
+
+        if (!Number.isFinite(totalWeight) || totalWeight <= 0 || !Number.isFinite(remainingWeight)) {
+            return 0;
+        }
+
+        return Math.max(0, Math.min(100, (remainingWeight / totalWeight) * 100));
+    };
+
+    const getBarColorClass = (spool: SpoolDto) => {
+        const remainingWeight = getRemainingWeightValue(spool);
+        const remainingPercentage = getRemainingPercentage(spool);
+
+        if (remainingWeight < 0) {
+            return "bg-red-600";
+        }
+
+        if (remainingPercentage <= 20) {
+            return "bg-amber-500";
+        }
+
+        return "bg-emerald-500";
+    };
 
     
     
@@ -122,6 +149,7 @@ export default function DashboardHome() {
 
                 <div className="flex gap-4">
                     <div className="w-1/2 border p-4 overflow-y-auto max-h-[40vh]">
+                    <h1 className="text-3xl font-bold">Current Prints and Low Spools</h1>
                         <div className="grid grid-cols-3 gap-4">
                             <DashCard<PrintDto>
                                 title="Pending prints"
@@ -155,12 +183,27 @@ export default function DashboardHome() {
                     </div>
 
                     <div className="bg-blue-200 w-1/2 p-4 overflow-y-auto max-h-[40vh]">
+                    <h1 className="text-3xl font-bold">Spool Inventory</h1>
                         {searchSpools.map(s => (
-                            <button key={s.id} onClick={() => handleSetEdit(s)} className="block bg-blue-300 text-left w-full hover:bg-orange-300 p-1">
-                                {s.brand}, {s.material}, {s.color} | - {s.remainingWeight} grams left
-                                {getRemainingWeightValue(s) < 0 ? (
-                                    <span className="ml-2 font-semibold text-red-600">(Warning: Negative)</span>
-                                ) : null}
+                            <button key={s.id} onClick={() => handleSetEdit(s)} className="block bg-blue-300 text-left w-full hover:bg-orange-300 p-3 space-y-2">
+                                <div className="flex items-center justify-between gap-3">
+                                    <span className="font-medium">{s.brand}, {s.material}, {s.color}</span>
+                                    <span className={getRemainingWeightValue(s) < 0 ? "font-semibold text-red-600" : "text-slate-800"}>
+                                        {s.remainingWeight} / {s.totalWeight} g
+                                    </span>
+                                </div>
+                                <div className="h-3 w-full overflow-hidden rounded-full bg-white/70">
+                                    <div
+                                        className={`h-full rounded-full transition-all ${getBarColorClass(s)}`}
+                                        style={{ width: `${getRemainingPercentage(s)}%` }}
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between text-sm">
+                                    <span>{Math.round(getRemainingPercentage(s))}% remaining</span>
+                                    {getRemainingWeightValue(s) < 0 ? (
+                                        <span className="font-semibold text-red-600">Warning: Negative</span>
+                                    ) : null}
+                                </div>
                             </button>
                         ))}
                     </div>
@@ -169,6 +212,7 @@ export default function DashboardHome() {
 
             {/* Nedre sektion för diagram */}
             <div className="flex-1 overflow-y-auto">
+                <h1 className="text-3xl font-bold">Statistics</h1>
                 <PrintsChart />
             </div>
             {/*{editingSpool ?  }*/}
