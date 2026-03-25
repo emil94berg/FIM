@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FIM.Server.Controllers
 {
-    [ApiController]
     [Authorize]
+    [ApiController]
     [Route("[controller]")]
     public class SpoolController(ISpoolService spoolService) : ControllerBase
     {

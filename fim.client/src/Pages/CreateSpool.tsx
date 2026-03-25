@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
     Table,
     TableBody,
@@ -6,7 +6,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "../components/ui/table";
 import { useState, useEffect } from 'react';
 import type { components } from "../types/schema";
 import { AddSpoolForm } from '../components/spools/AddSpoolForm';
@@ -93,7 +93,7 @@ export default function GetSpools() {
                         <TableRow key={s.id}>
                             <TableCell>{s.brand}</TableCell>
                             <TableCell>{s.material}</TableCell>
-                            <TableCell>{s.color}</TableCell>
+                            <TableCell>{s.colorName}</TableCell>
                             <TableCell>{s.diameter}</TableCell>
                             <TableCell>{s.totalWeight}</TableCell>
                             <TableCell>{s.remainingWeight}</TableCell>

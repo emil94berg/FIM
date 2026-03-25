@@ -52,6 +52,7 @@ builder.Services.AddScoped<IPrintService, PrintService>();
 builder.Services.AddScoped<ISpoolService,SpoolService>();
 builder.Services.AddHostedService<NotificationBackgroundService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IPublicFilamentCatalogService, PublicFilamentCatalogService>();
 
 var app = builder.Build();
 

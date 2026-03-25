@@ -52,6 +52,109 @@ export interface paths {
         patch: operations["UpdatePrint"];
         trace?: never;
     };
+    "/Print/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Print/printing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/PublicFilamentCatalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["FilamentRecord"][];
+                        "application/json": components["schemas"]["FilamentRecord"][];
+                        "text/json": components["schemas"]["FilamentRecord"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/Spool": {
         parameters: {
             query?: never;
@@ -84,6 +187,39 @@ export interface paths {
         patch: operations["UpdateSpool"];
         trace?: never;
     };
+    "/Spool/GetLowSpools": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -96,15 +232,43 @@ export interface components {
             gramsUsed: number | string;
         };
         CreateSpoolDto: {
+            colorHex: null | string;
+            colorHexes: null | string[];
+            /** Format: int32 */
+            extruderTemp: null | number | string;
+            /** Format: int32 */
+            bedTemp: null | number | string;
+            finish: null | string;
+            translucent: boolean;
+            glow: boolean;
             brand: string;
             material: string;
-            color: string;
+            colorName: string;
             /** Format: double */
             diameter: number | string;
             /** Format: double */
             totalWeight: number | string;
             /** Format: double */
             spoolCost: number | string;
+        };
+        FilamentRecord: {
+            identifier: string;
+            brand: string;
+            name: string;
+            material: string;
+            /** Format: double */
+            weight: number | string;
+            /** Format: double */
+            diameter: number | string;
+            colorHex: null | string;
+            colorHexes: null | string[];
+            /** Format: int32 */
+            extruderTemp: null | number | string;
+            /** Format: int32 */
+            bedTemp: null | number | string;
+            finish: null | string;
+            translucent: boolean;
+            glow: boolean;
         };
         NotificationDto: {
             /** Format: int32 */
@@ -135,9 +299,19 @@ export interface components {
             /** Format: int32 */
             id?: number | string;
             userId: string;
+            identifier?: string;
+            colorName: string;
+            colorHex?: null | string;
+            colorHexes?: null | string[];
+            /** Format: int32 */
+            extruderTemp?: null | number | string;
+            /** Format: int32 */
+            bedTemp?: null | number | string;
+            finish?: null | string;
+            translucent?: boolean;
+            glow?: boolean;
             brand: string;
             material: string;
-            color: string;
             /** Format: double */
             diameter: number | string;
             /** Format: double */
@@ -152,9 +326,19 @@ export interface components {
         SpoolDto: {
             /** Format: int32 */
             id: number | string;
+            identifier: string;
+            colorHex: null | string;
+            colorHexes: null | string[];
+            /** Format: int32 */
+            extruderTemp: null | number | string;
+            /** Format: int32 */
+            bedTemp: null | number | string;
+            finish: null | string;
+            translucent: boolean;
+            glow: boolean;
             brand: string;
             material: string;
-            color: string;
+            colorName: string;
             /** Format: double */
             diameter: number | string;
             /** Format: double */
@@ -177,13 +361,25 @@ export interface components {
             estimatedMinutes: null | number | string;
         };
         UpdateSpoolDto: {
+            identifier: null | string;
+            colorHex: null | string;
+            colorHexes: null | string[];
+            /** Format: int32 */
+            extruderTemp: null | number | string;
+            /** Format: int32 */
+            bedTemp: null | number | string;
+            finish: null | string;
+            translucent: null | boolean;
+            glow: null | boolean;
             brand: null | string;
             material: null | string;
-            color: null | string;
+            colorName: null | string;
             /** Format: double */
             diameter: null | number | string;
             /** Format: double */
             totalWeight: null | number | string;
+            /** Format: double */
+            remainingWeight: null | number | string;
             /** Format: double */
             spoolCost: null | number | string;
         };

@@ -4,6 +4,7 @@ using FIM.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FIM.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260324090227_initPublicFilamentCatalog")]
+    partial class initPublicFilamentCatalog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +103,7 @@ namespace FIM.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BedTemp")
+                    b.Property<int>("BedTemp")
                         .HasColumnType("int")
                         .HasJsonPropertyName("bed_temp");
 
@@ -110,6 +113,7 @@ namespace FIM.Server.Migrations
                         .HasJsonPropertyName("manufacturer");
 
                     b.Property<string>("ColorHex")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasJsonPropertyName("color_hex");
 
@@ -121,7 +125,7 @@ namespace FIM.Server.Migrations
                         .HasColumnType("float")
                         .HasJsonPropertyName("diameter");
 
-                    b.Property<int?>("ExtruderTemp")
+                    b.Property<int>("ExtruderTemp")
                         .HasColumnType("int")
                         .HasJsonPropertyName("extruder_temp");
 
@@ -152,8 +156,8 @@ namespace FIM.Server.Migrations
                         .HasColumnType("bit")
                         .HasJsonPropertyName("translucent");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("float")
+                    b.Property<int>("Weight")
+                        .HasColumnType("int")
                         .HasJsonPropertyName("weight");
 
                     b.HasKey("Id");
@@ -169,20 +173,11 @@ namespace FIM.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BedTemp")
-                        .HasColumnType("int");
-
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ColorHex")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("ColorHexes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ColorName")
+                    b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -191,19 +186,6 @@ namespace FIM.Server.Migrations
 
                     b.Property<double>("Diameter")
                         .HasColumnType("float");
-
-                    b.Property<int?>("ExtruderTemp")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Finish")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Glow")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Identifier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Material")
                         .IsRequired()
@@ -218,9 +200,6 @@ namespace FIM.Server.Migrations
 
                     b.Property<double>("TotalWeight")
                         .HasColumnType("float");
-
-                    b.Property<bool>("Translucent")
-                        .HasColumnType("bit");
 
                     b.Property<string>("UserId")
                         .IsRequired()

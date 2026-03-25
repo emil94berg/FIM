@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import type { components } from "../../types/schema";
+import { ColorCheckBox } from "@/components/ColorPickerComponent"
+
 
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
@@ -14,22 +16,38 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
     const [formData, setFormData] = useState<CreateSpoolDto>({
         brand: "",
         material: "",
-        color: "",
+        colorName: "",
         diameter: 1.75,
         totalWeight: 0,
-        spoolCost: 0
+        spoolCost: 0,
+        bedTemp: 0,
+        colorHex: "",
+        colorHexes: [],
+        extruderTemp: 0,
+        finish: "",
+        glow: false,
+        translucent: false
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setFormData(prev => ({ ...prev, [name]: name === "totalWeight" || name === "spoolCost" || name === "diameter" ? parseFloat(value) : value }));
+        setFormData(prev => ({
+            ...prev,
+            [name]: name === "totalWeight" ||
+                name === "spoolCost" ||
+                name === "diameter" ? parseFloat(value) : value
+        }));
     }
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         await onSubmit(formData);
     }
+
+   
+            
+    
 
     return (
         <div>
@@ -44,9 +62,10 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
                     <Input type="text" name="material" value={formData.material} onChange={handleChange} />
                 </Label>
                 <Label>
-                    Color:
-                    <Input type="text" name="color" value={formData.color} onChange={handleChange} />
+                    Color name:
+                    <Input type="text" name="colorName" value={formData.colorName} onChange={handleChange} />
                 </Label>
+                <ColorCheckBox formData={formData} setFormData={setFormData}></ColorCheckBox>
                 <Label>
                     Diameter (mm):
                     <Input type="number" name="diameter" step="0.01" value={formData.diameter} onChange={handleChange} />
