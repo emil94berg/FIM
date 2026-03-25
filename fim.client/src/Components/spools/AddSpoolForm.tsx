@@ -30,13 +30,19 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
 
         setFormData(prev => ({
             ...prev,
-            [name]: name === "totalWeight" ||
+            [name]:
+                type === "checkbox" ?
+                    checked :
+                name === "totalWeight" ||
                 name === "spoolCost" ||
-                name === "diameter" ? parseFloat(value) : value
+                name === "diameter" || 
+                name === "extruderTemp" ||
+                name === "bedTemp"
+                ? value === "" ? null : parseFloat(value) : value
         }));
     }
 
@@ -73,6 +79,26 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
                 <Label>
                     Total Weight:
                     <Input type="number" name="totalWeight" value={formData.totalWeight} onChange={handleChange} />
+                </Label>
+                <Label>
+                    Extruder temp:
+                    <Input type="number" name="extruderTemp" value={formData.extruderTemp ?? ""} onChange={handleChange} />
+                </Label>
+                <Label>
+                    Bed temp:
+                    <Input type="number" name="bedTemp" value={formData.bedTemp ?? ""} onChange={handleChange} />
+                </Label>
+                <Label>
+                    Glow:
+                    <Input className="bg-transparent" type="checkbox" name="glow" checked={formData.glow} onChange={handleChange} />
+                </Label>
+                <Label>
+                    Translucent:
+                    <Input className="bg-transparent" type="checkbox" name="translucent" checked={formData.translucent} onChange={handleChange} />
+                </Label>
+                <Label>
+                    Finish:
+                    <Input type="text" name="finish" value={formData.finish ?? ""} onChange={handleChange} />
                 </Label>
                 <Label>
                     Cost: 

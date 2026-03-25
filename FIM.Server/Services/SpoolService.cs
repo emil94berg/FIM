@@ -23,17 +23,11 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
 
     public async Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto, string userId)
     {
-        var splitString = dto.Diameter.ToString().Split(".").ToArray();
-        if(splitString == null || splitString.Length < 1)
-        {
-            splitString = new string[1];
-            splitString[0] = "1";
-            splitString[1] = "75";
-        }
+        string diameterText = dto.Diameter.ToString().Replace(",", "");
         var spool = new Spool
         {
             UserId = userId,
-            Identifier = $"{dto.Brand}_{dto.Material}_{dto.ColorName}_{splitString[0]}{splitString[1]}",
+            Identifier = $"{dto.Brand}_{dto.Material}_{dto.ColorName}_{diameterText}",
             ColorHex = dto.ColorHex,
             ColorHexes = dto.ColorHexes,
             ExtruderTemp = dto.ExtruderTemp,
