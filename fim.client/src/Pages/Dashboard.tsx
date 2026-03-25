@@ -5,7 +5,6 @@ import { authFetch } from "../auth/authFetch"
 import DashCard from "@/components/DashboardCard"
 import PrintsChart from "@/components/BarChart"
 import { EditSpoolForm } from "@/components/spools/EditSpoolForm"
-import { Bold } from "lucide-react";
 
 type PrintDto = components["schemas"]["PrintDto"];
 type SpoolDto = components["schemas"]["SpoolDto"];
