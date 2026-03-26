@@ -102,7 +102,7 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
                         <SelectGroup>
                             <SelectLabel>Spools</SelectLabel>
                             {allSpools.map(s => (
-                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.color}</SelectItem>
+                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.colorName}</SelectItem>
                             ))}
                         </SelectGroup>
                     </SelectContent>
