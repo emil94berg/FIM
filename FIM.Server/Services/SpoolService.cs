@@ -23,17 +23,27 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
 
     public async Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto, string userId)
     {
+        string diameterText = dto.Diameter.ToString().Replace(",", "");
         var spool = new Spool
         {
             UserId = userId,
+            Identifier = $"{dto.Brand}_{dto.Material}_{dto.ColorName}_{diameterText}",
+            ColorHex = dto.ColorHex,
+            ColorHexes = dto.ColorHexes,
+            ExtruderTemp = dto.ExtruderTemp,
+            BedTemp = dto.BedTemp,
+            Finish = dto.Finish,
+            Translucent = dto.Translucent,
+            Glow = dto.Glow,
             Brand = dto.Brand,
             Material = dto.Material,
-            Color = dto.Color,
+            ColorName = dto.ColorName,
             Diameter = dto.Diameter,
             TotalWeight = dto.TotalWeight,
             RemainingWeight = dto.TotalWeight,
             SpoolCost = dto.SpoolCost,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Favorite = false
         };
         dbContext.Spools.Add(spool);
         await dbContext.SaveChangesAsync();
@@ -62,8 +72,14 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
 
         if (dto.Brand != null) spool.Brand = dto.Brand;
         if (dto.Material != null) spool.Material = dto.Material;
-        if (dto.Color != null) spool.Color = dto.Color;
-        if (dto.Diameter.HasValue) spool.Diameter = dto.Diameter.Value;
+        if (dto.ColorName != null) spool.ColorName = dto.ColorName;
+        if (dto.ColorHex != null) spool.ColorHex = dto.ColorHex;
+        if (dto.ColorHexes != null) spool.ColorHexes = dto.ColorHexes;
+        if (dto.ExtruderTemp.HasValue) spool.ExtruderTemp = dto.ExtruderTemp.Value;
+        if (dto.BedTemp.HasValue) spool.BedTemp = dto.BedTemp.Value;
+        if (dto.Finish != null) spool.Finish = dto.Finish;
+        if (dto.Glow.HasValue) spool.Glow = dto.Glow.Value;
+        if (dto.Favorite.HasValue) spool.Favorite = dto.Favorite.Value;
         if (dto.TotalWeight.HasValue)        
         {
             if (spool.TotalWeight != spool.RemainingWeight)
@@ -78,6 +94,8 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             }
         }
         if (dto.SpoolCost.HasValue) spool.SpoolCost = dto.SpoolCost.Value;
+
+        spool.Identifier = $"{dto.Brand}_{dto.Material}_{dto.ColorName}";
 
         await dbContext.SaveChangesAsync();
         return SpoolDto.FromSpool(spool);

@@ -4,6 +4,7 @@ using FIM.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FIM.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260325101259_UpdatedSpool")]
+    partial class UpdatedSpool
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,9 +198,6 @@ namespace FIM.Server.Migrations
                     b.Property<int?>("ExtruderTemp")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Favorite")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Finish")
                         .HasColumnType("nvarchar(max)");
 
@@ -234,21 +234,6 @@ namespace FIM.Server.Migrations
                     b.ToTable("Spools");
                 });
 
-            modelBuilder.Entity("FIM.Server.Models.UserFavoriteFilament", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("FilamentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "FilamentId");
-
-                    b.HasIndex("FilamentId");
-
-                    b.ToTable("UserFavoriteFilaments");
-                });
-
             modelBuilder.Entity("FIM.Server.Models.Print", b =>
                 {
                     b.HasOne("FIM.Server.Models.Spool", "Spool")
@@ -258,22 +243,6 @@ namespace FIM.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Spool");
-                });
-
-            modelBuilder.Entity("FIM.Server.Models.UserFavoriteFilament", b =>
-                {
-                    b.HasOne("FIM.Server.Models.PublicFilamentCatalog", "Filament")
-                        .WithMany("FavoritedBy")
-                        .HasForeignKey("FilamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Filament");
-                });
-
-            modelBuilder.Entity("FIM.Server.Models.PublicFilamentCatalog", b =>
-                {
-                    b.Navigation("FavoritedBy");
                 });
 #pragma warning restore 612, 618
         }

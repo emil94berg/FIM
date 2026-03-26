@@ -83,7 +83,7 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
                         <SelectGroup>
                             <SelectLabel>Spools</SelectLabel>
                             {Spool.map(s => (
-                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.color}, {s.diameter}mm, {s.remainingWeight}g left</SelectItem>
+                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.colorName}, {s.diameter}mm, {s.remainingWeight}g left</SelectItem>
                             ))}
                         </SelectGroup>
                     </SelectContent>

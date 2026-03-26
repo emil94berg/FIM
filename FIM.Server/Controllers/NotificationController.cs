@@ -5,8 +5,8 @@ using FIM.Server.Services.Interfaces;
 
 namespace FIM.Server.Controllers
 {
-    [ApiController]
     [Authorize]
+    [ApiController]
     [Route("[controller]")]
     public class NotificationController : ControllerBase
     {

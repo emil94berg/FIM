@@ -1,11 +1,21 @@
 namespace FIM.Server.DTOs.SpoolDtos
 {
     public record UpdateSpoolDto(
+        string? Identifier,
+        string? ColorHex,
+        List<string>? ColorHexes,
+        int? ExtruderTemp,
+        int? BedTemp,
+        string? Finish,
+        bool? Translucent,
+        bool? Glow,
         string? Brand,
         string? Material,
-        string? Color,
+        string? ColorName,
         double? Diameter,
         double? TotalWeight,
-        decimal? SpoolCost
+        double? RemainingWeight,
+        decimal? SpoolCost,
+        bool? Favorite
     );
 }

@@ -4,27 +4,45 @@ namespace FIM.Server.DTOs.SpoolDtos
 {
     public record SpoolDto(
         int Id,
+        string Identifier,
+        string? ColorHex,
+        List<string>? ColorHexes,
+        int? ExtruderTemp,
+        int? BedTemp,
+        string? Finish,
+        bool Translucent,
+        bool Glow,
         string Brand,
         string Material,
-        string Color,
+        string ColorName,
         double Diameter,
         double TotalWeight,
         double RemainingWeight,
         decimal SpoolCost,
-        DateTime CreatedAt
+        DateTime CreatedAt,
+        bool Favorite
     )
     {
         public static SpoolDto FromSpool(Spool spool) =>
             new(
                 spool.Id,
+                spool.Identifier,
+                spool.ColorHex,
+                spool.ColorHexes,
+                spool.ExtruderTemp,
+                spool.BedTemp,
+                spool.Finish,
+                spool.Translucent,
+                spool.Glow,
                 spool.Brand,
                 spool.Material,
-                spool.Color,
+                spool.ColorName,
                 spool.Diameter,
                 spool.TotalWeight,
                 spool.RemainingWeight,
                 spool.SpoolCost,
-                spool.CreatedAt
+                spool.CreatedAt,
+                spool.Favorite
             );
         public static List<SpoolDto> ToListSpoolDto(List<Spool> spools)
         {

@@ -1,12 +1,17 @@
 using FIM.Server.Data;
+using FIM.Server.DTOs.Filament;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using static System.Net.WebRequestMethods;
 
 namespace FIM.Server.BackgroundServices;
 
 public class NotificationBackgroundService : BackgroundService
 {
+    private DateTime _nextFilamentUpdate = DateTime.UtcNow;
+
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<NotificationBackgroundService> _logger;
 
@@ -25,6 +30,8 @@ public class NotificationBackgroundService : BackgroundService
             try
             {
                 await CheckNotificationsAsync();
+
+                await RunWeeklyUpdateCatalog();
             }
             catch (Exception ex)
             {
@@ -34,6 +41,8 @@ public class NotificationBackgroundService : BackgroundService
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }
     }
+
+    
 
     private async Task CheckNotificationsAsync()
     {
@@ -103,5 +112,53 @@ public class NotificationBackgroundService : BackgroundService
             }
         }
         await dbContext.SaveChangesAsync();
+    }
+
+
+    private async Task RunWeeklyUpdateCatalog()
+    {
+        if(DateTime.UtcNow < _nextFilamentUpdate)
+        {
+            return;
+        }
+        _logger.LogInformation("Running weekly filament catalog update...");
+
+        await UpdateFilamentCatalogAsync();
+
+        _nextFilamentUpdate = DateTime.UtcNow.AddDays(7);
+    }
+
+    private async Task UpdateFilamentCatalogAsync()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        var existingFilamentCatalog = await dbContext.PublicFilamentCatalogs.AsNoTracking().ToListAsync();
+
+        var existingSet = existingFilamentCatalog.Select(s => s.Identifier).ToHashSet();
+
+        var filamentCatalogList = new List<PublicFilamentCatalog>();
+
+        string uri = "filaments.json";
+        var client = new HttpClient();
+        //string baseAddress = "https://donkie.github.io/SpoolmanDB/";
+        //client.BaseAddress = new Uri(baseAddress);
+
+        HttpResponseMessage response = await client.GetAsync("https://donkie.github.io/SpoolmanDB/filaments.json");
+        if (response.IsSuccessStatusCode)
+        {
+            string responseString = await response.Content.ReadAsStringAsync();
+            filamentCatalogList = JsonSerializer.Deserialize<List<PublicFilamentCatalog>>(responseString);
+        }
+        Console.WriteLine(filamentCatalogList);
+        if(filamentCatalogList != null)
+        {
+            var newFilaments = filamentCatalogList.Where(f => !existingSet.Contains(f.Identifier)).ToList();
+            if (newFilaments.Any())
+            {
+                await dbContext.PublicFilamentCatalogs.AddRangeAsync(newFilaments);
+                await dbContext.SaveChangesAsync();
+            }
+        }
     }
 }
