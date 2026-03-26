@@ -220,6 +220,76 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/UserFavoriteFilament/SetFavorite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: {
+                    filamentId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/UserFavoriteFilament": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: {
+                    filamentId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -322,6 +392,7 @@ export interface components {
             spoolCost: number | string;
             /** Format: date-time */
             createdAt: string;
+            favorite?: boolean;
         };
         SpoolDto: {
             /** Format: int32 */
@@ -349,6 +420,7 @@ export interface components {
             spoolCost: number | string;
             /** Format: date-time */
             createdAt: string;
+            favorite: boolean;
         };
         UpdatePrintDto: {
             name: null | string;
@@ -382,6 +454,7 @@ export interface components {
             remainingWeight: null | number | string;
             /** Format: double */
             spoolCost: null | number | string;
+            favorite: null | boolean;
         };
     };
     responses: never;

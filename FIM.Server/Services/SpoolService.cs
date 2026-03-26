@@ -42,7 +42,8 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             TotalWeight = dto.TotalWeight,
             RemainingWeight = dto.TotalWeight,
             SpoolCost = dto.SpoolCost,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Favorite = false
         };
         dbContext.Spools.Add(spool);
         await dbContext.SaveChangesAsync();
@@ -78,6 +79,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         if (dto.BedTemp.HasValue) spool.BedTemp = dto.BedTemp.Value;
         if (dto.Finish != null) spool.Finish = dto.Finish;
         if (dto.Glow.HasValue) spool.Glow = dto.Glow.Value;
+        if (dto.Favorite.HasValue) spool.Favorite = dto.Favorite.Value;
         if (dto.TotalWeight.HasValue)        
         {
             if (spool.TotalWeight != spool.RemainingWeight)

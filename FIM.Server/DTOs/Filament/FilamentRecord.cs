@@ -17,6 +17,7 @@ namespace FIM.Server.DTOs.Filament
             string? finish,
             bool translucent,
             bool glow
+        
     )
     {
         public static FilamentRecord ToFilamentRecord(PublicFilamentCatalog catalog)

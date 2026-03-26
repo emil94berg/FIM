@@ -19,7 +19,8 @@ namespace FIM.Server.DTOs.SpoolDtos
         double TotalWeight,
         double RemainingWeight,
         decimal SpoolCost,
-        DateTime CreatedAt
+        DateTime CreatedAt,
+        bool Favorite
     )
     {
         public static SpoolDto FromSpool(Spool spool) =>
@@ -40,7 +41,8 @@ namespace FIM.Server.DTOs.SpoolDtos
                 spool.TotalWeight,
                 spool.RemainingWeight,
                 spool.SpoolCost,
-                spool.CreatedAt
+                spool.CreatedAt,
+                spool.Favorite
             );
         public static List<SpoolDto> ToListSpoolDto(List<Spool> spools)
         {

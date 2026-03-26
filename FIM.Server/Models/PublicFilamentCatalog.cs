@@ -33,5 +33,6 @@ namespace FIM.Server.Models
         public bool Translucent { get; set; }
         [JsonPropertyName("glow")]
         public bool Glow { get; set; }
+        public ICollection<UserFavoriteFilament> FavoritedBy { get; set; }
     }
 }

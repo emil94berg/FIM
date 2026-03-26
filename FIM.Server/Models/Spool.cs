@@ -30,4 +30,5 @@ public class Spool
     [Required(ErrorMessage = "Spool Cost is required")]
     public required decimal SpoolCost { get; set; }
     public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public bool Favorite { get; set; } = false;
 }

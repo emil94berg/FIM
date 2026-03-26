@@ -15,6 +15,7 @@ namespace FIM.Server.DTOs.SpoolDtos
         double? Diameter,
         double? TotalWeight,
         double? RemainingWeight,
-        decimal? SpoolCost
+        decimal? SpoolCost,
+        bool? Favorite
     );
 }

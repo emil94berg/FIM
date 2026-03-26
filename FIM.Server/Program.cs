@@ -53,6 +53,7 @@ builder.Services.AddScoped<ISpoolService,SpoolService>();
 builder.Services.AddHostedService<NotificationBackgroundService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPublicFilamentCatalogService, PublicFilamentCatalogService>();
+builder.Services.AddScoped<IUserFavoriteFilamentService, UserFavoriteFilamentService>();
 
 var app = builder.Build();
 

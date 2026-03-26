@@ -31,8 +31,7 @@ namespace FIM.Server.Controllers
                 {
                     return Ok(returnList);
                 }
-           
-           
         }
+
     }
 }

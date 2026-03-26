@@ -35,6 +35,19 @@ export function CatalogList(){
 
     }, []);
 
+    const setFavorite = async (id: string) => {
+       
+            try {
+                await authFetch(`https://localhost:7035/UserFavoriteFilament/SetFavorite/${id}`, {
+                    method: "POST"
+                });
+                
+            }
+            catch (error) {
+                console.log("Failed to post to UserFavoriteFilament " + error)
+            }
+    }
+
  
 
 
@@ -91,7 +104,7 @@ export function CatalogList(){
 
                         </TableCell>
                         <TableCell>
-                            <Button className="bg-transparent" size="icon">
+                            <Button className="bg-transparent" size="icon" onClick={() => setFavorite(s.identifier) }>
                                 <StarIcon></StarIcon>
                             </Button>
                         </TableCell>
