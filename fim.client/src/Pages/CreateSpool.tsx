@@ -27,6 +27,8 @@ export default function GetSpools() {
     const [spools, setSpools] = useState<Spool[]>([]);
     const [editingSpool, setEditingSpool] = useState<Spool | null>(null);
 
+    const getRemainingWeightValue = (spool: Spool) => Number(spool.remainingWeight);
+
     useEffect(() => {
         const loadSpools = async () => {
             try {
@@ -96,7 +98,15 @@ export default function GetSpools() {
                             <TableCell>{s.colorName}</TableCell>
                             <TableCell>{s.diameter}</TableCell>
                             <TableCell>{s.totalWeight}</TableCell>
-                            <TableCell>{s.remainingWeight}</TableCell>
+                            <TableCell>
+                                {getRemainingWeightValue(s) < 0 ? (
+                                    <span className="font-semibold text-red-600">
+                                        {s.remainingWeight} (Warning: Negative)
+                                    </span>
+                                ) : (
+                                    s.remainingWeight
+                                )}
+                            </TableCell>
                             <TableCell>
                                 {new Date(s.createdAt).toLocaleString("sv-SE", {
                                     year: "numeric",

@@ -11,5 +11,6 @@ namespace FIM.Server.Services.Interfaces
         Task<(PrintDto? Print, string? Warning)> UpdatePrintAsync(int id, UpdatePrintDto dto, string userId);
         Task<List<PrintDto>> AllPendingPrintsAsync(string userId);
         Task<List<PrintDto>> AllPrintingPrintsAsync(string userId);
+        Task DeductSpoolForCompletedPrintAsync(int printId);
     }
 }

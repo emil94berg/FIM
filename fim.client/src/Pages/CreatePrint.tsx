@@ -20,6 +20,8 @@ import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
 type Print = components["schemas"]["PrintDto"];  
 type CreatePrindDto = components["schemas"]["CreatePrintDto"]; 
 
+type UpdatePrintResponse = Print | { print: Print; warning?: string };
+
 
 
 const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
@@ -76,12 +78,19 @@ export default function CreatePrint() {
     }
     const handleUpdatePrint = async (print: Print) => {
         try { 
-            const data: Print = await authFetch(`https://localhost:7035/Print/${print.id}`, {
+            const data: UpdatePrintResponse = await authFetch(`https://localhost:7035/Print/${print.id}`, {
                 method: "PATCH",
                 body: JSON.stringify(print)
             });
 
-            setPrint(prev => prev.map(p => (p.id === data.id ? data : p)));
+            const updatedPrint = "print" in data ? data.print : data;
+            const warning = "print" in data ? data.warning : undefined;
+
+            if (warning) {
+                alert(warning);
+            }
+
+            setPrint(prev => prev.map(p => (p.id === updatedPrint.id ? updatedPrint : p)));
             setEditingPrint(null);
         }
         catch (error: unknown) {
