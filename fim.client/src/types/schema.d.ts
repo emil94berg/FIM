@@ -140,9 +140,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["FilamentRecord"][];
-                        "application/json": components["schemas"]["FilamentRecord"][];
-                        "text/json": components["schemas"]["FilamentRecord"][];
+                        "text/plain": components["schemas"]["FilamentRecordDto"][];
+                        "application/json": components["schemas"]["FilamentRecordDto"][];
+                        "text/json": components["schemas"]["FilamentRecordDto"][];
                     };
                 };
             };
@@ -220,7 +220,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/UserFavoriteFilament/SetFavorite": {
+    "/UserFavoriteFilament/SetFavorite/{filamentId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -231,11 +231,11 @@ export interface paths {
         put?: never;
         post: {
             parameters: {
-                query?: {
-                    filamentId?: string;
-                };
+                query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    filamentId: string;
+                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -321,7 +321,7 @@ export interface components {
             /** Format: double */
             spoolCost: number | string;
         };
-        FilamentRecord: {
+        FilamentRecordDto: {
             identifier: string;
             brand: string;
             name: string;
@@ -339,6 +339,7 @@ export interface components {
             finish: null | string;
             translucent: boolean;
             glow: boolean;
+            isFavorite: boolean;
         };
         NotificationDto: {
             /** Format: int32 */

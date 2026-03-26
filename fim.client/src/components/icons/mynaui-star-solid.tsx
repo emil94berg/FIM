@@ -17,7 +17,7 @@ export function StarSolidIcon({
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
+      fill={color}
       stroke={color}
       strokeWidth={strokeWidth}
       strokeLinecap="round"

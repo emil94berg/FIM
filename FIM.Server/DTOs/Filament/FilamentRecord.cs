@@ -51,5 +51,47 @@ namespace FIM.Server.DTOs.Filament
         }
 
 
+
+        public record FilamentRecordDto(
+            string identifier,
+            string brand,
+            string name,
+            string material,
+            double weight,
+            double diameter,
+            string? colorHex,
+            List<string>? colorHexes,
+            int? extruderTemp,
+            int? bedTemp,
+            string? finish,
+            bool translucent,
+            bool glow,
+            bool isFavorite
+            );
+
+        //public static FilamentRecordDto ToFilamentRecordDto(FilamentRecord filament)
+        //{
+        //    return new FilamentRecordDto(
+        //        filament.identifier,
+        //        filament.brand,
+        //        filament.name,
+        //        filament.material,
+        //        filament.weight,
+        //        filament.diameter,
+        //        filament.colorHex,
+        //        filament.colorHexes,
+        //        filament.extruderTemp,
+        //        filament.bedTemp,
+        //        filament.finish,
+        //        filament.translucent,
+        //        filament.glow,
+        //        false
+
+
+        //        );
+
+        //}
+
+
     }
 }

@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button"
 import { StarIcon } from "@/components/icons/mynaui-star"
+import { StarSolidIcon } from "@/components/icons/mynaui-star-solid"
 
 
 
-type SpoolCatalog = components["schemas"]["FilamentRecord"];
+type SpoolCatalog = components["schemas"]["FilamentRecordDto"];
 
 
 export function CatalogList(){
@@ -25,7 +26,6 @@ export function CatalogList(){
             try {
                 const data: SpoolCatalog[] = await authFetch("https://localhost:7035/PublicFilamentCatalog");
                 setSpoolCatalog(data);
-                console.log(data);
             }
             catch (error) {
                 console.log("Failed to fetch SpoolCatalog: " + error);
@@ -36,6 +36,14 @@ export function CatalogList(){
     }, []);
 
     const setFavorite = async (id: string) => {
+
+        setSpoolCatalog(prev =>
+            prev.map(s =>
+                s.identifier === id ?
+                    { ...s, isFavorite: true }
+                    : s
+            )
+        );
        
             try {
                 await authFetch(`https://localhost:7035/UserFavoriteFilament/SetFavorite/${id}`, {
@@ -48,6 +56,27 @@ export function CatalogList(){
             }
     }
 
+    const deleteFavorite = async (id: string) => { 
+
+        setSpoolCatalog(prev =>
+            prev.map(s =>
+                s.identifier === id ?
+                    { ...s, isFavorite: false }
+                    : s
+            )
+        );
+
+        try {
+            await authFetch(`https://localhost:7035/UserFavoriteFilament/DeleteFavorite/${id}`, {
+                method: "POST"
+            })
+        }
+        catch (error) {
+            console.log("Failed to post to UserFavoriteFilament " + error);
+        }
+    }
+
+    
  
 
 
@@ -67,7 +96,7 @@ export function CatalogList(){
             </TableHeader>
             <TableBody>
                 {spoolCatalog.map(s => (
-                    <TableRow>
+                    <TableRow key={s.identifier}>
                         <TableCell>{s.name}</TableCell>
                         <TableCell>{s.brand}</TableCell>
                         <TableCell>{s.material}</TableCell>
@@ -104,9 +133,21 @@ export function CatalogList(){
 
                         </TableCell>
                         <TableCell>
-                            <Button className="bg-transparent" size="icon" onClick={() => setFavorite(s.identifier) }>
-                                <StarIcon></StarIcon>
-                            </Button>
+                            {s.isFavorite == false ? (
+                                <Button className="bg-transparent"
+                                    size="icon"
+                                    onClick={() => setFavorite(s.identifier)}>
+                                    <StarIcon></StarIcon>
+                                </Button>
+                            ) : (
+                                
+                                    <Button className="bg-transparent"
+                                        size="icon"
+                                        onClick={() => deleteFavorite(s.identifier)}>
+                                        <StarSolidIcon className="text-yellow-500"></StarSolidIcon>
+                                    </Button>
+                                )}
+                            
                         </TableCell>
                     </TableRow>
                 ))}

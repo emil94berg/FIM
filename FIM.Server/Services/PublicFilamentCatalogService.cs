@@ -2,6 +2,7 @@
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static FIM.Server.DTOs.Filament.FilamentRecord;
 
 namespace FIM.Server.Services
 {
@@ -12,11 +13,33 @@ namespace FIM.Server.Services
         {
              _dbContext = dbContext;
         }
-        public async Task<List<PublicFilamentCatalog>> GetWholeFilamentCatalog()
+
+        public async Task<List<FilamentRecordDto>> GetWholeFilamentCatalog(string userId)
         {
-            var test = await _dbContext.PublicFilamentCatalogs.ToListAsync();
-            Console.WriteLine(test);
-            return await _dbContext.PublicFilamentCatalogs.ToListAsync();
+            var result = await _dbContext.PublicFilamentCatalogs.Select(f => new FilamentRecordDto(
+                    f.Identifier,
+                    f.Brand,
+                    f.Name,
+                    f.Material,
+                    f.Weight,
+                    f.Diameter,
+                    f.ColorHex,
+                    f.ColorHexes,
+                    f.ExtruderTemp,
+                    f.BedTemp,
+                    f.Finish,
+                    f.Translucent,
+                    f.Glow,
+                    _dbContext.UserFavoriteFilaments.Any(uf => uf.UserId == userId && uf.FilamentId == f.Id)
+                )).ToListAsync();
+
+            return result;
+
+
+
+            //var result = await _dbContext.PublicFilamentCatalogs.ToListAsync();
+            
+            //return await _dbContext.PublicFilamentCatalogs.ToListAsync();
         }
     }
 }
