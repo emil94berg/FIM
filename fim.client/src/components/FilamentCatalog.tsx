@@ -12,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { StarIcon } from "@/components/icons/mynaui-star"
 import { StarSolidIcon } from "@/components/icons/mynaui-star-solid"
+import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+import { SetSpoolPrice } from "@/components/popUp/SpoolPricePopup"
 
 
 
@@ -76,8 +78,26 @@ export function CatalogList(){
         }
     }
 
-    
- 
+    const favoriteToSpools = 
+        async (filament: SpoolCatalog, price: number) => {
+            try {
+                await authFetch(`https://localhost:7035/Spool/FavoriteToSpool`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        filamentDto: filament,
+                        price: price
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+            }
+            catch (error) {
+                console.log("Failed to fetch" + error);
+            }
+        }
+        
+  
 
 
 
@@ -91,6 +111,7 @@ export function CatalogList(){
                     <TableHead>Material</TableHead>
                     <TableHead>Weight</TableHead>
                     <TableHead>Color</TableHead>
+                    <TableHead>Finish</TableHead>
                     <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
@@ -132,20 +153,35 @@ export function CatalogList(){
                             }
 
                         </TableCell>
+                        <TableCell>{ s.finish }</TableCell>
                         <TableCell>
                             {s.isFavorite == false ? (
-                                <Button className="bg-transparent"
-                                    size="icon"
-                                    onClick={() => setFavorite(s.identifier)}>
-                                    <StarIcon></StarIcon>
-                                </Button>
-                            ) : (
-                                
+                                <div>
                                     <Button className="bg-transparent"
                                         size="icon"
-                                        onClick={() => deleteFavorite(s.identifier)}>
-                                        <StarSolidIcon className="text-yellow-500"></StarSolidIcon>
+                                        onClick={() => setFavorite(s.identifier)}>
+                                        <StarIcon></StarIcon>
                                     </Button>
+                                    
+                                </div>
+                               
+                               
+                               
+                            ) : (
+                                <div>
+                                        <ConfirmDialog title="Remove favorite"
+                                            description={`Are you sure you want to remove ${s.identifier}`}
+                                            confirmText="Delete"
+                                            confirmButtonClassName="bg-red-500 text-white"
+                                            cancelButtonClassName="bg-blue-500 text-black"
+                                            onConfirm={() => deleteFavorite(s.identifier)}
+                                        ><Button className="bg-transparent" size="icon" ><StarSolidIcon className="text-yellow-500"></StarSolidIcon></Button></ConfirmDialog>
+
+                                        <SetSpoolPrice
+                                            onConfirm={(price: number) => favoriteToSpools(s, price)}></SetSpoolPrice>
+                                </div>
+                                    
+                                    
                                 )}
                             
                         </TableCell>

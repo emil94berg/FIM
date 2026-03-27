@@ -69,28 +69,13 @@ namespace FIM.Server.DTOs.Filament
             bool isFavorite
             );
 
-        //public static FilamentRecordDto ToFilamentRecordDto(FilamentRecord filament)
-        //{
-        //    return new FilamentRecordDto(
-        //        filament.identifier,
-        //        filament.brand,
-        //        filament.name,
-        //        filament.material,
-        //        filament.weight,
-        //        filament.diameter,
-        //        filament.colorHex,
-        //        filament.colorHexes,
-        //        filament.extruderTemp,
-        //        filament.bedTemp,
-        //        filament.finish,
-        //        filament.translucent,
-        //        filament.glow,
-        //        false
+        public class FavoriteToSpoolRequest
+        {
+            public FilamentRecordDto FilamentDto { get; set; }
+            public int Price { get; set; }
+        }
 
-
-        //        );
-
-        //}
+        
 
 
     }
