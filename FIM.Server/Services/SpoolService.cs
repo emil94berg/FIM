@@ -1,9 +1,10 @@
 using FIM.Server.Data;
 using FIM.Server.DTOs.SpoolDtos;
 using FIM.Server.Models;
-using Microsoft.EntityFrameworkCore;
-
 using FIM.Server.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using static FIM.Server.DTOs.Filament.FilamentRecord;
 
 namespace FIM.Server.Services;
 
@@ -105,5 +106,42 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         var list = await dbContext.Spools.Where(s => s.UserId == userId && s.RemainingWeight <= 100).ToListAsync();
         var dtoList = SpoolDto.ToListSpoolDto(list);
         return dtoList;
+    }
+
+    public async Task<bool> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, int price)
+    {
+        var spool = new Spool()
+        {
+            UserId = userId,
+            Material = dto.material,
+            Identifier = dto.identifier,
+            TotalWeight = dto.weight,
+            RemainingWeight = dto.weight,
+            SpoolCost = price,
+            ColorName = dto.name,
+            ColorHex = dto.colorHex,
+            ColorHexes = dto.colorHexes,
+            ExtruderTemp = dto.extruderTemp,
+            BedTemp = dto.bedTemp,
+            Finish = dto.finish,
+            Translucent = dto.translucent,
+            Glow = dto.glow,
+            Brand = dto.brand,
+            Diameter = dto.diameter,
+            CreatedAt = DateTime.UtcNow,
+            Favorite = dto.isFavorite
+        };
+
+        var result = dbContext.Spools.Add(spool);
+
+        if (result != null)
+        {
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

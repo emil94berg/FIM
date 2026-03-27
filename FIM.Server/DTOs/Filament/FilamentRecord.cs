@@ -51,5 +51,32 @@ namespace FIM.Server.DTOs.Filament
         }
 
 
+
+        public record FilamentRecordDto(
+            string identifier,
+            string brand,
+            string name,
+            string material,
+            double weight,
+            double diameter,
+            string? colorHex,
+            List<string>? colorHexes,
+            int? extruderTemp,
+            int? bedTemp,
+            string? finish,
+            bool translucent,
+            bool glow,
+            bool isFavorite
+            );
+
+        public class FavoriteToSpoolRequest
+        {
+            public FilamentRecordDto FilamentDto { get; set; }
+            public int Price { get; set; }
+        }
+
+        
+
+
     }
 }

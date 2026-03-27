@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button"
 import { StarIcon } from "@/components/icons/mynaui-star"
+import { StarSolidIcon } from "@/components/icons/mynaui-star-solid"
+import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+import { SetSpoolPrice } from "@/components/popUp/SpoolPricePopup"
 
 
 
-type SpoolCatalog = components["schemas"]["FilamentRecord"];
+type SpoolCatalog = components["schemas"]["FilamentRecordDto"];
 
 
 export function CatalogList(){
@@ -25,7 +28,6 @@ export function CatalogList(){
             try {
                 const data: SpoolCatalog[] = await authFetch("https://localhost:7035/PublicFilamentCatalog");
                 setSpoolCatalog(data);
-                console.log(data);
             }
             catch (error) {
                 console.log("Failed to fetch SpoolCatalog: " + error);
@@ -36,6 +38,14 @@ export function CatalogList(){
     }, []);
 
     const setFavorite = async (id: string) => {
+
+        setSpoolCatalog(prev =>
+            prev.map(s =>
+                s.identifier === id ?
+                    { ...s, isFavorite: true }
+                    : s
+            )
+        );
        
             try {
                 await authFetch(`https://localhost:7035/UserFavoriteFilament/SetFavorite/${id}`, {
@@ -48,7 +58,46 @@ export function CatalogList(){
             }
     }
 
- 
+    const deleteFavorite = async (id: string) => { 
+
+        setSpoolCatalog(prev =>
+            prev.map(s =>
+                s.identifier === id ?
+                    { ...s, isFavorite: false }
+                    : s
+            )
+        );
+
+        try {
+            await authFetch(`https://localhost:7035/UserFavoriteFilament/DeleteFavorite/${id}`, {
+                method: "POST"
+            })
+        }
+        catch (error) {
+            console.log("Failed to post to UserFavoriteFilament " + error);
+        }
+    }
+
+    const favoriteToSpools = 
+        async (filament: SpoolCatalog, price: number) => {
+            try {
+                await authFetch(`https://localhost:7035/Spool/FavoriteToSpool`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        filamentDto: filament,
+                        price: price
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+            }
+            catch (error) {
+                console.log("Failed to fetch" + error);
+            }
+        }
+        
+  
 
 
 
@@ -62,12 +111,13 @@ export function CatalogList(){
                     <TableHead>Material</TableHead>
                     <TableHead>Weight</TableHead>
                     <TableHead>Color</TableHead>
+                    <TableHead>Finish</TableHead>
                     <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {spoolCatalog.map(s => (
-                    <TableRow>
+                    <TableRow key={s.identifier}>
                         <TableCell>{s.name}</TableCell>
                         <TableCell>{s.brand}</TableCell>
                         <TableCell>{s.material}</TableCell>
@@ -103,10 +153,37 @@ export function CatalogList(){
                             }
 
                         </TableCell>
+                        <TableCell>{ s.finish }</TableCell>
                         <TableCell>
-                            <Button className="bg-transparent" size="icon" onClick={() => setFavorite(s.identifier) }>
-                                <StarIcon></StarIcon>
-                            </Button>
+                            {s.isFavorite == false ? (
+                                <div>
+                                    <Button className="bg-transparent"
+                                        size="icon"
+                                        onClick={() => setFavorite(s.identifier)}>
+                                        <StarIcon></StarIcon>
+                                    </Button>
+                                    
+                                </div>
+                               
+                               
+                               
+                            ) : (
+                                <div>
+                                        <ConfirmDialog title="Remove favorite"
+                                            description={`Are you sure you want to remove ${s.identifier}`}
+                                            confirmText="Delete"
+                                            confirmButtonClassName="bg-red-500 text-white"
+                                            cancelButtonClassName="bg-blue-500 text-black"
+                                            onConfirm={() => deleteFavorite(s.identifier)}
+                                        ><Button className="bg-transparent" size="icon" ><StarSolidIcon className="text-yellow-500"></StarSolidIcon></Button></ConfirmDialog>
+
+                                        <SetSpoolPrice
+                                            onConfirm={(price: number) => favoriteToSpools(s, price)}></SetSpoolPrice>
+                                </div>
+                                    
+                                    
+                                )}
+                            
                         </TableCell>
                     </TableRow>
                 ))}
