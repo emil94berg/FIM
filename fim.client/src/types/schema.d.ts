@@ -127,7 +127,10 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    pageNumber?: number | string;
+                    pageSize?: number | string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -220,7 +223,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/UserFavoriteFilament/SetFavorite": {
+    "/UserFavoriteFilament/SetFavorite/{filamentId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -231,11 +234,11 @@ export interface paths {
         put?: never;
         post: {
             parameters: {
-                query?: {
-                    filamentId?: string;
-                };
+                query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    filamentId: string;
+                };
                 cookie?: never;
             };
             requestBody?: never;

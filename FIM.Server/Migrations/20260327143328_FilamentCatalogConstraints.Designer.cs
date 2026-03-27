@@ -4,6 +4,7 @@ using FIM.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FIM.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260327143328_FilamentCatalogConstraints")]
+    partial class FilamentCatalogConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +53,7 @@ namespace FIM.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("FIM.Server.Models.Print", b =>
@@ -89,7 +92,7 @@ namespace FIM.Server.Migrations
 
                     b.HasIndex("SpoolId");
 
-                    b.ToTable("Prints", (string)null);
+                    b.ToTable("Prints");
                 });
 
             modelBuilder.Entity("FIM.Server.Models.PublicFilamentCatalog", b =>
@@ -183,8 +186,6 @@ namespace FIM.Server.Migrations
                         {
                             t.HasCheckConstraint("CK_PublicFilament_BedTemp_Range", "[BedTemp] IS NULL OR ([BedTemp] >= 0 AND [BedTemp] <= 200)");
 
-                            t.HasCheckConstraint("CK_PublicFilament_ColorHexes_IsJsonArray", "[ColorHexes] IS NULL OR (ISJSON([ColorHexes]) = 1 AND LEFT(LTRIM([ColorHexes]), 1) = '[')");
-
                             t.HasCheckConstraint("CK_PublicFilament_Diameter_Range", "[Diameter] > 0 AND [Diameter] <= 10");
 
                             t.HasCheckConstraint("CK_PublicFilament_ExtruderTemp_Range", "[ExtruderTemp] IS NULL OR ([ExtruderTemp] >= 0 AND [ExtruderTemp] <= 500)");
@@ -263,7 +264,7 @@ namespace FIM.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Spools", (string)null);
+                    b.ToTable("Spools");
                 });
 
             modelBuilder.Entity("FIM.Server.Models.UserFavoriteFilament", b =>
@@ -278,7 +279,7 @@ namespace FIM.Server.Migrations
 
                     b.HasIndex("FilamentId");
 
-                    b.ToTable("UserFavoriteFilaments", (string)null);
+                    b.ToTable("UserFavoriteFilaments");
                 });
 
             modelBuilder.Entity("FIM.Server.Models.Print", b =>

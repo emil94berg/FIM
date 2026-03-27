@@ -12,11 +12,32 @@ namespace FIM.Server.Services
         {
              _dbContext = dbContext;
         }
-        public async Task<List<PublicFilamentCatalog>> GetWholeFilamentCatalog()
+        public async Task<List<PublicFilamentCatalog>> GetPaginatedFilamentCatalog(int pageNumber, int pageSize, string sortOrder)
         {
-            var test = await _dbContext.PublicFilamentCatalogs.ToListAsync();
-            Console.WriteLine(test);
-            return await _dbContext.PublicFilamentCatalogs.ToListAsync();
+            // return await _dbContext.PublicFilamentCatalogs
+            //     .OrderBy(f => f.Name)
+            //     .Skip((pageNumber - 1) * pageSize)
+            //     .Take(pageSize)
+            //     .ToListAsync();
+
+            var baseQuery = _dbContext.PublicFilamentCatalogs.AsNoTracking();
+
+            var sortedQuery = sortOrder.ToLower() switch
+            {
+                "name" => baseQuery.OrderBy(f => f.Name).ThenBy(f => f.Id),
+                "brand" => baseQuery.OrderBy(f => f.Brand).ThenBy(f => f.Id),
+                "material" => baseQuery.OrderBy(f => f.Material).ThenBy(f => f.Id),
+                "color" => baseQuery.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
+                "hexcolor" => baseQuery.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
+                "diameter" => baseQuery.OrderBy(f => f.Diameter).ThenBy(f => f.Id),
+                _ => baseQuery.OrderBy(f => f.Id)
+            };
+            var result = await sortedQuery
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToListAsync();
+
+            return result;
         }
     }
 }

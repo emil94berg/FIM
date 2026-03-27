@@ -12,28 +12,45 @@ import {
 import { Button } from "@/components/ui/button"
 import { StarIcon } from "@/components/icons/mynaui-star"
 
-
-
 type SpoolCatalog = components["schemas"]["FilamentRecord"];
 
+const SortOrder = {
+    Name: "name",
+    Brand: "brand",
+    Material: "material",
+    Color: "color",
+    Diameter: "diameter"
+} as const;
 
-export function CatalogList(){
+type SortOrder = typeof SortOrder[keyof typeof SortOrder];
+
+export function CatalogList() {
     const [spoolCatalog, setSpoolCatalog] = useState<SpoolCatalog[]>([]);
+    const [page, setPage] = useState(1);
+    const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Name);
+    const [isLoading, setIsLoading] = useState(false);
+    const pageSize = 10;
 
     useEffect(() => {
         const loadCatalog = async () => {
+            setIsLoading(true);
             try {
-                const data: SpoolCatalog[] = await authFetch("https://localhost:7035/PublicFilamentCatalog");
+                const url = `https://localhost:7035/PublicFilamentCatalog?pageNumber=${page}&pageSize=${pageSize}&sortOrder=${sortOrder}`;
+                const data: SpoolCatalog[] = await authFetch(url);
                 setSpoolCatalog(data);
-                console.log(data);
             }
             catch (error) {
                 console.log("Failed to fetch SpoolCatalog: " + error);
+            } finally {
+                setIsLoading(false);
             }
         };
         loadCatalog();
+    }, [page, sortOrder]);
 
-    }, []);
+    useEffect(() => {
+        setPage(1);
+    }, [sortOrder]);
 
     const setFavorite = async (id: string) => {
        
@@ -54,6 +71,17 @@ export function CatalogList(){
 
     return (
 
+        <div>
+        <div className="flex gap-2 mb-4">
+            {Object.entries(SortOrder).map(([key, value]) => (
+                <Button
+                    key={value}
+                    className="bg-transparent"
+                    onClick={() => setSortOrder(value)}>
+                    {key}
+                </Button>
+            ))}
+        </div>
         <Table border={1}>
             <TableHeader>
                 <TableRow>
@@ -66,8 +94,10 @@ export function CatalogList(){
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {spoolCatalog.map(s => (
-                    <TableRow>
+                {isLoading ? (
+                    <TableRow><TableCell colSpan={6} className="text-center">Loading...</TableCell></TableRow>
+                ) :  spoolCatalog.map(s => (
+                    <TableRow key={s.identifier}>
                         <TableCell>{s.name}</TableCell>
                         <TableCell>{s.brand}</TableCell>
                         <TableCell>{s.material}</TableCell>
@@ -110,9 +140,27 @@ export function CatalogList(){
                         </TableCell>
                     </TableRow>
                 ))}
+               
             </TableBody>
         </Table>
-
-
+        <div className="flex items-center justify-end space-x-2 py-4">
+                <Button
+                    className="bg-transparent"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1 || isLoading}
+                >
+                    Previous
+                </Button>
+                <div className="text-sm font-medium">
+                    Page {page}
+                </div>
+                <Button
+                    className="bg-transparent"
+                    onClick={() => setPage((p) => p + 1)}
+                    disabled={spoolCatalog.length < pageSize || isLoading}>
+                    Next
+                </Button>
+            </div>
+            </div>
     )
 }

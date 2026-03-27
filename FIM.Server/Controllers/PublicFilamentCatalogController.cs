@@ -19,18 +19,21 @@ namespace FIM.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FilamentRecord>>> GetWholeCatalog()
+        public async Task<ActionResult<IEnumerable<FilamentRecord>>> GetWholeCatalog([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20, [FromQuery] string sortOrder = "name")
         {
-                var publicFilamentCatalog = await _publicFilamentService.GetWholeFilamentCatalog();
-                var returnList = FilamentRecord.ToFilamentRecordList(publicFilamentCatalog);
-                if (returnList == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(returnList);
-                }
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+            pageSize = pageSize < 1 ? 20 : pageSize;
+
+            var publicFilamentCatalog = await _publicFilamentService.GetPaginatedFilamentCatalog(pageNumber, pageSize, sortOrder);
+            var returnList = FilamentRecord.ToFilamentRecordList(publicFilamentCatalog);
+            if (returnList == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(returnList);
+            }
         }
 
     }
