@@ -26,6 +26,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(x => x.Filament)
             .WithMany(x => x.FavoritedBy)
             .HasForeignKey(x => x.FilamentId);
-
     }
 }

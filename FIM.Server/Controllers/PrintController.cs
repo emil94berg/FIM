@@ -3,6 +3,7 @@ using FIM.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using FIM.Server.Services.Interfaces;
 using FIM.Server.DTOs.PrintDtos;
+using FIM.Server.Services;
 
 namespace FIM.Server.Controllers
 {
@@ -78,6 +79,13 @@ namespace FIM.Server.Controllers
             {
                 return BadRequest();
             }
+        }
+        [HttpGet("GetActivePrints")]
+        public async Task<IActionResult> GetActivePrintsAsync()
+        {
+            var data = await _printService.GetActivePrintsAsync(UserId);
+            if (data != null) return Ok(data);
+            else return BadRequest();
         }
     }
 }

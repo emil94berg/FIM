@@ -1,6 +1,7 @@
 using FIM.Server.DTOs.Filament;
 using FIM.Server.DTOs.SpoolDtos;
 using FIM.Server.Migrations;
+using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -83,5 +84,13 @@ namespace FIM.Server.Controllers
             if (result) return Ok();
             else return NotFound();
         }
+        [HttpPost("UpdateSpoolWeight")]
+        public async Task<IActionResult> UpdateSpoolWeight([FromBody] SpoolWeightDto dto)
+        {
+            Console.WriteLine(dto.GramsUsed + " " + dto.SpoolId);
+            return Ok();
+            
+        }
+
     }
 }
