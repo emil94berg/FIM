@@ -48,6 +48,18 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasIndex(e => e.ColorHex).HasDatabaseName("IX_PublicFilament_ColorHex");
             entity.HasIndex(e => e.Diameter).HasDatabaseName("IX_PublicFilament_Diameter");
             entity.HasIndex(e => e.Id).HasDatabaseName("IX_PublicFilament_Id");
+
+            entity.HasIndex(e => new { e.Name, e.Id})
+                .HasDatabaseName("IX_PublicFilament_Sort_Name");
+
+            entity.HasIndex(e => new { e.Material, e.Id})
+                .HasDatabaseName("IX_PublicFilament_Sort_Material");
+
+            entity.HasIndex(e => new { e.ColorHex, e.Id})
+                .HasDatabaseName("IX_PublicFilament_Sort_ColorHex");
+
+            entity.HasIndex(e => new { e.Diameter, e.Id})
+                .HasDatabaseName("IX_PublicFilament_Sort_Diameter");
         });
     }
 }
