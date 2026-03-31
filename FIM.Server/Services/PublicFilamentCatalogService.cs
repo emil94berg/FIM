@@ -2,6 +2,7 @@
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static FIM.Server.DTOs.Filament.FilamentRecord;
 
 namespace FIM.Server.Services
 {

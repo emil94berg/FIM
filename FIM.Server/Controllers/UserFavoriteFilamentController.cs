@@ -26,7 +26,7 @@ namespace FIM.Server.Controllers
             if (result) return Ok();
             else return BadRequest();
         }
-        [HttpPost]
+        [HttpPost("DeleteFavorite/{filamentId}")]
         public async Task<IActionResult> DeleteFavoriteAsync(string filamentId)
         {
             var result = await _userFavoriteFilamentService.DeleteUserFavoriteFilamentAsync(UserId, filamentId);

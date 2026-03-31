@@ -1,7 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using FIM.Server.DTOs.Filament;
 using FIM.Server.DTOs.SpoolDtos;
+using FIM.Server.Migrations;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using static FIM.Server.DTOs.Filament.FilamentRecord;
 
 namespace FIM.Server.Controllers
 {
@@ -70,6 +73,15 @@ namespace FIM.Server.Controllers
         {
             var returnList = await spoolService.GetLowSpools(UserId);
             return Ok(returnList);
+        }
+
+        [HttpPost("FavoriteToSpool")]
+        public async Task<IActionResult> FromCatalogToSpoolsAsync([FromBody] FavoriteToSpoolRequest requestDto)
+        {
+            var result = await spoolService.AddToSpoolFromFavorite(requestDto.FilamentDto, UserId, requestDto.Price);
+
+            if (result) return Ok();
+            else return NotFound();
         }
     }
 }

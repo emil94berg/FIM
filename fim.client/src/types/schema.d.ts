@@ -143,9 +143,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["FilamentRecord"][];
-                        "application/json": components["schemas"]["FilamentRecord"][];
-                        "text/json": components["schemas"]["FilamentRecord"][];
+                        "text/plain": components["schemas"]["FilamentRecordDto"][];
+                        "application/json": components["schemas"]["FilamentRecordDto"][];
+                        "text/json": components["schemas"]["FilamentRecordDto"][];
                     };
                 };
             };
@@ -324,7 +324,7 @@ export interface components {
             /** Format: double */
             spoolCost: number | string;
         };
-        FilamentRecord: {
+        FilamentRecordDto: {
             identifier: string;
             brand: string;
             name: string;
@@ -342,6 +342,7 @@ export interface components {
             finish: null | string;
             translucent: boolean;
             glow: boolean;
+            isFavorite: boolean;
         };
         NotificationDto: {
             /** Format: int32 */

@@ -1,4 +1,5 @@
 using FIM.Server.DTOs.SpoolDtos;
+using static FIM.Server.DTOs.Filament.FilamentRecord;
 
 namespace FIM.Server.Services.Interfaces;
 
@@ -10,4 +11,5 @@ public interface ISpoolService
     Task<bool> DeleteSpoolAsync(int id, string userId);
     Task<SpoolDto?> UpdateSpoolAsync(int id, UpdateSpoolDto dto, string userId);
     Task<List<SpoolDto>> GetLowSpools(string userId);
+    Task<bool> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, int price);
 }

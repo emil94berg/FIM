@@ -1,4 +1,5 @@
 ﻿using FIM.Server.Models;
+using static FIM.Server.DTOs.Filament.FilamentRecord;
 
 namespace FIM.Server.Services.Interfaces
 {
