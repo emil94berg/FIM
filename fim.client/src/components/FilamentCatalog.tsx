@@ -100,20 +100,19 @@ export function CatalogList(){
     const favoriteToSpools = 
         async (filament: SpoolCatalog, price: number) => {
             try {
+                const replacePrice = Number(price.toString().replace(",", "."));
                 const response: Spool = await authFetch(`https://localhost:7035/Spool/FavoriteToSpool`, {
                     method: "POST",
                     body: JSON.stringify({
                         filamentDto: filament,
-                        price: price
+                        price: replacePrice
                     }),
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
                 
-
                 setMySpools(prev => [...prev, response]);
-                
             }
             catch (error) {
                 console.log("Failed to fetch" + error);

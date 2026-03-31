@@ -47,7 +47,7 @@ export function SetSpoolPrice({
                 <div className="py-4">
                     <Label htmlFor="spoolPrice">Spool price</Label>
                     <Input className="mt-2"
-                        type="text"
+                        type="number"
                         onChange={(e) => setLocalPrice(Number(e.target.value))}
                         id="spoolPrice"
                         placeholder="Spool price">

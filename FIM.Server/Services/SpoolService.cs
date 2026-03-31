@@ -108,7 +108,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         return dtoList;
     }
 
-    public async Task<SpoolDto> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, int price)
+    public async Task<SpoolDto> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, decimal price)
     {
         var spool = new Spool()
         {
