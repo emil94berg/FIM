@@ -136,7 +136,7 @@ export default function DashboardHome() {
                             setSearchData({ searchString: value });
 
                             const filtered = (searchData.searchString == null || searchData.searchString == "") ? allSpools : allSpools.filter(spool =>
-                                spool.color.toLowerCase().includes(value.toLowerCase()) ||
+                                spool.colorName.toLowerCase().includes(value.toLowerCase()) ||
                                 spool.brand.toLowerCase().includes(value.toLowerCase()) ||
                                 spool.material.toLowerCase().includes(value.toLowerCase())
                                 
@@ -170,7 +170,7 @@ export default function DashboardHome() {
                                 title="Low spools"
                                 items={allLowSpools}
                                 typeName="spools"
-                                renderItem={(s) => <span className="text-xl">{s.brand} {s.material} {s.color}</span>}
+                                renderItem={(s) => <span className="text-xl">{s.brand} {s.material} {s.colorName}</span>}
                             />
                             <DashCard
                                 title="Live prints"
@@ -186,7 +186,7 @@ export default function DashboardHome() {
                         {searchSpools.map(s => (
                             <button key={s.id} onClick={() => handleSetEdit(s)} className="block bg-blue-300 text-left w-full hover:bg-orange-300 p-3 space-y-2">
                                 <div className="flex items-center justify-between gap-3">
-                                    <span className="font-medium">{s.brand}, {s.material}, {s.color}</span>
+                                    <span className="font-medium">{s.brand}, {s.material}, {s.colorName}</span>
                                     <span className={getRemainingWeightValue(s) < 0 ? "font-semibold text-red-600" : "text-slate-800"}>
                                         {s.remainingWeight} / {s.totalWeight} g
                                     </span>

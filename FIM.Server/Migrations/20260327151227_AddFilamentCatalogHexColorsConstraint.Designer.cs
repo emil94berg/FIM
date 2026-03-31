@@ -4,6 +4,7 @@ using FIM.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FIM.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260327151227_AddFilamentCatalogHexColorsConstraint")]
+    partial class AddFilamentCatalogHexColorsConstraint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,21 +182,11 @@ namespace FIM.Server.Migrations
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_PublicFilament_Name");
 
-                    b.HasIndex("ColorHex", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_ColorHex");
-
-                    b.HasIndex("Diameter", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_Diameter");
-
-                    b.HasIndex("Material", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_Material");
-
-                    b.HasIndex("Name", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_Name");
-
                     b.ToTable("PublicFilamentCatalogs", null, t =>
                         {
                             t.HasCheckConstraint("CK_PublicFilament_BedTemp_Range", "[BedTemp] IS NULL OR ([BedTemp] >= 0 AND [BedTemp] <= 200)");
+
+                            t.HasCheckConstraint("CK_PublicFilament_ColorHexes_IsJsonArray", "[ColorHexes] IS NULL OR (ISJSON([ColorHexes]) = 1 AND LEFT(LTRIM([ColorHexes]), 1) = '[')");
 
                             t.HasCheckConstraint("CK_PublicFilament_Diameter_Range", "[Diameter] > 0 AND [Diameter] <= 10");
 

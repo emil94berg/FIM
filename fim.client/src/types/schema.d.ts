@@ -127,7 +127,10 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    pageNumber?: number | string;
+                    pageSize?: number | string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;

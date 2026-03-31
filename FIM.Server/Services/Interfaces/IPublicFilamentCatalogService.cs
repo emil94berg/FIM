@@ -5,6 +5,6 @@ namespace FIM.Server.Services.Interfaces
 {
     public interface IPublicFilamentCatalogService
     {
-        Task<List<FilamentRecordDto>> GetWholeFilamentCatalog(string userId);
+        Task<List<PublicFilamentCatalog>> GetPaginatedFilamentCatalog(int pageNumber, int pageSize, string sortOrder);
     }
 }
