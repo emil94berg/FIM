@@ -150,7 +150,7 @@ export function CatalogList() {
                 {isLoading ? (
                     <TableRow><TableCell colSpan={6} className="text-center">Loading...</TableCell></TableRow>
                 ) :  spoolCatalog.map(s => (
-                    <TableRow key={s.identifier} key={s.identifier}>
+                    <TableRow key={s.identifier}>
                         <TableCell>{s.name}</TableCell>
                         <TableCell>{s.brand}</TableCell>
                         <TableCell>{s.material}</TableCell>
