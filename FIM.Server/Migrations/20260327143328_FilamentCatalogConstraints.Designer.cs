@@ -4,6 +4,7 @@ using FIM.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FIM.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260327143328_FilamentCatalogConstraints")]
+    partial class FilamentCatalogConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,18 +181,6 @@ namespace FIM.Server.Migrations
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_PublicFilament_Name");
-
-                    b.HasIndex("ColorHex", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_ColorHex");
-
-                    b.HasIndex("Diameter", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_Diameter");
-
-                    b.HasIndex("Material", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_Material");
-
-                    b.HasIndex("Name", "Id")
-                        .HasDatabaseName("IX_PublicFilament_Sort_Name");
 
                     b.ToTable("PublicFilamentCatalogs", null, t =>
                         {
