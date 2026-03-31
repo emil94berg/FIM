@@ -20,24 +20,59 @@ namespace FIM.Server.Services
             //     .Take(pageSize)
             //     .ToListAsync();
 
-            var baseQuery = _dbContext.PublicFilamentCatalogs.AsNoTracking();
+            // var baseQuery = _dbContext.PublicFilamentCatalogs.AsNoTracking();
 
-            var sortedQuery = sortOrder.ToLower() switch
+            // var sortedQuery = sortOrder.ToLower() switch
+            // {
+            //     "name" => baseQuery.OrderBy(f => f.Name).ThenBy(f => f.Id),
+            //     "brand" => baseQuery.OrderBy(f => f.Brand).ThenBy(f => f.Id),
+            //     "material" => baseQuery.OrderBy(f => f.Material).ThenBy(f => f.Id),
+            //     "color" => baseQuery.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
+            //     "hexcolor" => baseQuery.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
+            //     "diameter" => baseQuery.OrderBy(f => f.Diameter).ThenBy(f => f.Id),
+            //     _ => baseQuery.OrderBy(f => f.Id)
+            // };
+            // var result = await sortedQuery
+            //             .Skip((pageNumber - 1) * pageSize)
+            //             .Take(pageSize)
+            //             .ToListAsync();
+
+            // return result;
+
+            var skip = (pageNumber -1) * pageSize;
+
+            // First we get Ids of records sorted
+            var idQuery = ApplySorting(_dbContext.PublicFilamentCatalogs.AsNoTracking(), sortOrder);
+
+            var pageIds = await idQuery
+                .Select(f => f.Id)
+                .Skip(skip)
+                .Take(pageSize)
+                .ToListAsync();
+
+            if (!pageIds.Any()) return new List<PublicFilamentCatalog>();
+
+            // Fetch the full records for those Ids
+            var finalResult = await _dbContext.PublicFilamentCatalogs
+                .AsNoTracking()
+                .Where(f => pageIds.Contains(f.Id))
+                .ToListAsync();
+
+            // Re-sort the final 10 results
+            return ApplySorting(finalResult.AsQueryable(), sortOrder).ToList();
+        }
+
+        private IQueryable<PublicFilamentCatalog> ApplySorting(IQueryable<PublicFilamentCatalog> query, string sortOrder)
+        {
+            return sortOrder?.ToLower() switch
             {
-                "name" => baseQuery.OrderBy(f => f.Name).ThenBy(f => f.Id),
-                "brand" => baseQuery.OrderBy(f => f.Brand).ThenBy(f => f.Id),
-                "material" => baseQuery.OrderBy(f => f.Material).ThenBy(f => f.Id),
-                "color" => baseQuery.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
-                "hexcolor" => baseQuery.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
-                "diameter" => baseQuery.OrderBy(f => f.Diameter).ThenBy(f => f.Id),
-                _ => baseQuery.OrderBy(f => f.Id)
+                "name"     => query.OrderBy(f => f.Name).ThenBy(f => f.Id),
+                "brand"    => query.OrderBy(f => f.Brand).ThenBy(f => f.Id),
+                "material" => query.OrderBy(f => f.Material).ThenBy(f => f.Id),
+                "color"    => query.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
+                "diameter" => query.OrderBy(f => f.Diameter).ThenBy(f => f.Id),
+                _          => query.OrderBy(f => f.Name).ThenBy(f => f.Id)
             };
-            var result = await sortedQuery
-                        .Skip((pageNumber - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync();
-
-            return result;
         }
     }
 }
