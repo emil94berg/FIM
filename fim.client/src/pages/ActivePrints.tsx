@@ -57,6 +57,33 @@ export default function EditActivePrints() {
         }
     };
 
+    const parseDate = (dateStr: string) => {
+        return new Date(
+            dateStr
+                .replace(" ", "T") + "Z"
+                .replace(/\.(\d{3})\d+/, ".$1")
+        )
+    }
+
+    const progressBarWidth = (print: Prints) => {
+        if (!print.estimatedEndTime) return 0;
+
+
+        const createdAt = parseDate(print.createdAt);
+        const estimatedEnd = parseDate(print.estimatedEndTime);
+        const now = new Date();
+
+        const fullTime = estimatedEnd.getTime() - createdAt.getTime();
+        if (fullTime <= 0) return 100;
+
+        const elapsedTime = now.getTime() - createdAt.getTime();
+        const percentage = (elapsedTime / fullTime) * 100;
+
+        console.log(createdAt, estimatedEnd);
+
+        return Math.round(Math.min(Math.max(percentage, 0), 100));
+    }
+
     const statusMap: Record<number, string> = {
         0: "Pending",
         1: "Printing",
@@ -75,6 +102,7 @@ export default function EditActivePrints() {
                         <TableHead>Print Name</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Actions</TableHead>
+                        <TableHead>Progress bar</TableHead>
                  
                     </TableRow>
                 </TableHeader>
@@ -86,6 +114,7 @@ export default function EditActivePrints() {
                                 <TableCell>
                                     <CancelPrint onConfirm={(grams: number) => UpdateGramsUsed(p, grams)}></CancelPrint>
                                 </TableCell>
+                                <TableCell style={{ backgroundColor: "lightgreen", width: progressBarWidth(p) }}>{progressBarWidth(p)}%</TableCell>
                             </TableRow>        
                         ))}
                 </TableBody>
