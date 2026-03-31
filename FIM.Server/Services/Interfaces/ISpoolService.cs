@@ -11,5 +11,6 @@ public interface ISpoolService
     Task<bool> DeleteSpoolAsync(int id, string userId);
     Task<SpoolDto?> UpdateSpoolAsync(int id, UpdateSpoolDto dto, string userId);
     Task<List<SpoolDto>> GetLowSpools(string userId);
-    Task<bool> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, int price);
+    Task<SpoolDto> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, decimal price);
+    Task<SpoolDto> UpdateSpoolWeightAsync(SpoolWeightDto spoolWeightDto, string usedId);
 }

@@ -1,4 +1,5 @@
 ﻿using FIM.Server.DTOs.Filament;
+using FIM.Server.Migrations;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,20 +21,20 @@ namespace FIM.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FilamentRecord>>> GetWholeCatalog([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20, [FromQuery] string sortOrder = "name")
+        public async Task<ActionResult<IEnumerable<FilamentRecordDto>>> GetWholeCatalog([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20, [FromQuery] string sortOrder = "name")
         {
             pageNumber = pageNumber < 1 ? 1 : pageNumber;
             pageSize = pageSize < 1 ? 20 : pageSize;
 
-            var publicFilamentCatalog = await _publicFilamentService.GetPaginatedFilamentCatalog(pageNumber, pageSize, sortOrder);
-            var returnList = FilamentRecord.ToFilamentRecordList(publicFilamentCatalog);
-            if (returnList == null)
+            var publicFilamentCatalog = await _publicFilamentService.GetPaginatedFilamentCatalog(pageNumber, pageSize, sortOrder, UserId);
+            
+            if (publicFilamentCatalog == null)
             {
                 return NotFound();
             }
             else
             {
-                return Ok(returnList);
+                return Ok(publicFilamentCatalog);
             }
         }
 

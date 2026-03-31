@@ -18,6 +18,7 @@ import { SetSpoolPrice } from "@/components/popUp/SpoolPricePopup"
 
 
 type SpoolCatalog = components["schemas"]["FilamentRecordDto"];
+type Spool = components["schemas"]["SpoolDto"];
 
 const SortOrder = {
     Name: "name",
@@ -35,6 +36,24 @@ export function CatalogList() {
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Name);
     const [isLoading, setIsLoading] = useState(false);
     const pageSize = 10;
+    const [mySpools, setMySpools] = useState<Spool[]>([]);
+
+    const spoolExists = (catalogItem: SpoolCatalog) => {
+        return mySpools.some(s => s.identifier === catalogItem.identifier)
+    }
+
+    useEffect(() => {
+        const loadMySpools = async () => {
+            try {
+                const data: Spool[] = await authFetch("https://localhost:7035/Spool");
+                setMySpools(data);
+            }
+            catch (error) {
+                console.log("Failed to fetch Spool: " + error);
+            }
+        };
+        loadMySpools();
+    }, [])
 
     useEffect(() => {
         const loadCatalog = async () => {
@@ -101,26 +120,25 @@ export function CatalogList() {
     const favoriteToSpools = 
         async (filament: SpoolCatalog, price: number) => {
             try {
-                await authFetch(`https://localhost:7035/Spool/FavoriteToSpool`, {
+                const replacePrice = Number(price.toString().replace(",", "."));
+                const response: Spool = await authFetch(`https://localhost:7035/Spool/FavoriteToSpool`, {
                     method: "POST",
                     body: JSON.stringify({
                         filamentDto: filament,
-                        price: price
+                        price: replacePrice
                     }),
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
+                
+                setMySpools(prev => [...prev, response]);
             }
             catch (error) {
                 console.log("Failed to fetch" + error);
             }
         }
         
-  
-
-
-
     return (
 
         <div>
@@ -209,9 +227,16 @@ export function CatalogList() {
                                             cancelButtonClassName="bg-blue-500 text-black"
                                             onConfirm={() => deleteFavorite(s.identifier)}
                                         ><Button className="bg-transparent" size="icon" ><StarSolidIcon className="text-yellow-500"></StarSolidIcon></Button></ConfirmDialog>
-
-                                        <SetSpoolPrice
-                                            onConfirm={(price: number) => favoriteToSpools(s, price)}></SetSpoolPrice>
+                                        {spoolExists(s) ? (
+                                            <SetSpoolPrice warningtext="This spool already exists in your inventory"
+                                                onConfirm={(price: number) => favoriteToSpools(s, price)}
+                                            ></SetSpoolPrice>
+                                            ) : (
+                                            <SetSpoolPrice
+                                                onConfirm={(price: number) => favoriteToSpools(s, price)}
+                                            ></SetSpoolPrice>
+                                        )}
+                                        
                                 </div>
                                     
                                     

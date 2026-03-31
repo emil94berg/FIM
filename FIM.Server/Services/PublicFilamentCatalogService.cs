@@ -1,4 +1,5 @@
 ﻿using FIM.Server.Data;
+using FIM.Server.Migrations;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace FIM.Server.Services
         {
              _dbContext = dbContext;
         }
-        public async Task<List<PublicFilamentCatalog>> GetPaginatedFilamentCatalog(int pageNumber, int pageSize, string sortOrder)
+        public async Task<List<FilamentRecordDto>> GetPaginatedFilamentCatalog(int pageNumber, int pageSize, string sortOrder, string userId)
         {
             // return await _dbContext.PublicFilamentCatalogs
             //     .OrderBy(f => f.Name)
@@ -51,7 +52,7 @@ namespace FIM.Server.Services
                 .Take(pageSize)
                 .ToListAsync();
 
-            if (!pageIds.Any()) return new List<PublicFilamentCatalog>();
+            if (!pageIds.Any()) return new List<FilamentRecordDto>();
 
             // Fetch the full records for those Ids
             var finalResult = await _dbContext.PublicFilamentCatalogs
@@ -60,7 +61,33 @@ namespace FIM.Server.Services
                 .ToListAsync();
 
             // Re-sort the final 10 results
-            return ApplySorting(finalResult.AsQueryable(), sortOrder).ToList();
+            var list = ApplySorting(finalResult.AsQueryable(), sortOrder).ToList();
+
+            var returnList = new List<FilamentRecordDto>();
+
+            foreach(var f in list)
+            {
+                bool favorite = _dbContext.UserFavoriteFilaments.Any(uf => uf.UserId == userId && uf.FilamentId == f.Id);
+                var filamentCatalogDto = new FilamentRecordDto(
+                    f.Identifier,
+                    f.Brand,
+                    f.Name,
+                    f.Material,
+                    f.Weight,
+                    f.Diameter,
+                    f.ColorHex,
+                    f.ColorHexes,
+                    f.ExtruderTemp, 
+                    f.BedTemp,
+                    f.Finish,
+                    f.Translucent,
+                    f.Glow,
+                    favorite
+                    );
+                returnList.Add(filamentCatalogDto);
+            }
+            return returnList;
+          
         }
 
         private IQueryable<PublicFilamentCatalog> ApplySorting(IQueryable<PublicFilamentCatalog> query, string sortOrder)

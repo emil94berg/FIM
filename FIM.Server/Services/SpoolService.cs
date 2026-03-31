@@ -108,7 +108,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         return dtoList;
     }
 
-    public async Task<bool> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, int price)
+    public async Task<SpoolDto> AddToSpoolFromFavorite(FilamentRecordDto dto, string userId, decimal price)
     {
         var spool = new Spool()
         {
@@ -137,11 +137,28 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         if (result != null)
         {
             await dbContext.SaveChangesAsync();
-            return true;
+            return SpoolDto.FromSpool(spool);
         }
         else
         {
-            return false;
+            return null;
+        }
+    }
+    public async Task<SpoolDto> UpdateSpoolWeightAsync(SpoolWeightDto spoolWeightDto, string usedId)
+    {
+        var updateSpool = await dbContext.Spools.FirstOrDefaultAsync(s => s.Id == spoolWeightDto.SpoolId && s.UserId == usedId);
+
+        if(updateSpool != null)
+        {
+            //Behöver även ändra på Print så att status sätts till "Cancelled"
+            updateSpool.RemainingWeight -= spoolWeightDto.GramsUsed;
+            dbContext.Update(updateSpool);
+            dbContext.SaveChanges();
+            return SpoolDto.FromSpool(updateSpool);
+        }
+        else
+        {
+            return null;
         }
     }
 }

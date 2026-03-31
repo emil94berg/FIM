@@ -72,7 +72,7 @@ namespace FIM.Server.DTOs.Filament
         public class FavoriteToSpoolRequest
         {
             public FilamentRecordDto FilamentDto { get; set; }
-            public int Price { get; set; }
+            public decimal Price { get; set; }
         }
 
         

@@ -1,6 +1,7 @@
 using FIM.Server.DTOs.Filament;
 using FIM.Server.DTOs.SpoolDtos;
 using FIM.Server.Migrations;
+using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -80,8 +81,24 @@ namespace FIM.Server.Controllers
         {
             var result = await spoolService.AddToSpoolFromFavorite(requestDto.FilamentDto, UserId, requestDto.Price);
 
-            if (result) return Ok();
+            if (result != null) return Ok(result);
             else return NotFound();
         }
+        [HttpPost("UpdateSpoolWeight")]
+        public async Task<IActionResult> UpdateSpoolWeight([FromBody] SpoolWeightDto dto)
+        {
+            var result = await spoolService.UpdateSpoolWeightAsync(dto, UserId);
+
+            if(result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
     }
 }

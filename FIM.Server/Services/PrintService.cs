@@ -7,6 +7,7 @@ using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Server;
 using System.Net.NetworkInformation;
 
 namespace FIM.Server.Services
@@ -179,6 +180,36 @@ namespace FIM.Server.Services
                 _context.Spools.Update(spool);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task<List<PrintDto>> GetActivePrintsAsync(string userId)
+        {
+            var list = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Printing).ToListAsync();
+            var returnList = new List<PrintDto>();
+            if(list != null)
+            {
+                foreach(var p in list)
+                {
+                    var dto = p.ToPrintDto();
+                    returnList.Add(dto);
+                }
+                return returnList;
+            }
+            else
+            {
+                return returnList;
+            }
+        }
+        public async Task<PrintDto> CancelPrintAsync(string userId, int printId)
+        {
+            var result = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId).FirstOrDefaultAsync();
+            if (result != null) 
+            {
+                result.Status = PrintStatus.Cancelled;
+                _context.Update(result);
+                await _context.SaveChangesAsync();
+                return result.ToPrintDto();
+            } 
+            else return null;
         }
     }
 }

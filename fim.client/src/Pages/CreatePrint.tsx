@@ -39,7 +39,6 @@ const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
 
 
 
-
 export default function CreatePrint() {
     const [Print, setPrint] = useState<Print[]>([]);
     const [editingPrint, setEditingPrint] = useState<Print | null>(null);
@@ -62,7 +61,8 @@ export default function CreatePrint() {
         0: "Pending",
         1: "Printing",
         2: "Done",
-        3: "Failed"
+        3: "Failed",
+        4: "Cancelled"
     }
     const handleDeletePrint = async (id: number | string) => {
         try {
