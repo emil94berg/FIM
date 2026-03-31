@@ -87,5 +87,12 @@ namespace FIM.Server.Controllers
             if (data != null) return Ok(data);
             else return BadRequest();
         }
+        [HttpPost("CancelPrint")]
+        public async Task<IActionResult> CancelPrintAsync([FromBody] PrintDto printDto)
+        {
+            var result = await _printService.CancelPrintAsync(UserId, printDto.Id);
+            if(result != null) return Ok(result);
+            else return BadRequest();
+        }
     }
 }

@@ -32,16 +32,25 @@ export default function EditActivePrints() {
 
     const UpdateGramsUsed = async (print: Prints, grams:number) => {
         try {
-                await authFetch(`https://localhost:7035/Spool/UpdateSpoolWeight`, {
-                method: "POST",
-                    body: JSON.stringify({
-                        GramsUsed: grams,
-                        SpoolId: print.spoolId
-                    }),
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
+            await authFetch(`https://localhost:7035/Spool/UpdateSpoolWeight`, {
+            method: "POST",
+                body: JSON.stringify({
+                    GramsUsed: grams,
+                    SpoolId: print.spoolId
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+
             });
+            const updatedPrint = await authFetch(`https://localhost:7035/Print/CancelPrint`, {
+                method: "POST",
+                body: JSON.stringify(print),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            setActivePrints(prev => prev.filter(p => p.id !== updatedPrint.id));
         }
         catch (error) {
             console.log("Failed to fetch from Spools " + error);
@@ -52,7 +61,8 @@ export default function EditActivePrints() {
         0: "Pending",
         1: "Printing",
         2: "Done",
-        3: "Failed"
+        3: "Failed",
+        4: "Cancelled"
     }
    
     return (

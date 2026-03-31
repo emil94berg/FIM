@@ -199,5 +199,17 @@ namespace FIM.Server.Services
                 return returnList;
             }
         }
+        public async Task<PrintDto> CancelPrintAsync(string userId, int printId)
+        {
+            var result = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId).FirstOrDefaultAsync();
+            if (result != null) 
+            {
+                result.Status = PrintStatus.Cancelled;
+                _context.Update(result);
+                await _context.SaveChangesAsync();
+                return result.ToPrintDto();
+            } 
+            else return null;
+        }
     }
 }

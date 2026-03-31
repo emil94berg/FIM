@@ -62,7 +62,8 @@ export default function CreatePrint() {
         0: "Pending",
         1: "Printing",
         2: "Done",
-        3: "Failed"
+        3: "Failed",
+        4: "Cancelled"
     }
     const handleDeletePrint = async (id: number | string) => {
         try {
