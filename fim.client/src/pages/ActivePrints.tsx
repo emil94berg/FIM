@@ -1,36 +1,25 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { components } from "src/types/schema"
 import { authFetch } from "../auth/authFetch"
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { CancelPrint } from "@/components/popUp/CancelPrintPopup"
+import { UpdatePercentageBar } from "@/components/notifications/PrintTableRow";
 
-type Prints = components["schemas"]["PrintDto"];
+
+type Print = components["schemas"]["PrintDto"];
 
 export default function EditActivePrints() {
-    const [activePrints, setActivePrints] = useState<Prints[]>([]);
+    const [activePrints, setActivePrints] = useState<Print[]>([]);
+    
 
+    
 
-    useEffect(() => {
-        const loadActivePrints = async () => {
-            try {
-                const data = await authFetch(`https://localhost:7035/Print/GetActivePrints`);
-                setActivePrints(data);
-            }
-            catch (error) {
-                console.log("Failed to fetch from Prints: " + error);
-            }
-        }
-        loadActivePrints();
-    }, []);
-
-    const UpdateGramsUsed = async (print: Prints, grams:number) => {
+    const UpdateGramsUsed = async (print: Print, grams:number) => {
         try {
             await authFetch(`https://localhost:7035/Spool/UpdateSpoolWeight`, {
             method: "POST",
@@ -41,7 +30,6 @@ export default function EditActivePrints() {
                 headers: {
                     "Content-Type": "application/json"
                 }
-
             });
             const updatedPrint = await authFetch(`https://localhost:7035/Print/CancelPrint`, {
                 method: "POST",
@@ -65,32 +53,57 @@ export default function EditActivePrints() {
         )
     }
 
-    const progressBarWidth = (print: Prints) => {
+   
+    
+    const progressBarWidth = useCallback((print: Print) => {
         if (!print.estimatedEndTime) return 0;
 
-
-        const createdAt = parseDate(print.createdAt);
+        const startedAt = parseDate(print.startedAt !== null ? print.startedAt : "could not fetch data");
         const estimatedEnd = parseDate(print.estimatedEndTime);
         const now = new Date();
 
-        const fullTime = estimatedEnd.getTime() - createdAt.getTime();
+        const fullTime = estimatedEnd.getTime() - startedAt.getTime();
         if (fullTime <= 0) return 100;
 
-        const elapsedTime = now.getTime() - createdAt.getTime();
+        const elapsedTime = now.getTime() - startedAt.getTime();
         const percentage = (elapsedTime / fullTime) * 100;
 
-        console.log(createdAt, estimatedEnd);
+        return (Math.round(Math.min(Math.max(percentage, 0), 100)))
+    }, [])
 
-        return Math.round(Math.min(Math.max(percentage, 0), 100));
+    const shortDate = (date: Date) => {
+        const newDate = date.toLocaleString("sv-SE", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        })
+        return newDate;
     }
 
-    const statusMap: Record<number, string> = {
-        0: "Pending",
-        1: "Printing",
-        2: "Done",
-        3: "Failed",
-        4: "Cancelled"
-    }
+ 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActivePrints(prev => [...prev]);
+        }, 10000);
+        return () => clearInterval(interval);
+    }, []);
+    
+
+    
+    useEffect(() => {
+        const loadActivePrints = async () => {
+            try {
+                const data = await authFetch(`https://localhost:7035/Print/GetActivePrints`);
+                setActivePrints(data);
+            }
+            catch (error) {
+                console.log("Failed to fetch from Prints: " + error);
+            }
+        }
+        loadActivePrints();
+    }, []);
    
     return (
         <div>
@@ -98,28 +111,25 @@ export default function EditActivePrints() {
             <Table border={1}>
                 <TableHeader>
                 <TableRow>
-                    
                         <TableHead>Print Name</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Actions</TableHead>
                         <TableHead>Progress bar</TableHead>
-                 
+                        <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                         {activePrints.map(p => (
-                            <TableRow>
-                                <TableCell>{p.name}</TableCell>
-                                <TableCell>{statusMap[p.status]}</TableCell>
-                                <TableCell>
-                                    <CancelPrint onConfirm={(grams: number) => UpdateGramsUsed(p, grams)}></CancelPrint>
-                                </TableCell>
-                                <TableCell style={{ backgroundColor: "lightgreen", width: progressBarWidth(p) }}>{progressBarWidth(p)}%</TableCell>
-                            </TableRow>        
+                            <UpdatePercentageBar
+                                print={p}
+                                shortDate={shortDate}
+                                parseDate={parseDate}
+                                UpdateGramsUsed={UpdateGramsUsed}
+                                progressBarWidth={progressBarWidth}
+                            ></UpdatePercentageBar> 
                         ))}
                 </TableBody>
             </Table>
         </div>
-    )
+    ) 
 }
 

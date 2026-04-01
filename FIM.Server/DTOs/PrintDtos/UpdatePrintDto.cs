@@ -7,6 +7,7 @@ namespace FIM.Server.DTOs.PrintDtos
           int? SpoolId,
           double? GramsUsed,
           PrintStatus? Status,
+          DateTime? StartedAt,
           int? EstimatedMinutes
     );
 }
