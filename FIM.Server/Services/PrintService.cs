@@ -217,5 +217,19 @@ namespace FIM.Server.Services
             } 
             else return null;
         }
+        public async Task <PrintDto> StartPrintAsync(int printId, string userId, int estimatedTime)
+        {
+            var updatePrint = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId).SingleOrDefaultAsync();
+            if (updatePrint != null)
+            {
+                updatePrint.EstimatedEndTime = DateTime.UtcNow.AddMinutes(estimatedTime);
+                updatePrint.Status = PrintStatus.Printing;
+                updatePrint.StartedAt = DateTime.UtcNow;
+                _context.Update(updatePrint);
+                await _context.SaveChangesAsync();
+                return updatePrint.ToPrintDto();
+            }
+            else return null;
+        }
     }
 }
