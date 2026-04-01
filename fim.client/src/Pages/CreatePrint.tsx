@@ -14,7 +14,8 @@ import {
 import { authFetch } from "../auth/authFetch"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
 import { StartPrintPopup } from "@/components/popUp/StartPrintPopup"
-/*import SideBar from "../components/SidebarMenu";*/
+import { HandleDeletedPrints } from "@/components/prints/DeletedPrints"
+ /*import SideBar from "../components/SidebarMenu";*/
 
 
 
@@ -36,8 +37,6 @@ const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
             body: JSON.stringify(print)
         });
 };
-
-
 
 
 export default function CreatePrint() {
@@ -109,61 +108,72 @@ export default function CreatePrint() {
     
 
     return (
-        
-        <div style={{ display: "flex", flexDirection: "column" }}>
-            <Table border={1}>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Spool-Brand</TableHead>
-                        <TableHead>Grams Used</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Created at</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {Print.map(p => (
-                        <TableRow key={ p.id }>
-                            <TableCell>{ p.name }</TableCell>
-                            <TableCell>{ p.spool?.brand }</TableCell>
-                            <TableCell>{ p.gramsUsed }</TableCell>
-                            <TableCell>{statusMap[p.status] }</TableCell>
-                            <TableCell>
-                                {new Date(p.createdAt).toLocaleString("sv-SE", {
-                                    year: "numeric",
-                                    month: "2-digit",
-                                    day: "2-digit",
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-                                })}
-                            </TableCell>
-                            <TableCell>
-                                {p.id !== undefined && (
-                                    <StartPrintPopup
-                                        print={p}
-                                        setPrints={setPrint}
-                                    ><Button className="bg-green-500" >Start Print</Button>
-                                    </StartPrintPopup>
-                                )}
-                                {p.id !== undefined && (
-                                    <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
-                                )}
-                                {p.id !== undefined && (
-                                    <ConfirmDialog title="Delete Print"
-                                        description={`Are you sure you want to delete ${p.name ?? "this item"}?`} 
-                                        confirmText="Delete"
-                                        confirmButtonClassName="bg-red-500 text-white"
-                                        cancelButtonClassName="bg-blue-500 text-black"
-                                        onConfirm={() => handleDeletePrint(p.id)}>
-                                        <Button variant="destructive" className="bg-red-500 text-white">Delete</Button>
-                                    </ConfirmDialog>
-                                )}
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+
+        <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ width: "50%" }}>
+                    <Table border={1}>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Spool-Brand</TableHead>
+                                <TableHead>Grams Used</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Created at</TableHead>
+                                <TableHead>Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {Print.map(p => (
+                                <TableRow key={p.id}>
+                                    <TableCell>{p.name}</TableCell>
+                                    <TableCell>{p.spool?.brand}</TableCell>
+                                    <TableCell>{p.gramsUsed}</TableCell>
+                                    <TableCell>{statusMap[p.status]}</TableCell>
+                                    <TableCell>
+                                        {new Date(p.createdAt).toLocaleString("sv-SE", {
+                                            year: "numeric",
+                                            month: "2-digit",
+                                            day: "2-digit",
+                                            hour: "2-digit",
+                                            minute: "2-digit"
+                                        })}
+                                    </TableCell>
+                                    <TableCell>
+                                        {p.id !== undefined && (
+                                            <StartPrintPopup
+                                                print={p}
+                                                setPrints={setPrint}
+                                            ><Button className="bg-green-500" >Start Print</Button>
+                                            </StartPrintPopup>
+                                        )}
+                                        {p.id !== undefined && (
+                                            <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
+                                        )}
+                                        {p.id !== undefined && (
+                                            <ConfirmDialog title="Delete Print"
+                                                description={`Are you sure you want to delete ${p.name ?? "this item"}?`}
+                                                confirmText="Delete"
+                                                confirmButtonClassName="bg-red-500 text-white"
+                                                cancelButtonClassName="bg-blue-500 text-black"
+                                                onConfirm={() => handleDeletePrint(p.id)}>
+                                                <Button variant="destructive" className="bg-red-500 text-white">Delete</Button>
+                                            </ConfirmDialog>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+                <div style={{ width: "50%", backgroundColor: "lightcoral", marginTop: "10px" }}>
+                    <HandleDeletedPrints></HandleDeletedPrints>
+                    
+                </div>
+                
+            </div>
+           
+            
             {editingPrint ? (
                 <EditPrintForm
                     print={editingPrint}
