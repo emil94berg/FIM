@@ -21,20 +21,26 @@ namespace FIM.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FilamentRecordDto>>> GetWholeCatalog([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20, [FromQuery] string sortOrder = "name")
+        public async Task<ActionResult<PagedFilamentResult>> GetWholeCatalog([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string sortOrder = "name", [FromQuery] string? searchTerm = null, [FromQuery] bool isDescending = false)
         {
             pageNumber = pageNumber < 1 ? 1 : pageNumber;
-            pageSize = pageSize < 1 ? 20 : pageSize;
+            pageSize = pageSize < 1 ? 10 : pageSize;
 
-            var publicFilamentCatalog = await _publicFilamentService.GetPaginatedFilamentCatalog(pageNumber, pageSize, sortOrder, UserId);
+            var result = await _publicFilamentService.GetPaginatedFilamentCatalog(
+                pageNumber, 
+                pageSize, 
+                sortOrder, 
+                UserId, 
+                searchTerm,
+                isDescending);
             
-            if (publicFilamentCatalog == null)
+            if (result == null)
             {
                 return NotFound();
             }
             else
             {
-                return Ok(publicFilamentCatalog);
+                return Ok(result);
             }
         }
 

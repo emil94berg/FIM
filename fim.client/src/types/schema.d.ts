@@ -203,6 +203,7 @@ export interface paths {
                     pageNumber?: number | string;
                     pageSize?: number | string;
                     sortOrder?: string;
+                    searchTerm?: string;
                 };
                 header?: never;
                 path?: never;
@@ -216,9 +217,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["FilamentRecordDto"][];
-                        "application/json": components["schemas"]["FilamentRecordDto"][];
-                        "text/json": components["schemas"]["FilamentRecordDto"][];
+                        "text/plain": components["schemas"]["PagedFilamentResult"];
+                        "application/json": components["schemas"]["PagedFilamentResult"];
+                        "text/json": components["schemas"]["PagedFilamentResult"];
                     };
                 };
             };
@@ -508,6 +509,15 @@ export interface components {
             isRead: boolean;
             /** Format: date-time */
             createdAt: string;
+        };
+        PagedFilamentResult: {
+            items?: components["schemas"]["FilamentRecordDto"][];
+            /** Format: int32 */
+            totalCount?: number | string;
+            /** Format: int32 */
+            pageNumber?: number | string;
+            /** Format: int32 */
+            pageSize?: number | string;
         };
         PrintDto: {
             /** Format: int32 */
