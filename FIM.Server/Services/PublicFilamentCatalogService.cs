@@ -1,4 +1,5 @@
 ﻿using FIM.Server.Data;
+using FIM.Server.DTOs.Filament;
 using FIM.Server.Migrations;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
@@ -14,7 +15,7 @@ namespace FIM.Server.Services
         {
              _dbContext = dbContext;
         }
-        public async Task<List<FilamentRecordDto>> GetPaginatedFilamentCatalog(int pageNumber, int pageSize, string sortOrder, string userId)
+        public async Task<PagedFilamentResult> GetPaginatedFilamentCatalog(int pageNumber, int pageSize, string sortOrder, string userId, string? searchTerm, bool isDescending)
         {
             // return await _dbContext.PublicFilamentCatalogs
             //     .OrderBy(f => f.Name)
@@ -42,9 +43,21 @@ namespace FIM.Server.Services
             // return result;
 
             var skip = (pageNumber -1) * pageSize;
+            var baseQuery = _dbContext.PublicFilamentCatalogs.AsNoTracking();
 
+            if(!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var lowerSearch = searchTerm.ToLower();
+                baseQuery = baseQuery.Where(f => 
+                    f.Name.ToLower().Contains(lowerSearch) ||
+                    f.Brand.ToLower().Contains(lowerSearch) ||
+                    f.Material.ToLower().Contains(lowerSearch)
+                );
+            }
+
+            var totalCount = await baseQuery.CountAsync();
             // First we get Ids of records sorted
-            var idQuery = ApplySorting(_dbContext.PublicFilamentCatalogs.AsNoTracking(), sortOrder);
+            var idQuery = ApplySorting(baseQuery, sortOrder,isDescending);
 
             var pageIds = await idQuery
                 .Select(f => f.Id)
@@ -52,7 +65,15 @@ namespace FIM.Server.Services
                 .Take(pageSize)
                 .ToListAsync();
 
-            if (!pageIds.Any()) return new List<FilamentRecordDto>();
+            if (!pageIds.Any())
+            {
+                return new PagedFilamentResult {
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    Items = new List<FilamentRecordDto>()
+                };
+            }
 
             // Fetch the full records for those Ids
             var finalResult = await _dbContext.PublicFilamentCatalogs
@@ -60,45 +81,51 @@ namespace FIM.Server.Services
                 .Where(f => pageIds.Contains(f.Id))
                 .ToListAsync();
 
+            var userFavorites = await _dbContext.UserFavoriteFilaments
+                .AsNoTracking()
+                .Where(uf => uf.UserId == userId && pageIds.Contains(uf.FilamentId))
+                .Select(uf => uf.FilamentId)
+                .ToListAsync();
+
             // Re-sort the final 10 results
-            var list = ApplySorting(finalResult.AsQueryable(), sortOrder).ToList();
+            var sortedList = ApplySorting(finalResult.AsQueryable(), sortOrder, isDescending).ToList();
 
-            var returnList = new List<FilamentRecordDto>();
+            
 
-            foreach(var f in list)
-            {
-                bool favorite = _dbContext.UserFavoriteFilaments.Any(uf => uf.UserId == userId && uf.FilamentId == f.Id);
-                var filamentCatalogDto = new FilamentRecordDto(
-                    f.Identifier,
-                    f.Brand,
-                    f.Name,
-                    f.Material,
-                    f.Weight,
-                    f.Diameter,
-                    f.ColorHex,
-                    f.ColorHexes,
-                    f.ExtruderTemp, 
-                    f.BedTemp,
-                    f.Finish,
-                    f.Translucent,
-                    f.Glow,
-                    favorite
-                    );
-                returnList.Add(filamentCatalogDto);
-            }
-            return returnList;
-          
+            var items = sortedList.Select(f => new FilamentRecordDto(
+                f.Identifier,
+                f.Brand,
+                f.Name,
+                f.Material,
+                f.Weight,
+                f.Diameter,
+                f.ColorHex,
+                f.ColorHexes,
+                f.ExtruderTemp,
+                f.BedTemp,
+                f.Finish,
+                f.Translucent,
+                f.Glow,
+                userFavorites.Contains(f.Id)
+            )).ToList();
+
+            return new PagedFilamentResult {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
-        private IQueryable<PublicFilamentCatalog> ApplySorting(IQueryable<PublicFilamentCatalog> query, string sortOrder)
+        private IQueryable<PublicFilamentCatalog> ApplySorting(IQueryable<PublicFilamentCatalog> query, string sortOrder, bool isDescending)
         {
             return sortOrder?.ToLower() switch
             {
-                "name"     => query.OrderBy(f => f.Name).ThenBy(f => f.Id),
-                "brand"    => query.OrderBy(f => f.Brand).ThenBy(f => f.Id),
-                "material" => query.OrderBy(f => f.Material).ThenBy(f => f.Id),
-                "color"    => query.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
-                "diameter" => query.OrderBy(f => f.Diameter).ThenBy(f => f.Id),
+                "name"     => isDescending ? query.OrderByDescending(f => f.Name).ThenBy(f => f.Id) : query.OrderBy(f => f.Name).ThenBy(f => f.Id),
+                "brand"    => isDescending ? query.OrderByDescending(f => f.Brand).ThenBy(f => f.Id) : query.OrderBy(f => f.Brand).ThenBy(f => f.Id),
+                "material" => isDescending ? query.OrderByDescending(f => f.Material).ThenBy(f => f.Id) : query.OrderBy(f => f.Material).ThenBy(f => f.Id),
+                "color"    => isDescending ? query.OrderByDescending(f => f.ColorHex).ThenBy(f => f.Id) : query.OrderBy(f => f.ColorHex).ThenBy(f => f.Id),
+                "diameter" => isDescending ? query.OrderByDescending(f => f.Diameter).ThenBy(f => f.Id) : query.OrderBy(f => f.Diameter).ThenBy(f => f.Id),
                 _          => query.OrderBy(f => f.Name).ThenBy(f => f.Id)
             };
         }

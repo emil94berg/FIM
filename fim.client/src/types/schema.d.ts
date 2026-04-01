@@ -118,6 +118,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Print/GetActivePrints": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Print/CancelPrint": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PrintDto"];
+                    "text/json": components["schemas"]["PrintDto"];
+                    "application/*+json": components["schemas"]["PrintDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/PublicFilamentCatalog": {
         parameters: {
             query?: never;
@@ -130,6 +202,8 @@ export interface paths {
                 query?: {
                     pageNumber?: number | string;
                     pageSize?: number | string;
+                    sortOrder?: string;
+                    searchTerm?: string;
                 };
                 header?: never;
                 path?: never;
@@ -143,9 +217,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["FilamentRecordDto"][];
-                        "application/json": components["schemas"]["FilamentRecordDto"][];
-                        "text/json": components["schemas"]["FilamentRecordDto"][];
+                        "text/plain": components["schemas"]["PagedFilamentResult"];
+                        "application/json": components["schemas"]["PagedFilamentResult"];
+                        "text/json": components["schemas"]["PagedFilamentResult"];
                     };
                 };
             };
@@ -223,6 +297,84 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Spool/FavoriteToSpool": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["FavoriteToSpoolRequest"];
+                    "text/json": components["schemas"]["FavoriteToSpoolRequest"];
+                    "application/*+json": components["schemas"]["FavoriteToSpoolRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Spool/UpdateSpoolWeight": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SpoolWeightDto"];
+                    "text/json": components["schemas"]["SpoolWeightDto"];
+                    "application/*+json": components["schemas"]["SpoolWeightDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/UserFavoriteFilament/SetFavorite/{filamentId}": {
         parameters: {
             query?: never;
@@ -258,7 +410,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/UserFavoriteFilament": {
+    "/UserFavoriteFilament/DeleteFavorite/{filamentId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -269,11 +421,11 @@ export interface paths {
         put?: never;
         post: {
             parameters: {
-                query?: {
-                    filamentId?: string;
-                };
+                query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    filamentId: string;
+                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -324,6 +476,11 @@ export interface components {
             /** Format: double */
             spoolCost: number | string;
         };
+        FavoriteToSpoolRequest: {
+            filamentDto?: components["schemas"]["FilamentRecordDto"];
+            /** Format: double */
+            price?: number | string;
+        };
         FilamentRecordDto: {
             identifier: string;
             brand: string;
@@ -352,6 +509,15 @@ export interface components {
             isRead: boolean;
             /** Format: date-time */
             createdAt: string;
+        };
+        PagedFilamentResult: {
+            items?: components["schemas"]["FilamentRecordDto"][];
+            /** Format: int32 */
+            totalCount?: number | string;
+            /** Format: int32 */
+            pageNumber?: number | string;
+            /** Format: int32 */
+            pageSize?: number | string;
         };
         PrintDto: {
             /** Format: int32 */
@@ -425,6 +591,12 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             favorite: boolean;
+        };
+        SpoolWeightDto: {
+            /** Format: int32 */
+            spoolId?: number | string;
+            /** Format: int32 */
+            gramsUsed?: number | string;
         };
         UpdatePrintDto: {
             name: null | string;
