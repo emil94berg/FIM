@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { authFetch } from "../auth/authFetch"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+import { StartPrintPopup } from "@/components/popUp/StartPrintPopup"
 /*import SideBar from "../components/SidebarMenu";*/
 
 
@@ -138,6 +139,11 @@ export default function CreatePrint() {
                                 })}
                             </TableCell>
                             <TableCell>
+                                {p.id !== undefined && (
+                                    <StartPrintPopup
+                                        print={p}
+                                    ><Button className="bg-green-500" >Start Print</Button></StartPrintPopup>
+                                )}
                                 {p.id !== undefined && (
                                     <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
                                 )}

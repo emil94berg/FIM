@@ -531,6 +531,8 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
+            startedAt: null | string;
+            /** Format: date-time */
             estimatedEndTime: null | string;
             spool: null | components["schemas"]["Spool"];
         };
@@ -605,6 +607,8 @@ export interface components {
             /** Format: double */
             gramsUsed: null | number | string;
             status: null | components["schemas"]["PrintStatus"];
+            /** Format: date-time */
+            startedAt: null | string;
             /** Format: int32 */
             estimatedMinutes: null | number | string;
         };

@@ -94,5 +94,13 @@ namespace FIM.Server.Controllers
             if(result != null) return Ok(result);
             else return BadRequest();
         }
+        [HttpPost("StartPrint")]
+        public async Task<IActionResult> StartPrintAsync([FromBody] StartPrintDto print)
+        {
+            if(print.estimatedTime <= 0) return BadRequest(new { message = "Estimated time must be greater than 0." });
+            var result = await _printService.StartPrintAsync(print.id, UserId, print.estimatedTime);
+            if(result != null) return Ok(result);
+            else return BadRequest();
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace FIM.Server.Services
                         p.GramsUsed,
                         p.Status,
                         p.CreatedAt,
+                        null,
                         p.EstimatedEndTime,
                         p.Spool
                     );
@@ -82,6 +83,8 @@ namespace FIM.Server.Services
 
                 if (startingPrint)
                 {
+                    update.StartedAt = DateTime.UtcNow;
+
                     if (dto.EstimatedMinutes == null || dto.EstimatedMinutes <= 0)
                     {
                         await transaction.RollbackAsync();
@@ -132,10 +135,13 @@ namespace FIM.Server.Services
                 if (dto.GramsUsed != null) update.GramsUsed = dto.GramsUsed.Value;
                 if (dto.Status != null) update.Status = dto.Status.Value;
 
+
+
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
                 var updateDto = await _context.Prints.Where(p => p.Id == id).Include(p => p.Spool).FirstOrDefaultAsync();
+                
                 return (updateDto.ToPrintDto(), warning);
             }
             catch
@@ -209,6 +215,20 @@ namespace FIM.Server.Services
                 await _context.SaveChangesAsync();
                 return result.ToPrintDto();
             } 
+            else return null;
+        }
+        public async Task <PrintDto> StartPrintAsync(int printId, string userId, int estimatedTime)
+        {
+            var updatePrint = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId).SingleOrDefaultAsync();
+            if (updatePrint != null)
+            {
+                updatePrint.EstimatedEndTime = DateTime.UtcNow.AddMinutes(estimatedTime);
+                updatePrint.Status = PrintStatus.Printing;
+                updatePrint.StartedAt = DateTime.UtcNow;
+                _context.Update(updatePrint);
+                await _context.SaveChangesAsync();
+                return updatePrint.ToPrintDto();
+            }
             else return null;
         }
     }
