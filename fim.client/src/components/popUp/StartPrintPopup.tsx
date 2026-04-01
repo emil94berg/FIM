@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState } from "react"
 import type { components } from "src/types/schema"
 import {
     AlertDialog,
@@ -20,13 +20,13 @@ type Print = components["schemas"]["PrintDto"];
 type StartPrintPopupPropts = {
     children: React.ReactNode
     print: Print
+    setPrints?: React.Dispatch<React.SetStateAction<Print[]>>
 }
-
-
 
 export function StartPrintPopup({
     print,
-    children
+    children,
+    setPrints
 }: StartPrintPopupPropts) { 
     const [estimatedTime, setEstimatedTime] = useState<number>(0);
 
@@ -39,6 +39,7 @@ export function StartPrintPopup({
                     estimatedTime: estimatedTime
                 })
             });
+            setPrints?.(prev => prev.map(p => p.id === data.id ? data : p));
         }
         catch (error) {
             console.log("Failed to fetch from print..." + error);

@@ -142,7 +142,9 @@ export default function CreatePrint() {
                                 {p.id !== undefined && (
                                     <StartPrintPopup
                                         print={p}
-                                    ><Button className="bg-green-500" >Start Print</Button></StartPrintPopup>
+                                        setPrints={setPrint}
+                                    ><Button className="bg-green-500" >Start Print</Button>
+                                    </StartPrintPopup>
                                 )}
                                 {p.id !== undefined && (
                                     <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
