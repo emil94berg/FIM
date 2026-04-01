@@ -20,5 +20,6 @@ public class Print
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? EstimatedEndTime { get; set; }
     public Spool? Spool { get; set; }
+    public DateTime StartedAt { get; set; }
 }
 

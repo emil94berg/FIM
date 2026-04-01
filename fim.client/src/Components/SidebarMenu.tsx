@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { useState } from "react";
 import { HomeIcon } from "@/components/icons/mynaui-home"
+import { AddQueueIcon } from "@/components/icons/mynaui-add-queue"
+import { ActivitySquareIcon } from "@/components/icons/mynaui-activity-square"
 
 const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
@@ -11,11 +13,19 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     },
     {
         title: "Create Print",
-        href: "/create-print"
+        href: "/create-print",
+        icon: <AddQueueIcon className="w-5 h-5" ></AddQueueIcon>
+
     },
     {
         title: "Create Spool",
-        href: "/create-spool"
+        href: "/create-spool",
+        icon: <AddQueueIcon className="w-5 h-5" ></AddQueueIcon>
+    },
+    {
+        title: "Active Prints",
+        href: "/ACtivePrints",
+        icon: <ActivitySquareIcon className="w-5 h-5" ></ActivitySquareIcon>
     },
 ]
 
@@ -39,7 +49,7 @@ export default function SideBar() {
         //        </nav>
         //    )}
         //</div>
-        <div className="flex">
+        <div className="flex" style={{marginRight: "20px"} }>
             <div className={`flex flex-col bg-gray-100 h-screen transition-all duration-300 ${open ? "w-48" : "w-12"}`}>
                 <Button className="m-2 p-2 bg-blue-500 text-white" onClick={() => setOpen(!open)}>☰</Button>
                 <nav className="flex flex-col mt-4 gap-2">
