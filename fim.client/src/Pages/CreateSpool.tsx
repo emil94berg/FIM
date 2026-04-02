@@ -18,6 +18,7 @@ export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
 export default function GetSpools() {
     const [spools, setSpools] = useState<Spool[]>([]);
     const [editingSpool, setEditingSpool] = useState<Spool | null>(null);
+    const [deletedPrints, setDeletedPrints] = useState<Spool[]>([]);
 
     
 
@@ -32,6 +33,19 @@ export default function GetSpools() {
         };
 
         loadSpools();
+    }, []);
+
+    useEffect(() => {
+        const loadDeletedSpools = async () => {
+            try {
+                const data = await authFetch(`https://localhost:7035/spool/GetAllDeletedSpools`)
+                setDeletedPrints(data);
+            }
+            catch (error) {
+                console.log("Failed to fetch from spools..." + error);
+            }
+        };
+        loadDeletedSpools();
     }, []);
 
     const handleCreateSpool = async (spool: CreateSpoolDto) => {
@@ -84,11 +98,6 @@ export default function GetSpools() {
                     <AddSpoolForm onSubmit={handleCreateSpool} />
                 )}
             </div>
-               
-            
-            
-                   
-           
         </div>
     )
 }

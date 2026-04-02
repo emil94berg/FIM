@@ -99,6 +99,13 @@ namespace FIM.Server.Controllers
             }
 
         }
+        [HttpGet("GetAllDeletedSpools")]
+        public async Task<IActionResult> GetAllDeletedSpoolsAsync()
+        {
+            var result = await spoolService.GetAllDeletedSpoolsAsync(UserId);
+            if(result != null) return Ok(result);
+            else return NotFound(); 
+        }
 
     }
 }

@@ -166,4 +166,10 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             return null;
         }
     }
+    public async Task<IEnumerable<SpoolDto>> GetAllDeletedSpoolsAsync(string userId)
+    {
+        var result = await dbContext.Spools.Where(s => s.IsDeleted == true && s.UserId == userId).ToListAsync();
+        return result.Select(SpoolDto.FromSpool);
+    }
+
 }
