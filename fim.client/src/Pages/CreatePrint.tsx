@@ -148,8 +148,8 @@ export default function CreatePrint() {
                 </div>
 
                 {showDeleted ? (
-                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px" }}>
-                        <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon></Button>
+                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border:"1px solid black",borderRadius: "10px"}}>
+                        <Button className="bg-transparent" onClick={handleSetShowDeleted} style={{ margin: "5px" }}><TrashIcon className="size-8"></TrashIcon>Deleted</Button>
                         <HandleDeletedPrints
                             prints={deletedPrints}
                             onPrintsChanged={handleDeleteFromComponent}
@@ -157,7 +157,7 @@ export default function CreatePrint() {
                     </div>
                 ) : (
                     <div style={{ marginTop: "10px" }}>
-                            <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon></Button>
+                            <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Show deleted</Button>
                     </div>
                         
                 )}
