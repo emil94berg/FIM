@@ -1,5 +1,5 @@
 import type { components } from "@/types/schema"
-import { useState, useEffect } from "react"
+
 import { authFetch } from "@/auth/authFetch"
 import {
     Table,
@@ -15,27 +15,15 @@ type Print = components["schemas"]["PrintDto"]
 
 
 type DeletePrintProps = {
-    setPrint: React.Dispatch<React.SetStateAction<Print[]>>
-    /*onActivate: (id: string) => void;*/
+    prints: Print[]
+    onPrintsChanged: (print: Print) => void
+
+    
 }
 
 
-export function HandleDeletedPrints({ setPrint }: DeletePrintProps) {
-    const [deletedPrints, setDeletedPrints] = useState<Print[]>([]);
-
-    useEffect(() => {
-        const loadPrints = async () => {
-            try {
-                const data = await authFetch(`https://localhost:7035/Print/GetAllDeletedPrints`)
-                setDeletedPrints(data);
-            }
-            catch (error) {
-                console.log("Failed to fetch from Prints..." + error);
-            }
-        };
-        loadPrints();
-    }, []);
-
+export function HandleDeletedPrints({ prints, onPrintsChanged }: DeletePrintProps) {
+    
     const deleteToActiveAsync = async (print: Print) => {
         try {
             const data = await authFetch(`https://localhost:7035/Print/UpdateStatus`, {
@@ -46,8 +34,9 @@ export function HandleDeletedPrints({ setPrint }: DeletePrintProps) {
                 })
             })
             if (data !== null) {
-                setDeletedPrints(prev => prev.filter(p => p.id !== data.id));
-                setPrint(prev => [...prev, data]);
+                //Kolla vad som ifnna i data här
+                /*setDeletedPrints(prev => prev.filter(p => p.id !== data.id));*/
+                onPrintsChanged(print);
             }
         }
         catch (error) {
@@ -66,8 +55,8 @@ export function HandleDeletedPrints({ setPrint }: DeletePrintProps) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {deletedPrints.map(p => (
-                        <TableRow>
+                    {prints.map(p => (
+                        <TableRow key={p.id}>
                             <TableCell>{ p.name}</TableCell>
                             <TableCell>{ p.createdAt}</TableCell>
                             <TableCell>

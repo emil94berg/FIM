@@ -20,13 +20,13 @@ type Print = components["schemas"]["PrintDto"];
 type StartPrintPopupPropts = {
     children: React.ReactNode
     print: Print
-    setPrints?: React.Dispatch<React.SetStateAction<Print[]>>
+    onStarted: (updatedPrint: Print) => void
 }
 
 export function StartPrintPopup({
     print,
     children,
-    setPrints
+    onStarted
 }: StartPrintPopupPropts) { 
     const [estimatedTime, setEstimatedTime] = useState<number>(0);
 
@@ -39,7 +39,7 @@ export function StartPrintPopup({
                     estimatedTime: estimatedTime
                 })
             });
-            setPrints?.(prev => prev.map(p => p.id === data.id ? data : p));
+            onStarted(data);
         }
         catch (error) {
             console.log("Failed to fetch from print..." + error);
