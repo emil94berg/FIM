@@ -15,7 +15,6 @@ import { authFetch } from "../auth/authFetch"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
 import { StartPrintPopup } from "@/components/popUp/StartPrintPopup"
 import { HandleDeletedPrints } from "@/components/prints/DeletedPrints"
- /*import SideBar from "../components/SidebarMenu";*/
 
 
 
@@ -108,7 +107,6 @@ export default function CreatePrint() {
     
 
     return (
-
         <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
             <div style={{ display: "flex", flexDirection: "row" }}>
                 <div style={{ width: "50%" }}>
@@ -166,9 +164,8 @@ export default function CreatePrint() {
                         </TableBody>
                     </Table>
                 </div>
-                <div style={{ width: "50%", backgroundColor: "lightcoral", marginTop: "10px" }}>
-                    <HandleDeletedPrints></HandleDeletedPrints>
-                    
+                <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px" }}>
+                    <HandleDeletedPrints setPrint={setPrint}></HandleDeletedPrints>
                 </div>
                 
             </div>

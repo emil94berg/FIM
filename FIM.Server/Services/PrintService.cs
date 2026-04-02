@@ -232,5 +232,29 @@ namespace FIM.Server.Services
             }
             else return null;
         }
+        public async Task<List<PrintDto>> GetAllDeletedPrintsAsync(string userId)
+        {
+            var deletedPrints = await _context.Prints.Where(p => p.UserId == userId && p.isDeleted == true).ToListAsync();
+
+            if(deletedPrints != null && deletedPrints.Count != 0)
+            {
+                return deletedPrints.Select(p => p.ToPrintDto()).ToList();
+            }
+            else return new List<PrintDto>();
+        }
+        public async Task<PrintDto> UpdatePrintStatusAsync(string userId, UpdatePrintStatusDto statusDto)
+        {
+            var result = await _context.Prints.Where(p => p.UserId == userId && p.Id == statusDto.Id).SingleOrDefaultAsync();
+            if (result != null)
+            {
+                result.Status = statusDto.Status;
+                result.isDeleted = false;
+                _context.Update(result);
+                await _context.SaveChangesAsync();
+                return result.ToPrintDto();
+            }
+            else return null;
+
+        }
     }
 }
