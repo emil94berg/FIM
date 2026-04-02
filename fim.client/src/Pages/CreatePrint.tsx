@@ -36,6 +36,7 @@ export default function CreatePrint() {
     const [deletedPrints, setDeletedPrints] = useState<Print[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
+
     useEffect(() => {
         const loadPrints = async () => {
             try {
