@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import type { components } from "@/types/schema";
 import { Link } from "react-router-dom";
 import { CompletedPrintsChart } from "@/components/dashboard/CompletedRadarChart"
+import { ChartSpoolMaterialLeft } from "@/components/dashboard/ChartSpoolMaterialLeft";
 
 
 type PrintDto = components["schemas"]["PrintDto"];
@@ -125,7 +126,26 @@ export default function DashboardHome() {
                     </div>
                 </TabsContent>
 
-                <TabsContent value="stats" className="flex-1 mt-4 outline-none">
+                {/* <TabsContent value="stats" className="flex-1 mt-4 outline-none overflow-auto">
+                    <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
+                        <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
+
+                        <div className="flex flex-row gap-4 min-h-0">
+                        <div className="flex-[3] min-w-0 flex flex-col gap-4">
+                            <div className="w-full">
+                            <ChartSpoolMaterialLeft spools={data.allSpools} />
+                            </div>
+                            <div className="w-full">
+                            <PrintsChart />
+                            </div>
+                        </div>
+
+                        <div className="bg-blue-500 flex-[1] min-w-[220px] rounded-xl" />
+                        </div>
+                    </div>
+                </TabsContent> */}
+
+                <TabsContent value="stats" className="flex-1 mt-4 outline-none overflow-auto">
                     <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
                         <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
 
@@ -136,8 +156,9 @@ export default function DashboardHome() {
                                 <PrintsChart />
                             </div>
 
-                            {/* Pick Stat Type */}
-                            <div className="bg-blue-500 flex-[1]">
+                            {/* PieCharts */}
+                            <div className="flex-[1]">
+                                <ChartSpoolMaterialLeft spools={data.allSpools} />
                             </div>
                         </div>
                     </div>

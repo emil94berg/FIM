@@ -109,6 +109,7 @@ export default function PrintsChart() {
                         <ChartTooltip
                             content={
                                 <ChartTooltipContent
+                                    className="bg-white/90 backdrop-blur-sm border rounded-lg p-3 shadow-lg"
                                     nameKey="count"
                                     labelFormatter={(value) => new Date(value).toLocaleDateString("sv-SE", {
                                         day: "numeric",
