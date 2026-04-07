@@ -27,7 +27,7 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
         const changed: Partial<Spool> = {};
         if (formData.brand !== spool.brand) changed.brand = formData.brand;
         if (formData.material !== spool.material) changed.material = formData.material;
-        if (formData.color !== spool.color) changed.color = formData.color;
+        if (formData.colorName !== spool.colorName) changed.colorName = formData.colorName;
         if (formData.diameter !== spool.diameter) changed.diameter = formData.diameter;
         if (formData.totalWeight !== spool.totalWeight) changed.totalWeight = formData.totalWeight;
         if (formData.spoolCost !== spool.spoolCost) changed.spoolCost = formData.spoolCost;
@@ -53,7 +53,7 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
                 <div className="flex flex-col gap-1"> 
                     <Label>
                         Spool Color:
-                        <Input type="text" name="color" value={formData.color} onChange={handelChange} />
+                        <Input type="text" name="colorName" value={formData.colorName} onChange={handelChange} />
                     </Label>
                 </div>
                 <div className="flex flex-col gap-1">
