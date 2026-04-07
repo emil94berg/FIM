@@ -5,6 +5,7 @@ import { signOut } from "../auth/authService";
 import { NotificationList } from "@/components/notifications/NotificationList";
 import { CatalogList } from "@/components/FilamentCatalog"
 
+
 export default function Home() {
     const { user } = useAuth();
     const navigate = useNavigate();
