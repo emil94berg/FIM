@@ -4,7 +4,10 @@ import { AddSpoolForm } from '../components/spools/AddSpoolForm';
 import { EditSpoolForm } from '../components/spools/EditSpoolForm';
 import { authFetch } from '../auth/authFetch';
 import { AllSpoolsTable } from "@/components/spools/AllSpoolsTable"
-
+import { Button } from "@/components/ui/button"
+import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
+import { TrashIcon } from "@/components/icons/mynaui-trash"
+ 
 type Spool = components["schemas"]["SpoolDto"];
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
@@ -18,7 +21,8 @@ export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
 export default function GetSpools() {
     const [spools, setSpools] = useState<Spool[]>([]);
     const [editingSpool, setEditingSpool] = useState<Spool | null>(null);
-    const [deletedPrints, setDeletedPrints] = useState<Spool[]>([]);
+    const [deletedSpools, setDeletedSpools] = useState<Spool[]>([]);
+    const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
     
 
@@ -39,7 +43,7 @@ export default function GetSpools() {
         const loadDeletedSpools = async () => {
             try {
                 const data = await authFetch(`https://localhost:7035/spool/GetAllDeletedSpools`)
-                setDeletedPrints(data);
+                setDeletedSpools(data);
             }
             catch (error) {
                 console.log("Failed to fetch from spools..." + error);
@@ -68,25 +72,52 @@ export default function GetSpools() {
 
     const handleDeleteSpool = async (id: number | string) => {
         try {
-            await authFetch(`https://localhost:7035/spool/${id}`, {
+            const data: Spool = await authFetch(`https://localhost:7035/spool/${id}`, {
                 method: "DELETE"
             });
             setSpools(prev => prev.filter(s => s.id !== id));
+            setDeletedSpools(prev => [...prev, data]);
         }
         catch (error) {
                 console.error("Error deleting spool", error);
         }
     }
+    const handleShowDeleted = () => {
+        setShowDeleted(prev => !prev);
+    }
+    const handleActiveFromComponent = (spool: Spool) => {
+        setDeletedSpools(prev => prev.filter(prev => prev.id !== spool.id));
+        setSpools(prev => [...prev, spool]);
+
+    }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{display: "flex"}}>
-                <AllSpoolsTable
-                    onDelete={handleDeleteSpool}
-                    spools={spools}
-                    onEditSpool={setEditingSpool}
-                ></AllSpoolsTable>
+        <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ width: "50vw" }}>
+                    <AllSpoolsTable
+                        onDelete={handleDeleteSpool}
+                        spools={spools}
+                        onEditSpool={setEditingSpool}
+                    ></AllSpoolsTable>
+                </div>
+                {showDeleted ? (
+                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border: "1px solid black", borderRadius: "10px" }}>
+                        <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }}><TrashIcon className="size-8"></TrashIcon></Button>
+                        <HandleDeletedSpools
+                            spools={deletedSpools}
+                            onActivateSpool={handleActiveFromComponent}
+                        ></HandleDeletedSpools>
+                    </div>
+                ) : (
+                        <div>
+                            <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }} ><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length })</Button>
+                        </div>
+                    )
+                }
+
             </div>
+           
             <div style={{display: "flex"} }>
                 {editingSpool ? (
                     <EditSpoolForm
@@ -98,6 +129,7 @@ export default function GetSpools() {
                     <AddSpoolForm onSubmit={handleCreateSpool} />
                 )}
             </div>
+            
         </div>
     )
 }

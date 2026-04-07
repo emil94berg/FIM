@@ -34,8 +34,6 @@ export function HandleDeletedPrints({ prints, onPrintsChanged }: DeletePrintProp
                 })
             })
             if (data !== null) {
-                //Kolla vad som ifnna i data här
-                /*setDeletedPrints(prev => prev.filter(p => p.id !== data.id));*/
                 onPrintsChanged(print);
             }
         }

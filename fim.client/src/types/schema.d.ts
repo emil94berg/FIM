@@ -190,6 +190,117 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Print/StartPrint": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["StartPrintDto"];
+                    "text/json": components["schemas"]["StartPrintDto"];
+                    "application/*+json": components["schemas"]["StartPrintDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Print/GetAllDeletedPrints": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Print/UpdateStatus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdatePrintStatusDto"];
+                    "text/json": components["schemas"]["UpdatePrintStatusDto"];
+                    "application/*+json": components["schemas"]["UpdatePrintStatusDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/PublicFilamentCatalog": {
         parameters: {
             query?: never;
@@ -374,6 +485,39 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Spool/GetAllDeletedSpools": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/UserFavoriteFilament/SetFavorite/{filamentId}": {
         parameters: {
             query?: never;
@@ -517,6 +661,7 @@ export interface components {
             spoolId: number | string;
             /** Format: double */
             gramsUsed: number | string;
+            isDeleted: boolean;
             status: components["schemas"]["PrintStatus"];
             /** Format: date-time */
             createdAt: string;
@@ -555,6 +700,7 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             favorite?: boolean;
+            isDeleted?: boolean;
         };
         SpoolDto: {
             /** Format: int32 */
@@ -583,12 +729,19 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             favorite: boolean;
+            isDeleted: boolean;
         };
         SpoolWeightDto: {
             /** Format: int32 */
             spoolId?: number | string;
             /** Format: int32 */
             gramsUsed?: number | string;
+        };
+        StartPrintDto: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            estimatedTime: number | string;
         };
         UpdatePrintDto: {
             name: null | string;
@@ -601,6 +754,11 @@ export interface components {
             startedAt: null | string;
             /** Format: int32 */
             estimatedMinutes: null | number | string;
+        };
+        UpdatePrintStatusDto: {
+            /** Format: int32 */
+            id: number | string;
+            status: components["schemas"]["PrintStatus"];
         };
         UpdateSpoolDto: {
             identifier: null | string;
@@ -625,6 +783,7 @@ export interface components {
             /** Format: double */
             spoolCost: null | number | string;
             favorite: null | boolean;
+            isDeleted: null | boolean;
         };
     };
     responses: never;

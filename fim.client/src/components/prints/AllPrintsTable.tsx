@@ -59,7 +59,7 @@ export function AllPrintsTable({ Print, statusMap, onEdit, onDelete, onStart }: 
                                     <StartPrintPopup
                                         print={p}
                                         onStarted={onStart}
-                                    ><Button className="bg-green-500" >Start Print</Button>
+                                    ><Button className="bg-green-500">Start Print</Button>
                                     </StartPrintPopup>
                                 )}
                                 {p.id !== undefined && (

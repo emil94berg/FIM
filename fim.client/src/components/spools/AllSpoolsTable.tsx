@@ -40,7 +40,7 @@ export function AllSpoolsTable({spools, onDelete, onEditSpool }: AllSpoolsTableP
                         <TableHead>Color</TableHead>
                         <TableHead>Diameter</TableHead>
                         <TableHead>Total Weight</TableHead>
-                        <TableHead>Remaining Weight</TableHead>
+                        <TableHead>Remaining</TableHead>
                         <TableHead>Created</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
@@ -67,9 +67,7 @@ export function AllSpoolsTable({spools, onDelete, onEditSpool }: AllSpoolsTableP
                                 {new Date(s.createdAt).toLocaleString("sv-SE", {
                                     year: "numeric",
                                     month: "2-digit",
-                                    day: "2-digit",
-                                    hour: "2-digit",
-                                    minute: "2-digit"
+                                    day: "2-digit"
                                 })}
                             </TableCell>
                             <TableCell>

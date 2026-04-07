@@ -157,8 +157,8 @@ export default function CreatePrint() {
                         ></HandleDeletedPrints>
                     </div>
                 ) : (
-                    <div style={{ marginTop: "10px" }}>
-                            <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Show deleted</Button>
+                        <div style={{ marginTop: "10px" }}>
+                            <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
                     </div>
                         
                 )}
