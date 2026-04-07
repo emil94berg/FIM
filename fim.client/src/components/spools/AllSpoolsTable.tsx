@@ -8,6 +8,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import type { components } from "@/types/schema"
+import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
 
 type Spool = components["schemas"]["SpoolDto"];
 
@@ -72,7 +73,17 @@ export function AllSpoolsTable({spools, onDelete, onEditSpool }: AllSpoolsTableP
                             </TableCell>
                             <TableCell>
                                 <Button className="bg-blue-500 text-black" onClick={() => onEditSpool(s)}>Edit</Button>
-                                <Button className="bg-red-500 text-white" onClick={() => onDelete(s.id!)}>Delete</Button>
+                                <ConfirmDialog
+                                    onConfirm={() => onDelete(s.id)}
+                                    title={`Delete ${s.identifier}`}
+                                    description="You activate your deleted spools for up to 1 week after removal"
+                                    confirmText="Delete"
+                                    confirmButtonClassName="bg-red-500 text-white"
+                                    cancelButtonClassName="bg-red-500 text-white"
+                                ><Button className="bg-red-500 text-white">Delete</Button></ConfirmDialog>
+
+
+                                {/*<Button className="bg-red-500 text-white" onClick={() => onDelete(s.id!)}>Delete</Button>*/}
                             </TableCell>
                         </TableRow>
 
