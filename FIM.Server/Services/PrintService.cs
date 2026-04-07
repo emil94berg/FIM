@@ -23,13 +23,14 @@ namespace FIM.Server.Services
         public async Task<List<PrintDto>> GetAllPrintsAsync(string userId)
         {
             var dtoList = new List<PrintDto>();
-            var print = await _context.Prints.Include(p => p.Spool).Where(u => u.UserId == userId).ToListAsync();
+            var print = await _context.Prints.Include(p => p.Spool).Where(u => u.UserId == userId && u.isDeleted == false).ToListAsync();
             foreach(var p in print){
                 var dto = new PrintDto(
                         p.Id,
                         p.Name,
                         p.SpoolId,
                         p.GramsUsed,
+                        p.isDeleted,
                         p.Status,
                         p.CreatedAt,
                         null,
@@ -59,11 +60,11 @@ namespace FIM.Server.Services
 
         public async Task<bool> DeletePrintAsync(int id, string userId)
         {
-            
             var delete = await _context.Prints.Where(p => p.Id == id && p.UserId == userId).FirstOrDefaultAsync();
             if(delete != null)
             {
-                _context.Prints.Remove(delete);
+                delete.isDeleted = true;
+                _context.Prints.Update(delete);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -153,7 +154,7 @@ namespace FIM.Server.Services
 
         public async Task<List<PrintDto>> AllPendingPrintsAsync(string userId)
         {
-            var pendingPrints = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Pending).ToListAsync();
+            var pendingPrints = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Pending && p.isDeleted == false).ToListAsync();
             var returnList = new List<PrintDto>();
             foreach (var p in pendingPrints)
             {
@@ -163,7 +164,7 @@ namespace FIM.Server.Services
         }
         public async Task <List<PrintDto>> AllPrintingPrintsAsync(string userId)
         {
-            var printing = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Printing).ToListAsync();
+            var printing = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Printing && p.isDeleted == false).ToListAsync();
             var returnList = new List<PrintDto>();
             foreach (var p in printing)
             {
@@ -189,7 +190,7 @@ namespace FIM.Server.Services
         }
         public async Task<List<PrintDto>> GetActivePrintsAsync(string userId)
         {
-            var list = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Printing).ToListAsync();
+            var list = await _context.Prints.Where(p => p.UserId == userId && p.Status == PrintStatus.Printing && p.isDeleted == false).ToListAsync();
             var returnList = new List<PrintDto>();
             if(list != null)
             {
@@ -207,7 +208,7 @@ namespace FIM.Server.Services
         }
         public async Task<PrintDto> CancelPrintAsync(string userId, int printId)
         {
-            var result = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId).FirstOrDefaultAsync();
+            var result = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId && p.isDeleted == false).FirstOrDefaultAsync();
             if (result != null) 
             {
                 result.Status = PrintStatus.Cancelled;
@@ -219,7 +220,7 @@ namespace FIM.Server.Services
         }
         public async Task <PrintDto> StartPrintAsync(int printId, string userId, int estimatedTime)
         {
-            var updatePrint = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId).SingleOrDefaultAsync();
+            var updatePrint = await _context.Prints.Where(p => p.Id == printId && p.UserId == userId && p.isDeleted == false).SingleOrDefaultAsync();
             if (updatePrint != null)
             {
                 updatePrint.EstimatedEndTime = DateTime.UtcNow.AddMinutes(estimatedTime);
@@ -230,6 +231,30 @@ namespace FIM.Server.Services
                 return updatePrint.ToPrintDto();
             }
             else return null;
+        }
+        public async Task<List<PrintDto>> GetAllDeletedPrintsAsync(string userId)
+        {
+            var deletedPrints = await _context.Prints.Where(p => p.UserId == userId && p.isDeleted == true).ToListAsync();
+
+            if(deletedPrints != null && deletedPrints.Count != 0)
+            {
+                return deletedPrints.Select(p => p.ToPrintDto()).ToList();
+            }
+            else return new List<PrintDto>();
+        }
+        public async Task<PrintDto> UpdatePrintStatusAsync(string userId, UpdatePrintStatusDto statusDto)
+        {
+            var result = await _context.Prints.Where(p => p.UserId == userId && p.Id == statusDto.Id).SingleOrDefaultAsync();
+            if (result != null)
+            {
+                result.Status = statusDto.Status;
+                result.isDeleted = false;
+                _context.Update(result);
+                await _context.SaveChangesAsync();
+                return result.ToPrintDto();
+            }
+            else return null;
+
         }
     }
 }
