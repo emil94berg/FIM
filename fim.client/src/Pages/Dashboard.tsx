@@ -9,6 +9,7 @@ import { OverviewTab } from "@/components/dashboard/OverviewTab";
 import { Button } from "@/components/ui/button";
 import type { components } from "@/types/schema";
 import { Link } from "react-router-dom";
+import { CompletedPrintsChart } from "@/components/dashboard/CompletedRadarChart"
 
 
 type PrintDto = components["schemas"]["PrintDto"];
@@ -16,23 +17,28 @@ type SpoolDto = components["schemas"]["SpoolDto"];
 
 export default function DashboardHome() {
     const [activeTab, setActiveTab] = useState("overview");
+    
     const [data, setData] = useState({
         pending: [] as PrintDto[],
         printing: [] as PrintDto[],
         lowSpools: [] as SpoolDto[],
         allSpools: [] as SpoolDto[],
+        allCompletedPrints: [] as PrintDto[]
     });
+
+
     const [searchString, setSearchString] = useState("");
     const [editingSpool, setEditingSpool] = useState<SpoolDto | null>(null);
 
     const fetchDashBoardData = async () => {
-        const [pending, printing, low, all] = await Promise.all([
+        const [pending, printing, low, all, prints ] = await Promise.all([
             authFetch(`https://localhost:7035/Print/pending`),
             authFetch(`https://localhost:7035/Print/printing`),
             authFetch('https://localhost:7035/Spool/GetLowSpools'),
-            authFetch(`https://localhost:7035/spool`)
+            authFetch(`https://localhost:7035/spool`),
+            authFetch(`https://localhost:7035/Print`)
         ]);
-        return { pending, printing, lowSpools: low, allSpools: all };
+        return { pending, printing, lowSpools: low, allSpools: all, allCompletedPrints: prints };
     };
 
     useEffect(() => {
@@ -79,6 +85,7 @@ export default function DashboardHome() {
                     <TabsTrigger value="overview" className="bg-transparent">Overview</TabsTrigger>
                     <TabsTrigger value="inventory" className="bg-transparent">Inventory</TabsTrigger>
                     <TabsTrigger value="stats" className="bg-transparent">Statistics</TabsTrigger>
+                    <TabsTrigger value="test" className="bg-transparent">Test</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="flex-1 overflow-auto mt-4">
@@ -131,16 +138,26 @@ export default function DashboardHome() {
 
                             {/* Pick Stat Type */}
                             <div className="bg-blue-500 flex-[1]">
-
                             </div>
-
                         </div>
-                        
-                        
+                    </div>
+                </TabsContent>
+                <TabsContent value="test" className="flex-1 mt-4 outline-none">
+                    <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
+                        <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
+
+                        <div className="flex-row flex">
+                            
+                            {/* Show Stats */}
+                            <div className="flex-[3]"> 
+                                <CompletedPrintsChart
+                                    prints={data.allCompletedPrints}
+                                ></CompletedPrintsChart>
+                            </div>
+                        </div>
                     </div>
                 </TabsContent>
             </Tabs>
-
             {editingSpool && (
                 <EditSpoolForm 
                     spool={editingSpool} 
