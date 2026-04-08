@@ -11,6 +11,7 @@ import type { components } from "@/types/schema";
 import { Link } from "react-router-dom";
 import { CompletedPrintsChart } from "@/components/dashboard/CompletedRadarChart"
 import { ChartSpoolMaterialLeft } from "@/components/dashboard/ChartSpoolMaterialLeft";
+import { ChartPrintOutcome } from "@/components/dashboard/ChartPrintOutcome";
 
 
 type PrintDto = components["schemas"]["PrintDto"];
@@ -159,6 +160,7 @@ export default function DashboardHome() {
                             {/* PieCharts */}
                             <div className="flex-[1]">
                                 <ChartSpoolMaterialLeft spools={data.allSpools} />
+                                {/* <ChartPrintOutcome /> */}
                             </div>
                         </div>
                     </div>
