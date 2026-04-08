@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { CompletedPrintsChart } from "@/components/dashboard/CompletedRadarChart"
 import { ChartSpoolMaterialLeft } from "@/components/dashboard/ChartSpoolMaterialLeft";
 import { ChartPrintOutcome } from "@/components/dashboard/ChartPrintOutcome";
+import { CardTotalSpoolCost } from "@/components/dashboard/CardTotalSpoolCost";
 
 
 type PrintDto = components["schemas"]["PrintDto"];
@@ -119,7 +120,7 @@ export default function DashboardHome() {
                             onChange={(e) => setSearchString(e.target.value)}
                         />
                     </div>
-
+                    <CardTotalSpoolCost spools={data.allSpools} />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {filteredSpools.map(s => (
                             <SpoolItem key={s.id} spool={s} onEdit={setEditingSpool} />
