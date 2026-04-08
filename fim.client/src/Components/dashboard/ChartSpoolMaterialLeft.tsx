@@ -20,10 +20,11 @@ import {
 
 type SpoolDto = components["schemas"]["SpoolDto"]
 type BucketKey = "Full" | "High" | "Medium" | "Low" | "VeryLow" | "Critical";
+type SpoolRef = { id: number | string; identifier: string };
 interface ChartRow {
   counts: BucketKey;
   count: number;
-  spools: string[];
+  spools: SpoolRef[];
   fill: string;
 }
 
@@ -41,7 +42,7 @@ const chartConfig = {
 
 export function ChartSpoolMaterialLeft({ spools }: { spools: SpoolDto[] }) {
   const chartData = useMemo<ChartRow[]>(() => {
-    const counts: Record<BucketKey, string[]> = {
+    const counts: Record<BucketKey, SpoolRef[]> = {
       Full: [],
       High: [],
       Medium: [],
@@ -56,13 +57,14 @@ export function ChartSpoolMaterialLeft({ spools }: { spools: SpoolDto[] }) {
 
       if (!Number.isFinite(totalWeight) || totalWeight <= 0 || !Number.isFinite(remainingWeight)) continue;
 
+      const spoolRef: SpoolRef = { id: spool.id, identifier: spool.identifier };
       const pct = (remainingWeight / totalWeight) * 100;
-      if (pct >= 99.9) counts.Full.push(spool.identifier);
-      else if (pct >= 75) counts.High.push(spool.identifier);
-      else if (pct >= 50) counts.Medium.push(spool.identifier);
-      else if (pct >= 25) counts.Low.push(spool.identifier);
-      else if (pct >= 10) counts.VeryLow.push(spool.identifier);
-      else counts.Critical.push(spool.identifier);
+      if (pct >= 99.9) counts.Full.push(spoolRef);
+      else if (pct >= 75) counts.High.push(spoolRef);
+      else if (pct >= 50) counts.Medium.push(spoolRef);
+      else if (pct >= 25) counts.Low.push(spoolRef);
+      else if (pct >= 10) counts.VeryLow.push(spoolRef);
+      else counts.Critical.push(spoolRef);
     }
 
     return [
@@ -102,8 +104,8 @@ export function ChartSpoolMaterialLeft({ spools }: { spools: SpoolDto[] }) {
                           <span className="text-muted-foreground">{displayName}</span>
                           <span className="font-medium">{value} {Number(value) === 1 ? "spool" : "spools"}</span>
                         </div>
-                        {spoolList.map((id: string) => (
-                          <span key={id} className="text-xs text-muted-foreground pl-2">• {id}</span>
+                        {spoolList.map((spool: SpoolRef) => (
+                          <span key={String(spool.id)} className="text-xs text-muted-foreground pl-2">• {spool.identifier}</span>
                         ))}
                       </div>
                     )
