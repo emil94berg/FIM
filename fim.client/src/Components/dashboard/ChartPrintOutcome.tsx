@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart } from "recharts"
 import {
   Card,
@@ -22,17 +21,28 @@ import { useMemo } from "react"
 type PrintDto = components["schemas"]["PrintDto"]
 
 const chartConfig = {
-    failures: { label: "Failures", color: "#re4444"},
+    failures: { label: "Failures", color: "#ef4444"},
     successes: { label: "Successes", color: "#22c55e" }
 } satisfies ChartConfig
 
-export function ChartPrintOutcome() {
-    const chartData = useMemo(() => {
-        const data: Record<"successes" | "failures", number> = {
-            successes: 0,
-            failures: 0,
-        };
-    })
+export function ChartPrintOutcome({ prints }: { prints: PrintDto[] }) {
+    const { chartData, totalPrints, compareTotal } = useMemo(() => {
+        let successes: number = 0
+        let failures: number = 0
+
+        for (const print of prints) {
+          const status = Number(print.status)
+          if (status === 2) successes++
+          else if (status === 3) failures++
+        }
+        const totalPrints = successes + failures
+        const compareTotal = (totalPrints / prints.length) * 100
+        const chartData = [
+          { outcome: "Successes", prints: successes, fill: "var(--color-successes)" },
+          { outcome: "Failures", prints: failures, fill: "var(--color-failures)" },
+        ]
+        return { chartData, totalPrints, compareTotal }
+    }, [prints])
 
   return (
     <Card className="flex flex-col">
@@ -53,7 +63,7 @@ export function ChartPrintOutcome() {
             <Pie
               data={chartData}
               dataKey="prints"
-              nameKey="browser"
+              nameKey="outcome"
               innerRadius={60}
               strokeWidth={5}
             >
@@ -72,14 +82,14 @@ export function ChartPrintOutcome() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalPrints.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Prints
                         </tspan>
                       </text>
                     )
@@ -89,6 +99,9 @@ export function ChartPrintOutcome() {
             </Pie>
           </PieChart>
         </ChartContainer>
+        <div className="mt-3 text-center text-sm text-muted-foreground">
+          {compareTotal.toFixed(2)}% of all prints were successful
+        </div>
       </CardContent>
     </Card>
   )

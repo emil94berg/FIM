@@ -150,7 +150,7 @@ export default function DashboardHome() {
                     <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
                         <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
 
-                        <div className="flex-row flex">
+                        <div className="flex-row flex gap-4">
                             
                             {/* Show Stats */}
                             <div className="flex-[3]"> 
@@ -160,7 +160,8 @@ export default function DashboardHome() {
                             {/* PieCharts */}
                             <div className="flex-[1]">
                                 <ChartSpoolMaterialLeft spools={data.allSpools} />
-                                {/* <ChartPrintOutcome /> */}
+                                <div className="mt-4" /> {/* Ugly solution for spacing */}
+                                <ChartPrintOutcome prints={data.allCompletedPrints} />
                             </div>
                         </div>
                     </div>
