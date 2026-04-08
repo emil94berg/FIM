@@ -138,16 +138,10 @@ export default function DashboardHome() {
 
                             {/* Pick Stat Type */}
                             <div className="bg-blue-500 flex-[1]">
-
                             </div>
-
                         </div>
-                        
-                        
                     </div>
                 </TabsContent>
-
-
                 <TabsContent value="test" className="flex-1 mt-4 outline-none">
                     <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
                         <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
@@ -160,16 +154,9 @@ export default function DashboardHome() {
                                     prints={data.allCompletedPrints}
                                 ></CompletedPrintsChart>
                             </div>
-
-
                         </div>
-                        
-                        
                     </div>
                 </TabsContent>
-
-
-
             </Tabs>
             {editingSpool && (
                 <EditSpoolForm 
