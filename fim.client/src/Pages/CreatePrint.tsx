@@ -1,28 +1,20 @@
-import { Button } from "@/components/ui/button"
 import type { components } from "../types/schema" 
 import { useState, useEffect } from "react";
 import { AddPrintForm } from "../components/prints/AddPrintForm";
 import { EditPrintForm } from "../components/prints/EditPrintForm";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import { authFetch } from "../auth/authFetch"
-import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
-import { StartPrintPopup } from "@/components/popUp/StartPrintPopup"
-/*import SideBar from "../components/SidebarMenu";*/
+import { HandleDeletedPrints } from "@/components/prints/DeletedPrints"
+import { AllPrintsTable } from "@/components/prints/AllPrintsTable"
+import { Button } from "../components/ui/button";
+import { TrashIcon } from "@/components/icons/mynaui-trash"
 
 
 
 type Print = components["schemas"]["PrintDto"];  
 type CreatePrindDto = components["schemas"]["CreatePrintDto"]; 
 
-type UpdatePrintResponse = Print | { print: Print; warning?: string };
 
+type UpdatePrintResponse = Print | { print: Print; warning?: string };
 
 
 const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
@@ -38,11 +30,33 @@ const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
 };
 
 
-
-
 export default function CreatePrint() {
-    const [Print, setPrint] = useState<Print[]>([]);
+    const [print, setPrint] = useState<Print[]>([]);
     const [editingPrint, setEditingPrint] = useState<Print | null>(null);
+    const [deletedPrints, setDeletedPrints] = useState<Print[]>([]);
+    const [showDeleted, setShowDeleted] = useState<boolean>(false);
+
+
+    useEffect(() => {
+        const loadPrints = async () => {
+            try {
+                const data = await authFetch(`https://localhost:7035/Print/GetAllDeletedPrints`)
+                setDeletedPrints(data);
+            }
+            catch (error) {
+                console.log("Failed to fetch from Prints..." + error);
+            }
+        };
+        loadPrints();
+    }, []);
+
+
+    const handleStartPrint = (updatedPrint: Print) => {
+        setPrint(prev =>
+            prev.map(p => p.id === updatedPrint.id ? updatedPrint : p)
+        );
+    };
+    
 
     useEffect(() => {
         const loadPrint = async () => {
@@ -65,18 +79,21 @@ export default function CreatePrint() {
         3: "Failed",
         4: "Cancelled"
     }
-    const handleDeletePrint = async (id: number | string) => {
+
+    const handleDeletePrint = async (print: Print) => {
         try {
-            await authFetch(`https://localhost:7035/Print/${id}`, {
+            await authFetch(`https://localhost:7035/Print/${print.id}`, {
                 method: "DELETE"
             });
             
-            setPrint(prev => prev.filter(p => p.id !== id));
+            setPrint(prev => prev.filter(p => p.id !== print.id));
+            setDeletedPrints(prev => [...prev, print]);
         }
         catch (error) {
             console.error("Error deleting print: ", error);
         }
     }
+
     const handleUpdatePrint = async (print: Print) => {
         try { 
             const data: UpdatePrintResponse = await authFetch(`https://localhost:7035/Print/${print.id}`, {
@@ -98,6 +115,7 @@ export default function CreatePrint() {
             alert(error instanceof Error ? error.message : "Error updating print.");
         }
     }
+
     const handleCreatePrint = async (print: CreatePrindDto) => {
         try {
             const newPrint = await handleSubmit(print);
@@ -106,62 +124,45 @@ export default function CreatePrint() {
             alert(error instanceof Error ? error.message : "Failed to create print.");
         }
     }
+    const handleDeleteFromComponent = async (print: Print) => {
+        setDeletedPrints(prev => prev.filter(prev => prev.id !== print.id));
+        setPrint(prev => [...prev, print]);
+
+    }
+    const handleSetShowDeleted = () => {
+        setShowDeleted(prev => !prev);
+    }
     
 
     return (
-        
-        <div style={{ display: "flex", flexDirection: "column" }}>
-            <Table border={1}>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Spool-Brand</TableHead>
-                        <TableHead>Grams Used</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Created at</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {Print.map(p => (
-                        <TableRow key={ p.id }>
-                            <TableCell>{ p.name }</TableCell>
-                            <TableCell>{ p.spool?.brand }</TableCell>
-                            <TableCell>{ p.gramsUsed }</TableCell>
-                            <TableCell>{statusMap[p.status] }</TableCell>
-                            <TableCell>
-                                {new Date(p.createdAt).toLocaleString("sv-SE", {
-                                    year: "numeric",
-                                    month: "2-digit",
-                                    day: "2-digit",
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-                                })}
-                            </TableCell>
-                            <TableCell>
-                                {p.id !== undefined && (
-                                    <StartPrintPopup
-                                        print={p}
-                                    ><Button className="bg-green-500" >Start Print</Button></StartPrintPopup>
-                                )}
-                                {p.id !== undefined && (
-                                    <Button variant="default" className="bg-blue-500 text-black" onClick={() => setEditingPrint(p)}>Edit</Button>
-                                )}
-                                {p.id !== undefined && (
-                                    <ConfirmDialog title="Delete Print"
-                                        description={`Are you sure you want to delete ${p.name ?? "this item"}?`} 
-                                        confirmText="Delete"
-                                        confirmButtonClassName="bg-red-500 text-white"
-                                        cancelButtonClassName="bg-blue-500 text-black"
-                                        onConfirm={() => handleDeletePrint(p.id)}>
-                                        <Button variant="destructive" className="bg-red-500 text-white">Delete</Button>
-                                    </ConfirmDialog>
-                                )}
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+        <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ width: "50%" }}>
+                    
+                    <AllPrintsTable
+                        Print={print}
+                        statusMap={statusMap}
+                        onDelete={handleDeletePrint}
+                        onEdit={setEditingPrint}
+                        onStart={handleStartPrint}
+                    ></AllPrintsTable>
+                </div>
+
+                {showDeleted ? (
+                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border:"1px solid black",borderRadius: "10px"}}>
+                        <Button className="bg-transparent" onClick={handleSetShowDeleted} style={{ margin: "5px" }}><TrashIcon className="size-8"></TrashIcon>Deleted</Button>
+                        <HandleDeletedPrints
+                            prints={deletedPrints}
+                            onPrintsChanged={handleDeleteFromComponent}
+                        ></HandleDeletedPrints>
+                    </div>
+                ) : (
+                        <div style={{ marginTop: "10px" }}>
+                            <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
+                    </div>
+                        
+                )}
+            </div>
             {editingPrint ? (
                 <EditPrintForm
                     print={editingPrint}
@@ -170,10 +171,6 @@ export default function CreatePrint() {
             ) : (
                     <AddPrintForm onSubmit={handleCreatePrint}></AddPrintForm>
             )}
-
-
-            
-            
         </div>
     )
 }

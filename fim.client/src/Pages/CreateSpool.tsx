@@ -1,18 +1,13 @@
-import { Button } from "../components/ui/button";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "../components/ui/table";
 import { useState, useEffect } from 'react';
 import type { components } from "../types/schema";
 import { AddSpoolForm } from '../components/spools/AddSpoolForm';
 import { EditSpoolForm } from '../components/spools/EditSpoolForm';
 import { authFetch } from '../auth/authFetch';
-
+import { AllSpoolsTable } from "@/components/spools/AllSpoolsTable"
+import { Button } from "@/components/ui/button"
+import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
+import { TrashIcon } from "@/components/icons/mynaui-trash"
+ 
 type Spool = components["schemas"]["SpoolDto"];
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
@@ -26,8 +21,10 @@ export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
 export default function GetSpools() {
     const [spools, setSpools] = useState<Spool[]>([]);
     const [editingSpool, setEditingSpool] = useState<Spool | null>(null);
+    const [deletedSpools, setDeletedSpools] = useState<Spool[]>([]);
+    const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
-    const getRemainingWeightValue = (spool: Spool) => Number(spool.remainingWeight);
+    
 
     useEffect(() => {
         const loadSpools = async () => {
@@ -40,6 +37,19 @@ export default function GetSpools() {
         };
 
         loadSpools();
+    }, []);
+
+    useEffect(() => {
+        const loadDeletedSpools = async () => {
+            try {
+                const data = await authFetch(`https://localhost:7035/spool/GetAllDeletedSpools`)
+                setDeletedSpools(data);
+            }
+            catch (error) {
+                console.log("Failed to fetch from spools..." + error);
+            }
+        };
+        loadDeletedSpools();
     }, []);
 
     const handleCreateSpool = async (spool: CreateSpoolDto) => {
@@ -62,77 +72,64 @@ export default function GetSpools() {
 
     const handleDeleteSpool = async (id: number | string) => {
         try {
-            await authFetch(`https://localhost:7035/spool/${id}`, {
+            const data: Spool = await authFetch(`https://localhost:7035/spool/${id}`, {
                 method: "DELETE"
             });
             setSpools(prev => prev.filter(s => s.id !== id));
+            setDeletedSpools(prev => [...prev, data]);
         }
         catch (error) {
                 console.error("Error deleting spool", error);
         }
     }
+    const handleShowDeleted = () => {
+        setShowDeleted(prev => !prev);
+    }
+    const handleActiveFromComponent = (spool: Spool) => {
+        setDeletedSpools(prev => prev.filter(prev => prev.id !== spool.id));
+        setSpools(prev => [...prev, spool]);
+
+    }
 
     return (
-        <div>
-            <h1>Create Spool</h1>
-            <p>This is the page to create a new spool.</p>
-            <Table border={1}>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Brand</TableHead>
-                        <TableHead>Material</TableHead>
-                        <TableHead>Color</TableHead>
-                        <TableHead>Diameter</TableHead>
-                        <TableHead>Total Weight</TableHead>
-                        <TableHead>Remaining Weight</TableHead>
-                        <TableHead>Created</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
+        <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ width: "50vw" }}>
+                    <AllSpoolsTable
+                        onDelete={handleDeleteSpool}
+                        spools={spools}
+                        onEditSpool={setEditingSpool}
+                    ></AllSpoolsTable>
+                </div>
+                {showDeleted ? (
+                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border: "1px solid black", borderRadius: "10px" }}>
+                        <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }}><TrashIcon className="size-8"></TrashIcon></Button>
+                        <HandleDeletedSpools
+                            spools={deletedSpools}
+                            onActivateSpool={handleActiveFromComponent}
+                        ></HandleDeletedSpools>
+                    </div>
+                ) : (
+                        <div>
+                            <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }} ><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length })</Button>
+                        </div>
+                    )
+                }
 
-                <TableBody>
-                    {spools.map(s => (
-                        <TableRow key={s.id}>
-                            <TableCell>{s.brand}</TableCell>
-                            <TableCell>{s.material}</TableCell>
-                            <TableCell>{s.colorName}</TableCell>
-                            <TableCell>{s.diameter}</TableCell>
-                            <TableCell>{s.totalWeight}</TableCell>
-                            <TableCell>
-                                {getRemainingWeightValue(s) < 0 ? (
-                                    <span className="font-semibold text-red-600">
-                                        {s.remainingWeight} (Warning: Negative)
-                                    </span>
-                                ) : (
-                                    s.remainingWeight
-                                )}
-                            </TableCell>
-                            <TableCell>
-                                {new Date(s.createdAt).toLocaleString("sv-SE", {
-                                    year: "numeric",
-                                    month: "2-digit",
-                                    day: "2-digit",
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-                                })}
-                            </TableCell>
-                            <TableCell>
-                                <Button className="bg-blue-500 text-black" onClick={() => setEditingSpool(s)}>Edit</Button>
-                                <Button className="bg-red-500 text-white" onClick={() => handleDeleteSpool(s.id!)}>Delete</Button>
-                        </TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            {editingSpool ? (
-                <EditSpoolForm
-                    spool={editingSpool}
-                    onSubmit={handleUpdateSpool}
-                    onCancel={() => setEditingSpool(null)}
-                />
-            ) : (
-                <AddSpoolForm onSubmit={handleCreateSpool} />
-            )}
+            </div>
+           
+            <div style={{display: "flex"} }>
+                {editingSpool ? (
+                    <EditSpoolForm
+                        spool={editingSpool}
+                        onSubmit={handleUpdateSpool}
+                        onCancel={() => setEditingSpool(null)}
+                    />
+                ) : (
+                    <AddSpoolForm onSubmit={handleCreateSpool} />
+                )}
+            </div>
+            
         </div>
     )
 }

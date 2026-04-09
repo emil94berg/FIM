@@ -12,7 +12,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
 {
     public async Task<IEnumerable<SpoolDto>> GetAllSpoolsAsync(string userId)
     {
-        var spools = await dbContext.Spools.Where(s => s.UserId == userId).ToListAsync();
+        var spools = await dbContext.Spools.Where(s => s.UserId == userId && s.IsDeleted == false).ToListAsync();
         return spools.Select(SpoolDto.FromSpool);
     }
 
@@ -44,23 +44,29 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             RemainingWeight = dto.TotalWeight,
             SpoolCost = dto.SpoolCost,
             CreatedAt = DateTime.UtcNow,
-            Favorite = false
+            Favorite = false,
+            IsDeleted = false
         };
         dbContext.Spools.Add(spool);
         await dbContext.SaveChangesAsync();
         return SpoolDto.FromSpool(spool);
     }
 
-    public async Task<bool> DeleteSpoolAsync(int id, string userId)
+    public async Task<SpoolDto> DeleteSpoolAsync(int id, string userId)
     {
          var spool = await dbContext.Spools.FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
         if (spool == null)
         {
-            return false;
+            return null;
         }
-        dbContext.Spools.Remove(spool);
-        await dbContext.SaveChangesAsync();
-        return true;
+        else
+        {
+            spool.IsDeleted = true;
+            dbContext.Spools.Update(spool);
+            await dbContext.SaveChangesAsync();
+            return SpoolDto.FromSpool(spool);
+        }
+        
     }
 
     public async Task<SpoolDto?> UpdateSpoolAsync(int id, UpdateSpoolDto dto, string userId)
@@ -103,7 +109,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
     }
     public async Task<List<SpoolDto>> GetLowSpools(string userId)
     {
-        var list = await dbContext.Spools.Where(s => s.UserId == userId && s.RemainingWeight <= 100).ToListAsync();
+        var list = await dbContext.Spools.Where(s => s.UserId == userId && s.RemainingWeight <= 100 && s.IsDeleted == false).ToListAsync();
         var dtoList = SpoolDto.ToListSpoolDto(list);
         return dtoList;
     }
@@ -144,13 +150,13 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             return null;
         }
     }
+
     public async Task<SpoolDto> UpdateSpoolWeightAsync(SpoolWeightDto spoolWeightDto, string usedId)
     {
         var updateSpool = await dbContext.Spools.FirstOrDefaultAsync(s => s.Id == spoolWeightDto.SpoolId && s.UserId == usedId);
 
         if(updateSpool != null)
         {
-            //Behöver även ändra på Print så att status sätts till "Cancelled"
             updateSpool.RemainingWeight -= spoolWeightDto.GramsUsed;
             dbContext.Update(updateSpool);
             dbContext.SaveChanges();
@@ -161,4 +167,24 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             return null;
         }
     }
+
+    public async Task<IEnumerable<SpoolDto>> GetAllDeletedSpoolsAsync(string userId)
+    {
+        var result = await dbContext.Spools.Where(s => s.IsDeleted == true && s.UserId == userId).ToListAsync();
+        return result.Select(SpoolDto.FromSpool);
+    }
+
+    public async Task<SpoolDto> ChangeDeletedStatusAsync(SpoolDto dto, string userId)
+    {
+        var result = await dbContext.Spools.FirstOrDefaultAsync(s => s.Id == dto.Id && s.UserId == userId);
+        if(result != null)
+        {
+            result.IsDeleted = !result.IsDeleted;
+            dbContext.Update(result);
+            await dbContext.SaveChangesAsync();
+            return SpoolDto.FromSpool(result);
+        }
+        else return null;
+    }
+
 }

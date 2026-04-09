@@ -44,12 +44,13 @@ namespace FIM.Server.Controllers
         [HttpDelete("{id}", Name = "DeleteSpool")]
         public async Task<IActionResult> DeleteSpool(int id)
         {
+            //Skicka tillbaka deleted object
             var deleted = await spoolService.DeleteSpoolAsync(id, UserId);
-            if (!deleted)
+            if (deleted == null)
             {
                 return NotFound();
             }
-            return Ok();
+            return Ok(deleted);
         }
         
         [HttpPatch("{id}", Name = "UpdateSpool")]
@@ -98,6 +99,20 @@ namespace FIM.Server.Controllers
                 return NotFound();
             }
 
+        }
+        [HttpGet("GetAllDeletedSpools")]
+        public async Task<IActionResult> GetAllDeletedSpoolsAsync()
+        {
+            var result = await spoolService.GetAllDeletedSpoolsAsync(UserId);
+            if(result != null) return Ok(result);
+            else return NotFound(); 
+        }
+        [HttpPut("ChangeDeletedStatus")]
+        public async Task<IActionResult> SetSpoolAsDeletedAsync([FromBody] SpoolDto dto)
+        {
+            var result = await spoolService.ChangeDeletedStatusAsync(dto, UserId);
+            if(result != null) return Ok(result);
+            else return NotFound();
         }
 
     }

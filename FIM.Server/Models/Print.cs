@@ -22,5 +22,6 @@ public class Print
     public Spool? Spool { get; set; }
     public DateTime StartedAt { get; set; }
     public DateTime CompletedAt { get; set; }
+    public bool isDeleted { get; set; } = false;
 }
 

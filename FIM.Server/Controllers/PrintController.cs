@@ -102,5 +102,19 @@ namespace FIM.Server.Controllers
             if(result != null) return Ok(result);
             else return BadRequest();
         }
+        [HttpGet("GetAllDeletedPrints")]
+        public async Task<IActionResult> GetAllDeletedPrintsAsync()
+        {
+            var result = await _printService.GetAllDeletedPrintsAsync(UserId);
+            if(result != null && result.Count != 0) return Ok(result);  
+            else return NotFound();
+        }
+        [HttpPost("UpdateStatus")]
+        public async Task<IActionResult> UpdatePrintStatusAsync([FromBody] UpdatePrintStatusDto statusDto)
+        {
+            var result = await _printService.UpdatePrintStatusAsync(UserId, statusDto);
+            if(result != null) return Ok(result);
+            else return BadRequest();
+        }
     }
 }

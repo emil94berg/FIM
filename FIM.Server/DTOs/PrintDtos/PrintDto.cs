@@ -7,6 +7,7 @@ namespace FIM.Server.DTOs.PrintDtos
         string Name,
         int SpoolId,
         double GramsUsed,
+        bool isDeleted,
         PrintStatus Status,
         DateTime CreatedAt,
         DateTime? StartedAt,

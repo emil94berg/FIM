@@ -60,41 +60,44 @@ export const AddPrintForm = ({ onSubmit }: AddPrintFormProps) => {
 
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex flex-col gap-1">
-                <Label>Print Name: </Label>
-                <Input type="text" name="name" value={formData.name} onChange={handleChange} />
-            </div>
-            <div className="flex flex-col gap-1">
-                <Label htmlFor="SpoolId">Spool: </Label>
-                <Select
-                    value={String(formData.spoolId)}
-                    onValueChange={(value) => 
-                        setFormData(prev => ({
-                            ...prev, spoolId: Number(value)
-                        }))}
-                    name="SpoolId"
-                        
-                >
-                    <SelectTrigger className="w-full max-w-min">
-                        <SelectValue placeholder="Select a spool"></SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border shadow-md">
-                        <SelectGroup>
-                            <SelectLabel>Spools</SelectLabel>
-                            {Spool.map(s => (
-                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.colorName}, {s.diameter}mm, {s.remainingWeight}g left</SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="flex flex-col gap-1">
-                <label>Grams used: </label>
-                <Input type="number" name="gramsUsed" value={formData.gramsUsed} onChange={handleChange} />
-            </div>
-            <Button className="bg-blue-500 text-black" variant="ghost" type="submit">Create print</Button>
-        </form>
+        <div style={{ display: "flex" }}>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="flex flex-col gap-1">
+                    <Label>Print Name: </Label>
+                    <Input type="text" name="name" value={formData.name} onChange={handleChange} />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <Label htmlFor="SpoolId">Spool: </Label>
+                    <Select
+                        value={String(formData.spoolId)}
+                        onValueChange={(value) =>
+                            setFormData(prev => ({
+                                ...prev, spoolId: Number(value)
+                            }))}
+                        name="SpoolId"
+
+                    >
+                        <SelectTrigger className="w-full max-w-min">
+                            <SelectValue placeholder="Select a spool"></SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="bg-white border shadow-md">
+                            <SelectGroup>
+                                <SelectLabel>Spools</SelectLabel>
+                                {Spool.map(s => (
+                                    <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.colorName}, {s.diameter}mm, {s.remainingWeight}g left</SelectItem>
+                                ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label>Grams used: </label>
+                    <Input type="number" name="gramsUsed" value={formData.gramsUsed} onChange={handleChange} />
+                </div>
+                <Button className="bg-blue-500 text-black" variant="ghost" type="submit">Create print</Button>
+            </form>
+        </div>
+        
     )
 }
 
