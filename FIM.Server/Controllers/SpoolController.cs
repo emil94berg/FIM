@@ -114,6 +114,13 @@ namespace FIM.Server.Controllers
             if(result != null) return Ok(result);
             else return NotFound();
         }
+        [HttpGet("GetGroupSpools")]
+        public async Task<ActionResult<SpoolGroupDto>> GetGroupedSpoolsAsync()
+        {
+            var result = await spoolService.GroupBySpoolIdentifier(UserId);
+            if(result != null) return Ok(result);
+            else return NotFound();
+        }
 
     }
 }

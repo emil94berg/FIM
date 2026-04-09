@@ -7,9 +7,11 @@ import { AllSpoolsTable } from "@/components/spools/AllSpoolsTable"
 import { Button } from "@/components/ui/button"
 import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
 import { TrashIcon } from "@/components/icons/mynaui-trash"
+import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
  
 type Spool = components["schemas"]["SpoolDto"];
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
+type GroupedSpool = components["schemas"]["SpoolGroupDto"]; 
 
 export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
     return await authFetch("https://localhost:7035/spool", {
@@ -23,6 +25,21 @@ export default function GetSpools() {
     const [editingSpool, setEditingSpool] = useState<Spool | null>(null);
     const [deletedSpools, setDeletedSpools] = useState<Spool[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
+    const [groupedSpools, setGroupedSpools] = useState<GroupedSpool[]>([]);
+
+    useEffect(() => {
+        const loadAllGroupedSpool = async () => {
+            try {
+                const data: GroupedSpool[] = await authFetch(`https://localhost:7035/spool/GetGroupSpools`)
+                setGroupedSpools(data);
+            }
+            catch (error){
+                console.log("Failed to load from spools... " + (error));
+            }
+          
+        }
+        loadAllGroupedSpool();
+    }, [])
 
     
 
@@ -128,6 +145,11 @@ export default function GetSpools() {
                 ) : (
                     <AddSpoolForm onSubmit={handleCreateSpool} />
                 )}
+            </div>
+            <div>
+                <AllSpoolsGrouped
+                    groupedSpools={groupedSpools}
+                ></AllSpoolsGrouped>
             </div>
             
         </div>

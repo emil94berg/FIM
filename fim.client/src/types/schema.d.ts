@@ -301,45 +301,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/Print/StartPrint": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StartPrintDto"];
-                    "text/json": components["schemas"]["StartPrintDto"];
-                    "application/*+json": components["schemas"]["StartPrintDto"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/PublicFilamentCatalog": {
         parameters: {
             query?: never;
@@ -548,6 +509,82 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Spool/ChangeDeletedStatus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SpoolDto"];
+                    "text/json": components["schemas"]["SpoolDto"];
+                    "application/*+json": components["schemas"]["SpoolDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Spool/GetGroupSpools": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["SpoolGroupDto"];
+                        "application/json": components["schemas"]["SpoolGroupDto"];
+                        "text/json": components["schemas"]["SpoolGroupDto"];
+                    };
                 };
             };
         };
@@ -782,6 +819,10 @@ export interface components {
             createdAt: string;
             favorite: boolean;
             isDeleted: boolean;
+        };
+        SpoolGroupDto: {
+            identifier: string;
+            spools: components["schemas"]["SpoolDto"][];
         };
         SpoolWeightDto: {
             /** Format: int32 */
