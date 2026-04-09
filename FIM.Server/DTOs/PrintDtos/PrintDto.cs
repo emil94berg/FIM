@@ -11,6 +11,7 @@ namespace FIM.Server.DTOs.PrintDtos
         DateTime CreatedAt,
         DateTime? StartedAt,
         DateTime? EstimatedEndTime,
+        DateTime? CompletedAt,
         Spool? Spool
     ); 
 }
