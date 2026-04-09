@@ -84,6 +84,7 @@ public class NotificationBackgroundService : BackgroundService
         {
             _logger.LogInformation($"Auto-completing print: {print.Name} (ID: {print.Id})");
             print.Status = PrintStatus.Completed;
+            print.CompletedAt = DateTime.UtcNow;
             await printService.DeductSpoolForCompletedPrintAsync(print.Id);
         }
 

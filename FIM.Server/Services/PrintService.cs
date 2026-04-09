@@ -34,6 +34,7 @@ namespace FIM.Server.Services
                         p.CreatedAt,
                         null,
                         p.EstimatedEndTime,
+                        p.CompletedAt,
                         p.Spool
                     );
                 dtoList.Add(dto);
@@ -211,6 +212,7 @@ namespace FIM.Server.Services
             if (result != null) 
             {
                 result.Status = PrintStatus.Cancelled;
+                result.EstimatedEndTime = null;
                 _context.Update(result);
                 await _context.SaveChangesAsync();
                 return result.ToPrintDto();

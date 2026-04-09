@@ -14,7 +14,7 @@ import {
     ChartContainer,
     ChartTooltip
 } from "@/components/ui/chart"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 
 type Print = components["schemas"]["PrintDto"]
 type charData = {
@@ -37,37 +37,67 @@ const chartConfig = {
 
 
 export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
-    const [data, setData] = useState<charData[]>([]);
+    /*const [data, setData] = useState<charData[]>([]);*/
 
-    const monthOrder = [
+    //const monthOrder = [
+    //    "January", "February", "March", "April", "May", "June",
+    //    "July", "August", "September", "October", "November", "December"
+    //]
+
+    const monthOrder = useMemo(() => [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
-    ]
+    ], [])
 
-    useEffect(() => {
-        const groupedData = prints.reduce((acc: charData[], print) => {
-            const date = new Date(String(print.estimatedEndTime))
+    //useEffect(() => {
+    //    const groupedData = prints.reduce((acc: charData[], print) => {
+    //        const date = new Date(String(print.estimatedEndTime))
+    //        const month = date.toLocaleString("en-US", { month: "long" })
+
+    //        const existing = acc.find((item: charData) => item.month === month)
+
+    //        if (existing) {
+    //            existing.numberOfPrints += 1
+    //        }
+    //        else {
+    //            acc.push({ month, numberOfPrints: 1 })
+    //        }
+
+    //        return acc
+    //    }, [] as charData[]);
+    //    groupedData.sort((a: charData, b: charData) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
+    //    setData(groupedData);
+    //}, [prints]);
+
+    const completedPrintsNumber = () => {
+        return prints.filter(print =>
+            print.completedAt && print.status === 2
+        ).length;
+    }
+
+    const data = useMemo(() => {
+        const completedPrints = prints.filter(print => print.status === 2);
+        const groupedData = completedPrints.reduce((acc: charData[], print) => {
+            const date = new Date(String(print.completedAt))
             const month = date.toLocaleString("en-US", { month: "long" })
 
-            const existing = acc.find((item: charData) => item.month === month)
+            const existing = acc.find(item => item.month === month)
 
             if (existing) {
-                existing.numberOfPrints += 1
+                existing.numberOfPrints++;
             }
             else {
                 acc.push({ month, numberOfPrints: 1 })
             }
-
             return acc
-        }, [] as charData[])
-        groupedData.sort((a:charData, b:charData) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month))
-        setData(groupedData);
-    },[prints])
+        }, [])
+        groupedData.sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month))
+        return groupedData
+    }, [prints, monthOrder])
+
     
-
-
-
-
+    
+    
     return (
         <Card style={{maxWidth: "30%"}}>
             <CardHeader>
@@ -96,7 +126,7 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
                 </ChartContainer>
             </CardContent>
             <CardFooter>
-                Total number of completed prints: {prints.length}
+                Total number of completed prints: {completedPrintsNumber()}
             </CardFooter>
         </Card>
     )

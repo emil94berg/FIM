@@ -21,10 +21,6 @@ public class Print
     public DateTime? EstimatedEndTime { get; set; }
     public Spool? Spool { get; set; }
     public DateTime StartedAt { get; set; }
-
-
-
-    //För att kunna visa rätt data när vi skapar våra charts
-    //public DateTime CompletedAt { get; set; }
+    public DateTime CompletedAt { get; set; }
 }
 
