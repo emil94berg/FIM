@@ -3,7 +3,6 @@ import type { components } from "../types/schema";
 import { AddSpoolForm } from '../components/spools/AddSpoolForm';
 import { EditSpoolForm } from '../components/spools/EditSpoolForm';
 import { authFetch } from '../auth/authFetch';
-import { AllSpoolsTable } from "@/components/spools/AllSpoolsTable"
 import { Button } from "@/components/ui/button"
 import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
 import { TrashIcon } from "@/components/icons/mynaui-trash"
@@ -105,18 +104,21 @@ export default function GetSpools() {
     const handleActiveFromComponent = (spool: Spool) => {
         setDeletedSpools(prev => prev.filter(prev => prev.id !== spool.id));
         setSpools(prev => [...prev, spool]);
-
+    }
+    //Uppdatera UI när vi plockar bort samt lägger till filament i vår groupedSpools lista
+    const handleGroupedSpoolsActivate = (grouped: GroupedSpool, id: number) => {
+        setGroupedSpools(prev => prev.filter(prev => prev.spools.filter(s => s.id != id)))
     }
 
     return (
         <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
             <div style={{ display: "flex", flexDirection: "row" }}>
                 <div style={{ width: "50vw" }}>
-                    <AllSpoolsTable
-                        onDelete={handleDeleteSpool}
-                        spools={spools}
+                    <AllSpoolsGrouped
+                        groupedSpools={groupedSpools}
                         onEditSpool={setEditingSpool}
-                    ></AllSpoolsTable>
+                        onDelete={handleDeleteSpool}
+                    ></AllSpoolsGrouped>
                 </div>
                 {showDeleted ? (
                     <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border: "1px solid black", borderRadius: "10px" }}>
@@ -146,10 +148,8 @@ export default function GetSpools() {
                     <AddSpoolForm onSubmit={handleCreateSpool} />
                 )}
             </div>
-            <div>
-                <AllSpoolsGrouped
-                    groupedSpools={groupedSpools}
-                ></AllSpoolsGrouped>
+            <div style={{display: "flex"} }>
+               
             </div>
             
         </div>

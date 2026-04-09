@@ -188,7 +188,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
     }
     public async Task<List<SpoolGroupDto>> GroupBySpoolIdentifier(string userId)
     {
-        var result = dbContext.Spools.Where(s => s.UserId == userId)
+        var result = dbContext.Spools.Where(s => s.UserId == userId && s.IsDeleted == false)
             .GroupBy(s => s.Identifier)
             .Select(g => new SpoolGroupDto(
                 g.Key,
