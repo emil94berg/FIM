@@ -33,6 +33,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
     return (
         <AlertDialog>
+
             <AlertDialogTrigger asChild>
                 {children}
             </AlertDialogTrigger>

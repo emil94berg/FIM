@@ -32,11 +32,6 @@ namespace FIM.Server.BackgroundServices
                 }
 
 
-
-
-
-
-
                 await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
             }
         }

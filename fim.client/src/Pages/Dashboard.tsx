@@ -1,227 +1,195 @@
-import type { components } from "../types/schema" 
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input"
-import { authFetch } from "../auth/authFetch"
-import DashCard from "@/components/DashboardCard"
-import PrintsChart from "@/components/BarChart"
-import { EditSpoolForm } from "@/components/spools/EditSpoolForm"
+import { useEffect, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { authFetch } from "../auth/authFetch";
+import PrintsChart from "@/components/BarChart";
+import { EditSpoolForm } from "@/components/spools/EditSpoolForm";
+import { SpoolItem } from "@/components/dashboard/SpoolItem";
+import { OverviewTab } from "@/components/dashboard/OverviewTab";
+import { Button } from "@/components/ui/button";
+import type { components } from "@/types/schema";
+import { Link } from "react-router-dom";
+import { CompletedPrintsChart } from "@/components/dashboard/CompletedRadarChart"
+import { ChartSpoolMaterialLeft } from "@/components/dashboard/ChartSpoolMaterialLeft";
+import { ChartPrintOutcome } from "@/components/dashboard/ChartPrintOutcome";
+import { CardTotalSpoolCost } from "@/components/dashboard/CardTotalSpoolCost";
+
 
 type PrintDto = components["schemas"]["PrintDto"];
 type SpoolDto = components["schemas"]["SpoolDto"];
 
 export default function DashboardHome() {
-    const [pendingPrints, setPendingPrints] = useState<PrintDto[]>([]);
-    const [allLowSpools, setAllLowSpools] = useState<SpoolDto[]>([]);
-    const [printingPrints, setPrintingPrints] = useState<PrintDto[]>([]);
-    const [allSpools, setAllSpools] = useState<SpoolDto[]>([]);
-    const [searchSpools, setSearchSpools] = useState<SpoolDto[]>([]);
-    const [editingSpool, setEditingSpool] = useState<SpoolDto | null>(null);
-
-    const [searchData, setSearchData] = useState({
-        searchString: ""
+    const [activeTab, setActiveTab] = useState("overview");
+    
+    const [data, setData] = useState({
+        pending: [] as PrintDto[],
+        printing: [] as PrintDto[],
+        lowSpools: [] as SpoolDto[],
+        allSpools: [] as SpoolDto[],
+        allCompletedPrints: [] as PrintDto[]
     });
 
+
+    const [searchString, setSearchString] = useState("");
+    const [editingSpool, setEditingSpool] = useState<SpoolDto | null>(null);
+
+    const fetchDashBoardData = async () => {
+        const [pending, printing, low, all, prints ] = await Promise.all([
+            authFetch(`https://localhost:7035/Print/pending`),
+            authFetch(`https://localhost:7035/Print/printing`),
+            authFetch('https://localhost:7035/Spool/GetLowSpools'),
+            authFetch(`https://localhost:7035/spool`),
+            authFetch(`https://localhost:7035/Print`)
+        ]);
+        return { pending, printing, lowSpools: low, allSpools: all, allCompletedPrints: prints };
+    };
+
     useEffect(() => {
-        const loadPendingPrints = async () => {
+        const loadDashBoardData = async () => {
             try {
-                const data: PrintDto[] = await authFetch(`https://localhost:7035/Print/pending`);
-                setPendingPrints(data);
+                const nextData = await fetchDashBoardData();
+                setData(nextData);
             } catch (error) {
-                console.error("Error fetching data: " + error);
+                console.error("Error loading dashboard data", error);
             }
         };
-        loadPendingPrints();
-    }, []);
 
-    useEffect(() => {
-        const loadAllSpools = async () => {
-            try {
-                const data: SpoolDto[] = await authFetch('https://localhost:7035/Spool/GetLowSpools');
-                setAllLowSpools(data);
-            } catch (error) {
-                console.log("Failed to fetch" + error)
-            }
-        };
-        loadAllSpools();
-    }, []);
-
-    useEffect(() => {
-        const loadPrintingPrints = async () => {
-            try {
-                const data: PrintDto[] = await authFetch(`https://localhost:7035/Print/printing`);
-                setPrintingPrints(data);
-            } catch (error) {
-                console.log("Failed to fetch: " + error);
-            }
-        };
-        loadPrintingPrints();
-    }, []);
-
-    useEffect(() => {
-        const loadAllSpools = async () => {
-            try {
-                const data: SpoolDto[] = await authFetch(`https://localhost:7035/spool`);
-                setAllSpools(data);
-            }
-            catch (error) {
-                console.log("Failed to fetch spools: " + error)
-            }
-
-        };
-        loadAllSpools();
-    }, []);
-
-    useEffect(() => {
-        setSearchSpools(allSpools)
-    }, [allSpools])
+        void loadDashBoardData();
+     }, []);
 
     const handleUpdateSpool = async (id: number | string, updated: Partial<SpoolDto>) => {
         try {
-            const updateSpool: SpoolDto = await authFetch(`https://localhost:7035/spool/${id}`, {
+            await authFetch(`https://localhost:7035/spool/${id}`, {
                 method: "PATCH",
                 body: JSON.stringify(updated)
             });
-            setAllSpools(prev => prev.map(s => s.id === id ? updateSpool : s));
+            const nextData = await fetchDashBoardData();
+            setData(nextData);
             setEditingSpool(null);
         } catch (error) {
             console.error("Error updating spool", error);
         }
-    }
-    const handleSetEdit = (s:SpoolDto) => {
-        setEditingSpool(null);
-        setEditingSpool(s);
-    }
-
-    const getRemainingWeightValue = (spool: SpoolDto) => Number(spool.remainingWeight);
-    const getTotalWeightValue = (spool: SpoolDto) => Number(spool.totalWeight);
-    const getRemainingPercentage = (spool: SpoolDto) => {
-        const totalWeight = getTotalWeightValue(spool);
-        const remainingWeight = getRemainingWeightValue(spool);
-
-        if (!Number.isFinite(totalWeight) || totalWeight <= 0 || !Number.isFinite(remainingWeight)) {
-            return 0;
-        }
-
-        return Math.max(0, Math.min(100, (remainingWeight / totalWeight) * 100));
     };
 
-    const getBarColorClass = (spool: SpoolDto) => {
-        const remainingWeight = getRemainingWeightValue(spool);
-        const remainingPercentage = getRemainingPercentage(spool);
-
-        if (remainingWeight < 0) {
-            return "bg-red-600";
-        }
-
-        if (remainingPercentage <= 20) {
-            return "bg-amber-500";
-        }
-
-        return "bg-emerald-500";
-    };
-
-    
-    
+     const filteredSpools = data.allSpools.filter(s =>
+        s.colorName.toLowerCase().includes(searchString.toLowerCase()) ||
+        s.brand.toLowerCase().includes(searchString.toLowerCase()) ||
+        s.material.toLowerCase().includes(searchString.toLowerCase())
+    );
     return (
-        <div className="flex flex-col h-screen p-4 gap-4 overflow-scroll">
-            {/* Övre sektion med max 50% höjd */}
-            <div className="max-w-full max-h-[50%] overflow-y-auto">
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-3xl font-bold">Dashboard</h1>
-                    <Input placeholder="Search spools"
-                        type="search" id="input-field-search"
-                        value={searchData.searchString}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setSearchData({ searchString: value });
+        <div className="flex flex-col h-screen p-4 gap-4 overflow-hidden"> 
+            
+            <div className="flex items-center">
+                <h1 className="text-3xl font-extrabold tracking-tight">Dashboard</h1>
+            </div>
 
-                            const filtered = (searchData.searchString == null || searchData.searchString == "") ? allSpools : allSpools.filter(spool =>
-                                spool.colorName.toLowerCase().includes(value.toLowerCase()) ||
-                                spool.brand.toLowerCase().includes(value.toLowerCase()) ||
-                                spool.material.toLowerCase().includes(value.toLowerCase())
-                                
-                            );
-                            setSearchSpools(filtered);
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden w-full">
+                <TabsList className="w-fit">
+                    <TabsTrigger value="overview" className="bg-transparent">Overview</TabsTrigger>
+                    <TabsTrigger value="inventory" className="bg-transparent">Inventory</TabsTrigger>
+                    <TabsTrigger value="stats" className="bg-transparent">Statistics</TabsTrigger>
+                    <TabsTrigger value="test" className="bg-transparent">Test</TabsTrigger>
+                </TabsList>
 
-                        }} />
-                </div>
-
-                <div className="flex gap-4">
-                    <div className="w-1/2 border p-4 overflow-y-auto max-h-[40vh]">
-                    <h1 className="text-3xl font-bold">Current Prints and Low Spools</h1>
-                        <div className="grid grid-cols-3 gap-4">
-                            <DashCard<PrintDto>
-                                title="Pending prints"
-                                items={pendingPrints}
-                                typeName="prints"
-                                renderItem={(p) => (
-                                    <span className="text-xl">
-                                        {p.name}, {new Date(p.createdAt).toLocaleString("sv-SE", {
-                                            year: "numeric",
-                                            month: "2-digit",
-                                            day: "2-digit",
-                                            hour: "2-digit",
-                                            minute: "2-digit"
-                                        })}
-                                    </span>
-                                )}
-                            />
-                            <DashCard<SpoolDto>
-                                title="Low spools"
-                                items={allLowSpools}
-                                typeName="spools"
-                                renderItem={(s) => <span className="text-xl">{s.brand} {s.material} {s.colorName}</span>}
-                            />
-                            <DashCard
-                                title="Live prints"
-                                items={printingPrints}
-                                typeName="prints"
-                                renderItem={(p) => <span className="text-xl">{p.name}</span>}
-                            />
-                        </div>
+                <TabsContent value="overview" className="flex-1 overflow-auto mt-4">
+                    <div className="mb-4 flex flex-wrap gap-2">
+                        <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
+                            <Link to="/create-print">Create Print</Link>
+                        </Button>
+                        <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
+                            <Link to="/activePrints">Active Prints</Link>
+                        </Button>
                     </div>
 
-                    <div className="bg-blue-200 w-1/2 p-4 overflow-y-auto max-h-[40vh]">
-                    <h1 className="text-3xl font-bold">Spool Inventory</h1>
-                        {searchSpools.map(s => (
-                            <button key={s.id} onClick={() => handleSetEdit(s)} className="block bg-blue-300 text-left w-full hover:bg-orange-300 p-3 space-y-2">
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="font-medium">{s.brand}, {s.material}, {s.colorName}</span>
-                                    <span className={getRemainingWeightValue(s) < 0 ? "font-semibold text-red-600" : "text-slate-800"}>
-                                        {s.remainingWeight} / {s.totalWeight} g
-                                    </span>
-                                </div>
-                                <div className="h-3 w-full overflow-hidden rounded-full bg-white/70">
-                                    <div
-                                        className={`h-full rounded-full transition-all ${getBarColorClass(s)}`}
-                                        style={{ width: `${getRemainingPercentage(s)}%` }}
-                                    />
-                                </div>
-                                <div className="flex items-center justify-between text-sm">
-                                    <span>{Math.round(getRemainingPercentage(s))}% remaining</span>
-                                    {getRemainingWeightValue(s) < 0 ? (
-                                        <span className="font-semibold text-red-600">Warning: Negative</span>
-                                    ) : null}
-                                </div>
-                            </button>
+                    <OverviewTab 
+                        pending={data.pending}
+                        printing={data.printing}
+                        lowSpools={data.lowSpools}
+                    />
+                </TabsContent>
+
+                <TabsContent value="inventory" className="flex-1 overflow-auto mt-4">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                        <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
+                            <Link to="/create-spool">Create Spool</Link>
+                        </Button>
+                        <Input
+                            className="w-full sm:max-w-xs"
+                            placeholder="Search inventory..."
+                            value={searchString}
+                            onChange={(e) => setSearchString(e.target.value)}
+                        />
+                    </div>
+                    <CardTotalSpoolCost spools={data.allSpools} />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {filteredSpools.map(s => (
+                            <SpoolItem key={s.id} spool={s} onEdit={setEditingSpool} />
                         ))}
                     </div>
-                </div>
-            </div>
+                </TabsContent>
 
-            {/* Nedre sektion för diagram */}
-            <div className="flex-1 overflow-y-auto">
-                <h1 className="text-3xl font-bold">Statistics</h1>
-                <PrintsChart />
-            </div>
-            {/*{editingSpool ?  }*/}
-            {editingSpool ? (
-                <EditSpoolForm
-                    key={editingSpool.id}
-                    spool={editingSpool}
-                    onCancel={() => setEditingSpool(null)}
-                    onSubmit={handleUpdateSpool}></EditSpoolForm>
-            ) : (null) }
+                {/* <TabsContent value="stats" className="flex-1 mt-4 outline-none overflow-auto">
+                    <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
+                        <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
+
+                        <div className="flex flex-row gap-4 min-h-0">
+                        <div className="flex-[3] min-w-0 flex flex-col gap-4">
+                            <div className="w-full">
+                            <ChartSpoolMaterialLeft spools={data.allSpools} />
+                            </div>
+                            <div className="w-full">
+                            <PrintsChart />
+                            </div>
+                        </div>
+
+                        <div className="bg-blue-500 flex-[1] min-w-[220px] rounded-xl" />
+                        </div>
+                    </div>
+                </TabsContent> */}
+
+                <TabsContent value="stats" className="flex-1 mt-4 outline-none overflow-auto">
+                    <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
+                        <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
+
+                        <div className="flex-row flex gap-4">
+                            
+                            {/* Show Stats */}
+                            <div className="flex-[3]"> 
+                                <PrintsChart />
+                            </div>
+
+                            {/* PieCharts */}
+                            <div className="flex-[1]">
+                                <ChartSpoolMaterialLeft spools={data.allSpools} />
+                                <div className="mt-4" /> {/* Ugly solution for spacing */}
+                                <ChartPrintOutcome prints={data.allCompletedPrints} />
+                            </div>
+                        </div>
+                    </div>
+                </TabsContent>
+                <TabsContent value="test" className="flex-1 mt-4 outline-none">
+                    <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
+                        <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
+
+                        <div className="flex-row flex">
+                            
+                            {/* Show Stats */}
+                            <div className="flex-[3]"> 
+                                <CompletedPrintsChart
+                                    prints={data.allCompletedPrints}
+                                ></CompletedPrintsChart>
+                            </div>
+                        </div>
+                    </div>
+                </TabsContent>
+            </Tabs>
+            {editingSpool && (
+                <EditSpoolForm 
+                    spool={editingSpool} 
+                    onCancel={() => setEditingSpool(null)} 
+                    onSubmit={handleUpdateSpool}
+                />
+            )}
         </div>
-    )
+    );
 }

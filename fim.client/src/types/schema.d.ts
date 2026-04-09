@@ -301,6 +301,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Print/StartPrint": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["StartPrintDto"];
+                    "text/json": components["schemas"]["StartPrintDto"];
+                    "application/*+json": components["schemas"]["StartPrintDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/PublicFilamentCatalog": {
         parameters: {
             query?: never;
@@ -315,6 +354,7 @@ export interface paths {
                     pageSize?: number | string;
                     sortOrder?: string;
                     searchTerm?: string;
+                    isDescending?: boolean;
                 };
                 header?: never;
                 path?: never;
@@ -679,6 +719,8 @@ export interface components {
             startedAt: null | string;
             /** Format: date-time */
             estimatedEndTime: null | string;
+            /** Format: date-time */
+            completedAt: null | string;
             spool: null | components["schemas"]["Spool"];
         };
         PrintStatus: number;
