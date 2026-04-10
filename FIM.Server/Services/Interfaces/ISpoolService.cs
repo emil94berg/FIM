@@ -15,4 +15,5 @@ public interface ISpoolService
     Task<SpoolDto> UpdateSpoolWeightAsync(SpoolWeightDto spoolWeightDto, string usedId);
     Task<IEnumerable<SpoolDto>> GetAllDeletedSpoolsAsync(string usedId);
     Task<SpoolDto> ChangeDeletedStatusAsync(SpoolDto dto, string userId);
+    Task<List<SpoolGroupDto>> GroupBySpoolIdentifier(string userId);
 }

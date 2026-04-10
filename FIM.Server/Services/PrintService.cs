@@ -1,5 +1,6 @@
 ﻿using FIM.Server.Data;
 using FIM.Server.DTOs.PrintDtos;
+using FIM.Server.DTOs.SpoolDtos;
 using FIM.Server.Helpers.DTOMapper;
 using FIM.Server.Migrations;
 using FIM.Server.Models;
@@ -258,5 +259,6 @@ namespace FIM.Server.Services
             else return null;
 
         }
+        
     }
 }

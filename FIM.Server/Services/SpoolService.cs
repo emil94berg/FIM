@@ -87,22 +87,26 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         if (dto.Finish != null) spool.Finish = dto.Finish;
         if (dto.Glow.HasValue) spool.Glow = dto.Glow.Value;
         if (dto.Favorite.HasValue) spool.Favorite = dto.Favorite.Value;
-        if (dto.TotalWeight.HasValue)        
-        {
-            if (spool.TotalWeight != spool.RemainingWeight)
-            {
-                throw new InvalidOperationException("Total weight cannot be changed after the spool has been used.");
-            }
-
-            spool.TotalWeight = dto.TotalWeight.Value;
-            if (spool.RemainingWeight > spool.TotalWeight)
-            {
-                spool.RemainingWeight = spool.TotalWeight;
-            }
-        }
+        if (dto.TotalWeight.HasValue) spool.TotalWeight = dto.TotalWeight.Value;
+        if (dto.RemainingWeight.HasValue) spool.RemainingWeight = dto.RemainingWeight.Value;
+        if (dto.Diameter.HasValue) spool.Diameter = dto.Diameter.Value;
         if (dto.SpoolCost.HasValue) spool.SpoolCost = dto.SpoolCost.Value;
+        //if (dto.TotalWeight.HasValue)        
+        //{
+        //    if (spool.TotalWeight != spool.RemainingWeight)
+        //    {
+        //        throw new InvalidOperationException("Total weight cannot be changed after the spool has been used.");
+        //    }
 
-        spool.Identifier = $"{dto.Brand}_{dto.Material}_{dto.ColorName}";
+        //    spool.TotalWeight = dto.TotalWeight.Value;
+        //    if (spool.RemainingWeight > spool.TotalWeight)
+        //    {
+        //        spool.RemainingWeight = spool.TotalWeight;
+        //    }
+        //}
+
+        string diameterText = spool.Diameter.ToString().Replace(",", "");
+        spool.Identifier = $"{spool.Brand}_{spool.Material}_{spool.ColorName}_{diameterText}";
 
         await dbContext.SaveChangesAsync();
         return SpoolDto.FromSpool(spool);
@@ -185,6 +189,16 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             return SpoolDto.FromSpool(result);
         }
         else return null;
+    }
+    public async Task<List<SpoolGroupDto>> GroupBySpoolIdentifier(string userId)
+    {
+        var result = dbContext.Spools.Where(s => s.UserId == userId && s.IsDeleted == false)
+            .GroupBy(s => s.Identifier)
+            .Select(g => new SpoolGroupDto(
+                g.Key,
+                SpoolDto.ToListSpoolDto(g.ToList())
+                )).ToList();
+        return result;
     }
 
 }
