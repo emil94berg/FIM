@@ -3,7 +3,6 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import * as React from "react"
 import {  ChevronsUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -98,9 +97,6 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
                                                             cancelButtonClassName="bg-red-500 text-white"
                                                             ><Button className="bg-red-500 text-white">Delete</Button>
                                                         </ConfirmDialog>
-
-
-                                                        {/*<Button className="bg-red-500 text-white" onClick={() => onDelete(s.id!)}>Delete</Button>*/}
                                                     </TableCell>
                                                 </TableRow>
 
@@ -114,31 +110,5 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
                 </Collapsible>
             ))}
         </div>
-
-
-
-
-     //<Table>}
-     //<TableRow>}
-     //     <TableHeader>}
-     //             <TableRow>}
-     //           <TableHead>Identifier</TableHead>}
-     //                 <TableHead>Total weight</TableHead>}
-     //            </TableRow>}
-     //         </TableHeader>}
-     //      </TableRow>}
-     //      <TableBody>}
-     //          {groupedSpools.map(gs => (}
-     //               <TableRow key={gs.identifier}>
-     //                   <TableCell>{gs.identifier}</TableCell>
-     //                   {gs.spools.map(s => (
-     //                       <TableCell key={s.id}>{s.brand}</TableCell>
-     //                   ))}
-     //               </TableRow>
-     //           ))}
-               
-     //       </TableBody>
-     //   </Table>
-
     )
 }

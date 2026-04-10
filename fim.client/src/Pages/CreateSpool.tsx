@@ -20,7 +20,6 @@ export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
 }
 
 export default function GetSpools() {
-    const [spools, setSpools] = useState<Spool[]>([]);
     const [editingSpool, setEditingSpool] = useState<Spool | null>(null);
     const [deletedSpools, setDeletedSpools] = useState<Spool[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
@@ -41,19 +40,6 @@ export default function GetSpools() {
     }, [])
 
     
-    useEffect(() => {
-        const loadSpools = async () => {
-            try {
-                const data: Spool[] = await authFetch("https://localhost:7035/spool");
-                setSpools(data);
-            } catch (error) {
-                console.error("Error fetching spools:", error);
-            }
-        };
-
-        loadSpools();
-    }, []);
-
     useEffect(() => {
         const loadDeletedSpools = async () => {
             try {
@@ -92,8 +78,6 @@ export default function GetSpools() {
                 method: "PATCH",
                 body: JSON.stringify(updated)
             });
-            setSpools(prev => prev.map(s => s.id === id ? updateSpool : s));
-
             setGroupedSpools(prev => prev.map(gs => ({
                 ...gs,
                 spools: gs.spools.map(s => s.id === id ? updateSpool : s)
@@ -112,7 +96,6 @@ export default function GetSpools() {
             const data: Spool = await authFetch(`https://localhost:7035/spool/${id}`, {
                 method: "DELETE"
             });
-            setSpools(prev => prev.filter(s => s.id !== id));
             setDeletedSpools(prev => [...prev, data]);
         }
         catch (error) {
