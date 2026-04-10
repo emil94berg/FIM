@@ -3,6 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import type { components } from "../../types/schema";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog"
 
 type Spool = components["schemas"]["SpoolDto"];
 
@@ -35,50 +43,57 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
     }
 
     return (
-        <div>
-            <h2>Edit Spool</h2>
-            <form onSubmit={handleSubmit} className="spacey-y-4">
-                <div className="flex flex-col gap-1">
-                    <Label>
-                        Spool Brand:
-                        <Input type="text" name="brand" value={formData.brand} onChange={handelChange} />
-                    </Label>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <Label>
-                        Spool Material:
-                        <Input type="text" name="material" value={formData.material} onChange={handelChange} />
-                    </Label>
-                </div>
-                <div className="flex flex-col gap-1"> 
-                    <Label>
-                        Spool Color:
-                        <Input type="text" name="colorName" value={formData.colorName} onChange={handelChange} />
-                    </Label>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <Label>
-                        Spool Diameter:
-                        <Input type="number" name="diameter" value={formData.diameter} onChange={handelChange} />
-                    </Label>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <Label>
-                        Total Weight:
-                        <Input type="number" name="totalWeight" value={formData.totalWeight} onChange={handelChange} />
-                    </Label>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <Label>
-                        Spool Cost:
-                        <Input type="number" name="spoolCost" value={formData.spoolCost} onChange={handelChange} />
-                    </Label>
-                </div>
-                <Button className="bg-blue-500 text-black" type="submit">Update Spool</Button>
-                <Button className="bg-red-500 text-white" type="button" onClick={onCancel}>
-                    Cancel
-                </Button>
-            </form>
-        </div>
+        <Dialog open onOpenChange={(open) => {
+            if (!open) onCancel();
+        }}>
+            <DialogContent className="bg-white">
+                <DialogHeader>
+                    <DialogTitle>Edit Spool</DialogTitle>
+                    <DialogDescription>Make changes to the spool details below.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="flex flex-col gap-1">
+                        <Label>
+                            Spool Brand:
+                            <Input type="text" name="brand" value={formData.brand} onChange={handelChange} />
+                        </Label>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Label>
+                            Spool Material:
+                            <Input type="text" name="material" value={formData.material} onChange={handelChange} />
+                        </Label>
+                    </div>
+                    <div className="flex flex-col gap-1"> 
+                        <Label>
+                            Spool Color:
+                            <Input type="text" name="colorName" value={formData.colorName} onChange={handelChange} />
+                        </Label>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Label>
+                            Spool Diameter:
+                            <Input type="number" name="diameter" value={formData.diameter} onChange={handelChange} />
+                        </Label>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Label>
+                            Total Weight:
+                            <Input type="number" name="totalWeight" value={formData.totalWeight} onChange={handelChange} />
+                        </Label>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Label>
+                            Spool Cost:
+                            <Input type="number" name="spoolCost" value={formData.spoolCost} onChange={handelChange} />
+                        </Label>
+                    </div>
+                    <DialogFooter>
+                        <Button className="bg-blue-500 text-black" type="submit">Update Spool</Button>
+                        <Button className="bg-red-500 text-white" type="button" onClick={onCancel}>Cancel</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     )
 }
