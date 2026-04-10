@@ -31,7 +31,7 @@ export function SetSpoolPrice({
 
     return (
         <AlertDialog>
-            <AlertDialogTrigger className="bg-transparent">
+            <AlertDialogTrigger className="bg-transparent" asChild>
                 <Button variant="outline" className="bg-blue-500 text-yellow">Add to spools</Button>
             </AlertDialogTrigger>
 
@@ -41,7 +41,7 @@ export function SetSpoolPrice({
                     <AlertDialogDescription>What is the purchase price?</AlertDialogDescription>
                 </AlertDialogHeader>
                 {warningtext !== "" ? (
-                    <Label style={{ color: "red", fontSize:"18px" }}>{warningtext}</Label>
+                    <Label htmlFor="spoolPrice" style={{ color: "red", fontSize:"18px" }} id="spoolPriceWarning">{warningtext}</Label>
                 ): (
                    null ) }
                 <div className="py-4">
@@ -50,6 +50,7 @@ export function SetSpoolPrice({
                         type="number"
                         onChange={(e) => setLocalPrice(Number(e.target.value))}
                         id="spoolPrice"
+                        name="spoolPrice"
                         placeholder="Spool price">
                     </Input>
                 </div>
@@ -57,10 +58,10 @@ export function SetSpoolPrice({
                     <AlertDialogAction onClick={() => {
                         onConfirm(localPrice);
                     }}
-                        className="bg-blue-500 text white">
+                        className="bg-blue-500 text-white">
                         Set Price
                     </AlertDialogAction>
-                    <AlertDialogCancel>"Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="bg-red-500 text-white">Cancel</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

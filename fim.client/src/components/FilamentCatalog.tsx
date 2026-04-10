@@ -197,6 +197,7 @@ export function CatalogList() {
         <div>
             <div className="flex justify-end mb-4">
                 <input type="text" 
+                id="searchInput"
                 placeholder="Search name, brand, material..." 
                 className="border rounded px-4 py-2 w-full md:w-64 bg-transparent"
                 value={searchTerm}
@@ -265,7 +266,7 @@ export function CatalogList() {
 
                             </TableCell>
                             <TableCell>{s.weight}gr</TableCell>
-                            <TableCell>{ s.finish ? s.finish : "N/A" }</TableCell>
+                            <TableCell>{s.finish ? s.finish : "N/A" }</TableCell>
                             <TableCell>{s.translucent ? "Yes" : "No"}</TableCell>
                             <TableCell>{s.glow ? "Yes" : "No"}</TableCell>
                             <TableCell>
@@ -278,33 +279,24 @@ export function CatalogList() {
                                         </Button>
                                         
                                     </div>
-                                
-                                
-                                
                                 ) : (
-                                    <div>
-                                            <ConfirmDialog title="Remove favorite"
-                                                description={`Are you sure you want to remove ${s.identifier}`}
-                                                confirmText="Delete"
-                                                confirmButtonClassName="bg-red-500 text-white"
-                                                cancelButtonClassName="bg-blue-500 text-black"
-                                                onConfirm={() => deleteFavorite(s.identifier)}
-                                            ><Button className="bg-transparent" size="icon" ><StarSolidIcon className="text-yellow-500"></StarSolidIcon></Button></ConfirmDialog>
-                                            {spoolExists(s) ? (
-                                                <SetSpoolPrice warningtext="This spool already exists in your inventory"
-                                                    onConfirm={(price: number) => favoriteToSpools(s, price)}
-                                                ></SetSpoolPrice>
-                                                ) : (
-                                                <SetSpoolPrice
-                                                    onConfirm={(price: number) => favoriteToSpools(s, price)}
-                                                ></SetSpoolPrice>
-                                            )}
-                                            
+                                    <div className="flex flex-col">
+                                        <ConfirmDialog title="Remove favorite"
+                                            description={`Are you sure you want to remove ${s.identifier}`}
+                                            confirmText="Delete"
+                                            confirmButtonClassName="bg-red-500 text-white"
+                                            cancelButtonClassName="bg-blue-500 text-black"
+                                            onConfirm={() => deleteFavorite(s.identifier)}
+                                        ><Button className="bg-transparent" size="icon" ><StarSolidIcon className="text-yellow-500"></StarSolidIcon></Button></ConfirmDialog>
                                     </div>
-                                        
-                                        
                                     )}
-                                
+                                    <div>
+                                        {spoolExists(s) ? (
+                                            <SetSpoolPrice warningtext="This spool already exists in your inventory" onConfirm={(price: number) => favoriteToSpools(s, price)}></SetSpoolPrice>
+                                        ) : (
+                                            <SetSpoolPrice onConfirm={(price: number) => favoriteToSpools(s, price)}></SetSpoolPrice>
+                                        )}
+                                    </div>
                             </TableCell>
                         </TableRow>
                     ))}
