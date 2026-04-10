@@ -41,7 +41,6 @@ export default function GetSpools() {
     }, [])
 
     
-
     useEffect(() => {
         const loadSpools = async () => {
             try {
@@ -70,7 +69,21 @@ export default function GetSpools() {
 
     const handleCreateSpool = async (spool: CreateSpoolDto) => {
         const newSpool = await CreateSpool(spool);
-        setSpools(prev => [...prev, newSpool]);
+        if (!groupedSpools.some(sg => sg.identifier == newSpool.identifier)) {
+            const newSpoolGroup: GroupedSpool = { identifier: newSpool.identifier, spools: [newSpool] }
+            setGroupedSpools(prev => [...prev, newSpoolGroup])
+        }
+        else {
+            setGroupedSpools(prev => prev.map(gs => {
+                if (gs.identifier !== newSpool.identifier) return gs
+                return {
+                    ...gs,
+                    spools: [...gs.spools, newSpool]
+                }
+            }
+            ))
+        }
+
     }
 
     const handleUpdateSpool = async (id: number | string, updated: Partial<Spool>) => {
@@ -80,6 +93,14 @@ export default function GetSpools() {
                 body: JSON.stringify(updated)
             });
             setSpools(prev => prev.map(s => s.id === id ? updateSpool : s));
+
+            setGroupedSpools(prev => prev.map(gs => ({
+                ...gs,
+                spools: gs.spools.map(s => s.id === id ? updateSpool : s)
+            })));
+
+
+
             setEditingSpool(null);
         } catch (error) {
             console.error("Error updating spool", error);
@@ -103,12 +124,38 @@ export default function GetSpools() {
     }
     const handleActiveFromComponent = (spool: Spool) => {
         setDeletedSpools(prev => prev.filter(prev => prev.id !== spool.id));
-        setSpools(prev => [...prev, spool]);
+
+        if (!groupedSpools.some(sg => sg.identifier == spool.identifier)) {
+            const newSpoolGroup: GroupedSpool = { identifier: spool.identifier, spools: [spool] }
+            setGroupedSpools(prev => [...prev, newSpoolGroup])
+        }
+        else {
+            setGroupedSpools(prev => prev
+                .map(gs => {
+                    if (gs.identifier !== spool.identifier) return gs
+                    return {
+                        ...gs,
+                        spools: [...gs.spools, spool]
+                    };
+                })
+            )
+        }
     }
+
     //Uppdatera UI när vi plockar bort samt lägger till filament i vår groupedSpools lista
     const handleGroupedSpoolsActivate = (grouped: GroupedSpool, id: number) => {
-        setGroupedSpools(prev => prev.filter(prev => prev.spools.filter(s => s.id != id)))
-    }
+        setGroupedSpools(prev =>
+            prev
+                .map(gs => {
+                    if (gs.identifier !== grouped.identifier) return gs;
+                    return {
+                        ...gs,
+                        spools: gs.spools.filter(s => s.id !== id)
+                    };
+                })
+                .filter(gs => gs.spools.length > 0)
+        );
+    };
 
     return (
         <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
@@ -118,6 +165,7 @@ export default function GetSpools() {
                         groupedSpools={groupedSpools}
                         onEditSpool={setEditingSpool}
                         onDelete={handleDeleteSpool}
+                        handleGrouped={handleGroupedSpoolsActivate}
                     ></AllSpoolsGrouped>
                 </div>
                 {showDeleted ? (

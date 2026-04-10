@@ -23,10 +23,11 @@ type AllSpoolsGroupedProps = {
     groupedSpools: GroupedSpool[]
     onEditSpool: (s: Spool) => void
     onDelete: (id: number | string) => void
+    handleGrouped: (groupSpools: GroupedSpool, id: number) => void
 }
 
 
-export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete }: AllSpoolsGroupedProps)  {
+export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleGrouped }: AllSpoolsGroupedProps)  {
    
     const getRemainingWeightValue = (spool: Spool) => Number(spool.remainingWeight);
 
@@ -89,13 +90,14 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete }: AllSp
                                                     <TableCell>
                                                         <Button className="bg-blue-500 text-black" onClick={() => onEditSpool(s)}>Edit</Button>
                                                         <ConfirmDialog
-                                                            onConfirm={() => onDelete(s.id)}
+                                                            onConfirm={async () => { await onDelete(s.id); handleGrouped(gs, Number(s.id)) }}
                                                             title={`Delete ${s.identifier}`}
                                                             description="You activate your deleted spools for up to 1 week after removal"
                                                             confirmText="Delete"
                                                             confirmButtonClassName="bg-red-500 text-white"
                                                             cancelButtonClassName="bg-red-500 text-white"
-                                                        ><Button className="bg-red-500 text-white">Delete</Button></ConfirmDialog>
+                                                            ><Button className="bg-red-500 text-white">Delete</Button>
+                                                        </ConfirmDialog>
 
 
                                                         {/*<Button className="bg-red-500 text-white" onClick={() => onDelete(s.id!)}>Delete</Button>*/}
