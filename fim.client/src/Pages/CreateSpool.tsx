@@ -124,7 +124,6 @@ export default function GetSpools() {
             )
         }
     }
-
     //Uppdatera UI när vi plockar bort samt lägger till filament i vår groupedSpools lista
     const handleGroupedSpoolsActivate = (grouped: GroupedSpool, id: number) => {
         setGroupedSpools(prev =>
@@ -167,7 +166,6 @@ export default function GetSpools() {
                 }
 
             </div>
-           
             <div style={{display: "flex"} }>
                 {editingSpool ? (
                     <EditSpoolForm
@@ -179,10 +177,9 @@ export default function GetSpools() {
                     <AddSpoolForm onSubmit={handleCreateSpool} />
                 )}
             </div>
-            <div style={{display: "flex"} }>
-               
+            <div style={{ display: "flex" }}>
+
             </div>
-            
         </div>
     )
 }
