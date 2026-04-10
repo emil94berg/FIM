@@ -47,12 +47,19 @@ namespace FIM.Server.Services
 
             if(!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var lowerSearch = searchTerm.ToLower();
-                baseQuery = baseQuery.Where(f => 
-                    f.Name.ToLower().Contains(lowerSearch) ||
-                    f.Brand.ToLower().Contains(lowerSearch) ||
-                    f.Material.ToLower().Contains(lowerSearch)
-                );
+                var tokens = searchTerm.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                foreach(var token in tokens)
+                {
+                    var lowerToken = token.ToLower();
+                    baseQuery = baseQuery.Where(f => 
+                        f.Name.ToLower().Contains(lowerToken) ||
+                        f.Brand.ToLower().Contains(lowerToken) ||
+                        f.Material.ToLower().Contains(lowerToken) ||
+                        f.ColorHex.ToLower().Contains(lowerToken) ||
+                        f.Diameter.ToString().Contains(lowerToken)
+                    );
+                }
             }
 
             var totalCount = await baseQuery.CountAsync();
