@@ -33,6 +33,7 @@ const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
 export default function CreatePrint() {
     const [print, setPrint] = useState<Print[]>([]);
     const [editingPrint, setEditingPrint] = useState<Print | null>(null);
+    const [addingPrint, setAddingPrint] = useState(false);
     const [deletedPrints, setDeletedPrints] = useState<Print[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
@@ -120,6 +121,7 @@ export default function CreatePrint() {
         try {
             const newPrint = await handleSubmit(print);
             setPrint(prev => [...prev, newPrint]);
+            setAddingPrint(false);
         } catch (error: unknown) {
             alert(error instanceof Error ? error.message : "Failed to create print.");
         }
@@ -138,6 +140,7 @@ export default function CreatePrint() {
         <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
             <div style={{ display: "flex", flexDirection: "row" }}>
                 <div style={{ width: "50%" }}>
+                    <Button className="bg-blue-500 text-white" onClick={() => setAddingPrint(true)}>Add Print</Button>
                     
                     <AllPrintsTable
                         Print={print}
@@ -163,14 +166,18 @@ export default function CreatePrint() {
                         
                 )}
             </div>
-            {editingPrint ? (
-                <EditPrintForm
-                    print={editingPrint}
-                    onSubmit={handleUpdatePrint}
-                    onCancel={() => setEditingPrint(null)}></EditPrintForm>
-            ) : (
-                    <AddPrintForm onSubmit={handleCreatePrint}></AddPrintForm>
-            )}
+            <div style={{ display: "flex" }}>
+                {editingPrint ? (
+                    <EditPrintForm
+                        print={editingPrint}
+                        onSubmit={handleUpdatePrint}
+                        onCancel={() => setEditingPrint(null)}></EditPrintForm>
+                ) : addingPrint ? (
+                    <AddPrintForm
+                        onSubmit={handleCreatePrint}
+                        onCancel={() => setAddingPrint(false)}></AddPrintForm>
+                ) : null}
+            </div>
         </div>
     )
 }
