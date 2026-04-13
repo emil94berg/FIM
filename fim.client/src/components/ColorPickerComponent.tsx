@@ -76,7 +76,7 @@ export const ColorCheckBox = ({formData, setFormData }: Props) => {
                         Pick a color
                         <Input
                             type="color"
-                            value={formData.colorHex ?
+                            value={formData?.colorHex ?
                                 `#${formData.colorHex}`
                                 : "#000000"}
                             onChange={(e) =>

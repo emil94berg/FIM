@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import type { components } from "../types/schema";
 import { AddSpoolForm } from '../components/spools/AddSpoolForm';
 import { EditSpoolForm } from '../components/spools/EditSpoolForm';
@@ -7,10 +7,13 @@ import { Button } from "@/components/ui/button"
 import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
 import { TrashIcon } from "@/components/icons/mynaui-trash"
 import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
- 
+import { ExistingSpoolContext } from "@/components/Context/AddSpoolContextType"
+
+
+
 type Spool = components["schemas"]["SpoolDto"];
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
-type GroupedSpool = components["schemas"]["SpoolGroupDto"]; 
+type GroupedSpool = components["schemas"]["SpoolGroupDto"];
 
 export const CreateSpool = async (spool: CreateSpoolDto): Promise<Spool> => {
     return await authFetch("https://localhost:7035/spool", {
@@ -24,6 +27,7 @@ export default function GetSpools() {
     const [deletedSpools, setDeletedSpools] = useState<Spool[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
     const [groupedSpools, setGroupedSpools] = useState<GroupedSpool[]>([]);
+    const { setFormData } = useContext(ExistingSpoolContext);
 
     useEffect(() => {
         const loadAllGroupedSpool = async () => {
@@ -31,15 +35,15 @@ export default function GetSpools() {
                 const data: GroupedSpool[] = await authFetch(`https://localhost:7035/spool/GetGroupSpools`)
                 setGroupedSpools(data);
             }
-            catch (error){
+            catch (error) {
                 console.log("Failed to load from spools... " + (error));
             }
-          
+
         }
         loadAllGroupedSpool();
     }, [])
 
-    
+
     useEffect(() => {
         const loadDeletedSpools = async () => {
             try {
@@ -99,7 +103,7 @@ export default function GetSpools() {
             setDeletedSpools(prev => [...prev, data]);
         }
         catch (error) {
-                console.error("Error deleting spool", error);
+            console.error("Error deleting spool", error);
         }
     }
     const handleShowDeleted = () => {
@@ -139,6 +143,10 @@ export default function GetSpools() {
         );
     };
 
+    const onHandleExisting = (spool: CreateSpoolDto) => {
+        setFormData(spool);
+    }
+
     return (
         <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
             <div style={{ display: "flex", flexDirection: "row" }}>
@@ -148,6 +156,7 @@ export default function GetSpools() {
                         onEditSpool={setEditingSpool}
                         onDelete={handleDeleteSpool}
                         handleGrouped={handleGroupedSpoolsActivate}
+                        onSetExisting={onHandleExisting}
                     ></AllSpoolsGrouped>
                 </div>
                 {showDeleted ? (
@@ -159,14 +168,14 @@ export default function GetSpools() {
                         ></HandleDeletedSpools>
                     </div>
                 ) : (
-                        <div>
-                            <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }} ><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length })</Button>
-                        </div>
-                    )
+                    <div>
+                        <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }} ><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
+                    </div>
+                )
                 }
 
             </div>
-            <div style={{display: "flex"} }>
+            <div style={{ display: "flex" }}>
                 {editingSpool ? (
                     <EditSpoolForm
                         spool={editingSpool}
