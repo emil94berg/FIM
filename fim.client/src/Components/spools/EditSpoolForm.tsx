@@ -89,7 +89,7 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
                         </Label>
                     </div>
                     <DialogFooter>
-                        <Button className="bg-blue-500 text-black" type="submit">Update Spool</Button>
+                        <Button className="bg-blue-500 text-white" type="submit">Update Spool</Button>
                         <Button className="bg-red-500 text-white" type="button" onClick={onCancel}>Cancel</Button>
                     </DialogFooter>
                 </form>

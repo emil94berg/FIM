@@ -5,6 +5,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import type { components } from "../../types/schema"
 import { useState, useEffect } from "react";
 import { authFetch } from "@/auth/authFetch"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog"
 
 
 type Print = components["schemas"]["PrintDto"];
@@ -51,85 +59,98 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
     }, []);
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex flex-col gap-1">
-                <Label>Name: </Label>
-                <Input
-                    value={formData.name}
-                    onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                ></Input>
-            </div>
-            <div className="flex flex-col gap-1">
-                <Label>Status: </Label>
-                <Select
-                    value={String(formData.status)}
-                    onValueChange={(value) =>
-                        setFormData(prev => ({
-                            ...prev, status: Number(value)
-                        }))}
-                    name="Status"
+        <Dialog open onOpenChange={(open) => {
+            if (!open) onCancel();
+        }}>
+            <DialogContent className="bg-white">
+                <DialogHeader>
+                    <DialogTitle>Edit Print</DialogTitle>
+                    <DialogDescription>Make changes to the print details below.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="flex flex-col gap-1">
+                        <Label>Name: </Label>
+                        <Input
+                            className="bg-gray-300"
+                            value={formData.name}
+                            onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        ></Input>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Label>Status: </Label>
+                        <Select
+                            value={String(formData.status)}
+                            onValueChange={(value) =>
+                                setFormData(prev => ({
+                                    ...prev, status: Number(value)
+                                }))}
+                            name="Status"
 
-                >
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Status"></SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border shadow-md">
-                        <SelectGroup>
-                            <SelectGroup>
-                                <SelectLabel>Status</SelectLabel>
-                                {Object.entries(statusMap).map(([key, value]) => (
-                                    <SelectItem key={key} value={String(key)}>{value}</SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="flex flex-col gap-1">
-                <Label htmlFor="spoolId">Spool: </Label>
-                <Select
-                    value={String(formData.spoolId)}
-                    onValueChange={(value) =>
-                        setFormData(prev => ({
-                            ...prev, spoolId: Number(value)
-                        }))}
-                    name="spoolId"
-                >
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select a spool"></SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border shadow-md">
-                        <SelectGroup>
-                            <SelectLabel>Spools</SelectLabel>
-                            {allSpools.map(s => (
-                                <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.colorName}</SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="flex flex-col gap-1">
-                <Label>Grams used: </Label>
-                <Input
-                    value={formData.gramsUsed}
-                    onChange={e => setFormData(prev => ({ ...prev, gramsUsed: Number(e.target.value) }))}
-                ></Input>
-            </div>
-            {showTimeInput && (
-                <div className="flex flex-col gap-1">
-                    <Label>Estimated print time (minutes): </Label>
-                    <Input
-                        type="number"
-                        min={1}
-                        value={formData.estimatedMinutes ?? ""}
-                        onChange={e => setFormData(prev => ({ ...prev, estimatedMinutes: Number(e.target.value) }))}
-                        placeholder="e.g. 120"
-                    />
-                </div>
-            )}
-            <Button className="bg-blue-500 text-black" type="submit">Save</Button>
-            <Button className="bg-red-500 text-white" type="button" onClick={onCancel} >Cancel</Button>
-        </form>
+                        >
+                            <SelectTrigger className="w-full bg-gray-300">
+                                <SelectValue placeholder="Status"></SelectValue>
+                            </SelectTrigger>
+                            <SelectContent className="bg-white border shadow-md">
+                                <SelectGroup>
+                                    <SelectGroup>
+                                        <SelectLabel>Status</SelectLabel>
+                                        {Object.entries(statusMap).map(([key, value]) => (
+                                            <SelectItem key={key} value={String(key)}>{value}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Label htmlFor="spoolId">Spool: </Label>
+                        <Select
+                            value={String(formData.spoolId)}
+                            onValueChange={(value) =>
+                                setFormData(prev => ({
+                                    ...prev, spoolId: Number(value)
+                                }))}
+                            name="spoolId"
+                        >
+                            <SelectTrigger className="w-full bg-gray-300">
+                                <SelectValue placeholder="Select a spool"></SelectValue>
+                            </SelectTrigger>
+                            <SelectContent className="bg-white border shadow-md">
+                                <SelectGroup>
+                                    <SelectLabel>Spools</SelectLabel>
+                                    {allSpools.map(s => (
+                                        <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.colorName}</SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <Label>Grams used: </Label>
+                        <Input
+                            className="bg-gray-300"
+                            value={formData.gramsUsed}
+                            onChange={e => setFormData(prev => ({ ...prev, gramsUsed: Number(e.target.value) }))}
+                        ></Input>
+                    </div>
+                    {showTimeInput && (
+                        <div className="flex flex-col gap-1">
+                            <Label>Estimated print time (minutes): </Label>
+                            <Input
+                                type="number"
+                                min={1}
+                                value={formData.estimatedMinutes ?? ""}
+                                onChange={e => setFormData(prev => ({ ...prev, estimatedMinutes: Number(e.target.value) }))}
+                                placeholder="e.g. 120"
+                            />
+                    </div>
+                )}
+                <DialogFooter>
+                    <Button className="bg-blue-500 text-white" type="submit">Save</Button>
+                    <Button className="bg-red-500 text-white" type="button" onClick={onCancel} >Cancel</Button>
+                </DialogFooter>
+            </form>
+            </DialogContent>
+        </Dialog>
     )
-
 }
