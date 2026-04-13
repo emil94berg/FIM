@@ -8,21 +8,24 @@ import Signup from './pages/Signup';
 import CreatePrint from './pages/CreatePrint';
 import DashBoard from './pages/Dashboard'
 import ActivePrints from './pages/ActivePrints'
+import SpoolProvider from "@/components/Context/AddSpoolContext"
 
 export default function App() {
     return (
         <>
-            <Routes>
-                <Route path="/" element={<SideBarLayout component={ <Home /> } />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/create-spool" element={<SideBarLayout component={<CreateSpool />} />} />
-                    <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
-                    <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
-                    <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
-                </Route>
-            </Routes>
+         
+                <Routes>
+                    <Route path="/" element={<SideBarLayout component={ <Home /> } />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route element={<ProtectedRoute />}>
+                    <Route path="/create-spool" element={<SpoolProvider><SideBarLayout component={<CreateSpool />} /> </SpoolProvider> } />
+                        <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
+                        <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
+                        <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
+                    </Route>
+                 </Routes>
+           
         </>
     );
 }

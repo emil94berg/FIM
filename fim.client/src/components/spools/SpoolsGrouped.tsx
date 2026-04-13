@@ -17,16 +17,18 @@ import type { components } from "@/types/schema"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
 
 type Spool = components["schemas"]["SpoolDto"];
-type GroupedSpool = components["schemas"]["SpoolGroupDto"]; 
+type GroupedSpool = components["schemas"]["SpoolGroupDto"];
+type CreateSpool = components["schemas"]["CreateSpoolDto"];
 type AllSpoolsGroupedProps = {
     groupedSpools: GroupedSpool[]
     onEditSpool: (s: Spool) => void
     onDelete: (id: number | string) => void
     handleGrouped: (groupSpools: GroupedSpool, id: number) => void
+    onSetExisting: (existingSpool: CreateSpool) => void
 }
 
 
-export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleGrouped }: AllSpoolsGroupedProps)  {
+export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleGrouped, onSetExisting }: AllSpoolsGroupedProps)  {
    
     const getRemainingWeightValue = (spool: Spool) => Number(spool.remainingWeight);
 
@@ -86,8 +88,9 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
                                                             day: "2-digit"
                                                         })}
                                                     </TableCell>
-                                                    <TableCell>
-                                                        <Button className="bg-blue-500 text-black" onClick={() => onEditSpool(s)}>Edit</Button>
+                                                <TableCell>
+                                                    <Button className="bg-green-500" onClick={() => onSetExisting(s)}>+</Button>
+                                                    <Button className="bg-blue-500 text-black" onClick={() => onEditSpool(s)}>Edit</Button>
                                                         <ConfirmDialog
                                                             onConfirm={async () => { await onDelete(s.id); handleGrouped(gs, Number(s.id)) }}
                                                             title={`Delete ${s.identifier}`}
