@@ -16,7 +16,6 @@ type AllSpoolsTableProps = {
     spools: Spool[]
     onDelete: (id: number | string) => void
     onEditSpool: (spool: Spool) => void
-
 }
 
 
