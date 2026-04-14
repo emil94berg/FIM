@@ -17,6 +17,7 @@ namespace FIM.Server.Services.Interfaces
         Task<PrintDto> StartPrintAsync(int printId, string userId, int estimatedTime);
         Task<List<PrintDto>> GetAllDeletedPrintsAsync(string userId);
         Task<PrintDto> UpdatePrintStatusAsync(string userId, UpdatePrintStatusDto statusDto);
+        Task<bool> HardDeletePrintAsync(PrintDto dto, string userId);
 
     }
 }
