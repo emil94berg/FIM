@@ -24,8 +24,6 @@ type AddPrintFormProps = {
     onCancel: () => void;
 }
 
-
-
 export const AddPrintForm = ({ onSubmit, onCancel }: AddPrintFormProps) => {
     
     const [Spool, setSpools] = useState<Spool[]>([]);
@@ -72,18 +70,17 @@ export const AddPrintForm = ({ onSubmit, onCancel }: AddPrintFormProps) => {
         <Dialog open onOpenChange={(open) => {
             if (!open) onCancel();
         }}>
-            <DialogContent className="bg-white">
+            <DialogContent className="bg-white sm:max-w-md max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Add a New Print</DialogTitle>
                     <DialogDescription>Fill out the details of the print below.</DialogDescription>
                 </DialogHeader>
-                <div style={{ display: "flex" }}>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4 min-w-0">
                         <div className="flex flex-col gap-1">
                             <Label>Print Name: </Label>
                             <Input type="text" name="name" value={formData.name} onChange={handleChange} />
                         </div>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-1 min-w-0">
                             <Label htmlFor="SpoolId">Spool: </Label>
                             <Select
                                 value={String(formData.spoolId)}
@@ -94,14 +91,18 @@ export const AddPrintForm = ({ onSubmit, onCancel }: AddPrintFormProps) => {
                                 name="SpoolId"
 
                             >
-                                <SelectTrigger className="w-full max-w-min">
+                                <SelectTrigger className="max-w-full min-w-0">
                                     <SelectValue placeholder="Select a spool"></SelectValue>
                                 </SelectTrigger>
                                 <SelectContent className="bg-white border shadow-md">
                                     <SelectGroup>
                                         <SelectLabel>Spools</SelectLabel>
-                                        {Spool.map(s => (
-                                            <SelectItem key={s.id} value={String(s.id)}>{s.brand}, {s.material}, {s.colorName}, {s.diameter}mm, {s.remainingWeight}g left</SelectItem>
+                                        {Spool.map((s) => (
+                                            <SelectItem key={s.id} value={String(s.id)}>
+                                                <span className="block max-w-full truncate">
+                                                {s.brand}, {s.material}, {s.colorName}, {s.diameter}mm, {s.remainingWeight}g left
+                                                </span>
+                                            </SelectItem>
                                         ))}
                                     </SelectGroup>
                                 </SelectContent>
@@ -116,7 +117,6 @@ export const AddPrintForm = ({ onSubmit, onCancel }: AddPrintFormProps) => {
                             <Button className="bg-red-500 text-white" type="button" onClick={onCancel}>Cancel</Button>
                         </DialogFooter>
                     </form>
-                </div>
             </DialogContent>
         </Dialog> 
     )

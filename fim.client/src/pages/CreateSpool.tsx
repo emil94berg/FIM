@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
 import { TrashIcon } from "@/components/icons/mynaui-trash"
 import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
-import { ExistingSpoolContext } from "@/components/Context/AddSpoolContextType"
+import { ExistingSpoolContext } from "@/components/context/AddSpoolContextType"
 
 
 
@@ -28,6 +28,7 @@ export default function GetSpools() {
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
     const [groupedSpools, setGroupedSpools] = useState<GroupedSpool[]>([]);
     const { setFormData } = useContext(ExistingSpoolContext);
+    const [addingSpool, setAddingSpool] = useState(false);
 
     useEffect(() => {
         const loadAllGroupedSpool = async () => {
@@ -144,6 +145,7 @@ export default function GetSpools() {
     };
 
     const onHandleExisting = (spool: CreateSpoolDto) => {
+        setAddingSpool(true);
         setFormData(spool);
     }
 
@@ -182,12 +184,11 @@ export default function GetSpools() {
                         onSubmit={handleUpdateSpool}
                         onCancel={() => setEditingSpool(null)}
                     />
+                ) : addingSpool ? (
+                    <AddSpoolForm onSubmit={handleCreateSpool} onCancel={() => setAddingSpool(false)} />
                 ) : (
-                    <AddSpoolForm onSubmit={handleCreateSpool} />
+                    <Button className="bg-green-500 text-white" onClick={() => setAddingSpool(true)}>Add Spool</Button>
                 )}
-            </div>
-            <div style={{ display: "flex" }}>
-
             </div>
         </div>
     )
