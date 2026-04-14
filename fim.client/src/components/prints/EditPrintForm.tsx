@@ -62,7 +62,7 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
         <Dialog open onOpenChange={(open) => {
             if (!open) onCancel();
         }}>
-            <DialogContent className="bg-white">
+            <DialogContent className="bg-white sm:max-w-sm">
                 <DialogHeader>
                     <DialogTitle>Edit Print</DialogTitle>
                     <DialogDescription>Make changes to the print details below.</DialogDescription>

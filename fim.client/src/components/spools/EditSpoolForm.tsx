@@ -60,7 +60,7 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
                 onCancel();
             }
         }}>
-            <DialogContent className="bg-white">
+            <DialogContent className="bg-white sm:max-w-sm">
                 <DialogHeader>
                     <DialogTitle>Edit Spool</DialogTitle>
                     <DialogDescription>Make changes to the spool details below.</DialogDescription>

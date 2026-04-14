@@ -107,9 +107,7 @@ export default function GetSpools() {
             console.error("Error deleting spool", error);
         }
     }
-    const handleShowDeleted = () => {
-        setShowDeleted(prev => !prev);
-    }
+ 
     const handleActiveFromComponent = (spool: Spool) => {
         setDeletedSpools(prev => prev.filter(prev => prev.id !== spool.id));
 
@@ -172,21 +170,10 @@ export default function GetSpools() {
                         onSetExisting={onHandleExisting}
                     ></AllSpoolsGrouped>
                 </div>
-                {showDeleted ? (
-                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border: "1px solid black", borderRadius: "10px" }}>
-                        <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }}><TrashIcon className="size-8"></TrashIcon></Button>
-                        <HandleDeletedSpools
-                            spools={deletedSpools}
-                            onActivateSpool={handleActiveFromComponent}
-                            onHardDeleteSpool={onHardDeleteSpool}
-                        ></HandleDeletedSpools>
-                    </div>
-                ) : (
-                    <div>
-                        <Button className="bg-transparent" onClick={handleShowDeleted} style={{ margin: "5px" }} ><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
-                    </div>
-                )
-                }
+
+                <div>
+                    <Button className="bg-transparent" onClick={() => setShowDeleted(prev => !prev)} style={{ margin: "5px" }} ><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
+                </div>
 
             </div>
             <div style={{ display: "flex" }}>
@@ -201,6 +188,14 @@ export default function GetSpools() {
                 ) : (
                     <Button className="bg-green-500 text-white" onClick={() => setAddingSpool(true)}>Add Spool</Button>
                 )}
+                {showDeleted ? (
+                    <HandleDeletedSpools
+                        spools={deletedSpools}
+                        onActivateSpool={handleActiveFromComponent}
+                        onHardDeleteSpool={onHardDeleteSpool}
+                        onCancel={() => setShowDeleted(prev => !prev)}
+                    ></HandleDeletedSpools>
+                ) : null}
             </div>
         </div>
     )

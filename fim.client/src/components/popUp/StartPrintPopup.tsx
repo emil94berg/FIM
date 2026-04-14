@@ -51,7 +51,7 @@ export function StartPrintPopup({
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent className="bg-white text-black">
+            <DialogContent className="bg-white text-black sm:max-w-sm">
                 <DialogHeader>
                     <DialogTitle>Start print</DialogTitle>
                     <DialogDescription>Start print {print.name}</DialogDescription>
