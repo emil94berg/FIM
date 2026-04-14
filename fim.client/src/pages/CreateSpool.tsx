@@ -148,6 +148,17 @@ export default function GetSpools() {
         setAddingSpool(true);
         setFormData(spool);
     }
+    const onHardDeleteSpool = (spool: Spool) => {
+        setGroupedSpools(prev => 
+            prev.map(gs => {
+                if (gs.identifier !== spool.identifier) return gs;
+                return {
+                    ...gs,
+                    spools: gs.spools.filter(s => s.id !== spool.id)
+                }
+            }))
+        setDeletedSpools(prev => prev.filter(s => s.id !== spool.id))
+    }
 
     return (
         <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
@@ -167,6 +178,7 @@ export default function GetSpools() {
                         <HandleDeletedSpools
                             spools={deletedSpools}
                             onActivateSpool={handleActiveFromComponent}
+                            onHardDeleteSpool={onHardDeleteSpool}
                         ></HandleDeletedSpools>
                     </div>
                 ) : (

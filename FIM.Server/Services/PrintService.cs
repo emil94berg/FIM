@@ -257,7 +257,17 @@ namespace FIM.Server.Services
                 return result.ToPrintDto();
             }
             else return null;
-
+        }
+        public async Task<bool> HardDeletePrintAsync(PrintDto dto, string userId)
+        {
+            var result = await _context.Prints.Where(p => p.Id == dto.Id && p.UserId == userId).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                _context.Remove(result);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else return false;
         }
         
     }

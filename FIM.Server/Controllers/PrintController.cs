@@ -116,5 +116,12 @@ namespace FIM.Server.Controllers
             if(result != null) return Ok(result);
             else return BadRequest();
         }
+        [HttpDelete("HardDeletePrint")]
+        public async Task<IActionResult> HardDeletePrintAsync([FromBody] PrintDto printDto)
+        {
+            var result = await _printService.HardDeletePrintAsync(printDto, UserId);
+            if(result) return Ok();
+            else return BadRequest();
+        }
     }
 }

@@ -201,5 +201,16 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
                 )).ToList();
         return result;
     }
+    public async Task<bool> HardDeleteSpoolAsync(SpoolDto dto, string userId)
+    {
+        var spoolToDelete = await dbContext.Spools.Where(s => s.Id == dto.Id && s.UserId == userId).FirstOrDefaultAsync();
+        if (spoolToDelete != null)
+        {
+            dbContext.Spools.Remove(spoolToDelete);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+        else return false;
+    }
 
 }

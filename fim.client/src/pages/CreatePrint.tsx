@@ -134,6 +134,9 @@ export default function CreatePrint() {
     const handleSetShowDeleted = () => {
         setShowDeleted(prev => !prev);
     }
+    const handleHardDeleteFromComponent = (print: Print) => {
+        setDeletedPrints(prev => prev.filter(prev => prev.id !== print.id));
+    }
     
 
     return (
@@ -157,6 +160,7 @@ export default function CreatePrint() {
                         <HandleDeletedPrints
                             prints={deletedPrints}
                             onPrintsChanged={handleDeleteFromComponent}
+                            onHandlePrintsHardDelete={handleHardDeleteFromComponent}
                         ></HandleDeletedPrints>
                     </div>
                 ) : (
