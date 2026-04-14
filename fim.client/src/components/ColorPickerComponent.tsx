@@ -5,10 +5,11 @@ import { useState } from "react";
 import type { components } from "../types/schema";
 
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
+type SpoolDto = components["schemas"]["SpoolDto"];
 
 type Props = {
-    formData: CreateSpoolDto;
-    setFormData: React.Dispatch<React.SetStateAction<CreateSpoolDto>>
+    formData: CreateSpoolDto | SpoolDto;
+    setFormData: React.Dispatch<React.SetStateAction<CreateSpoolDto | SpoolDto>>
 }
 
 export const ColorCheckBox = ({formData, setFormData }: Props) => {
