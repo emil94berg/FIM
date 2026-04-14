@@ -52,7 +52,7 @@ namespace FIM.Server.Controllers
             }
             return Ok(deleted);
         }
-        
+
         [HttpPatch("{id}", Name = "UpdateSpool")]
         public async Task<ActionResult<SpoolDto>> UpdateSpool(int id, UpdateSpoolDto dto)
         {
@@ -90,7 +90,7 @@ namespace FIM.Server.Controllers
         {
             var result = await spoolService.UpdateSpoolWeightAsync(dto, UserId);
 
-            if(result != null)
+            if (result != null)
             {
                 return Ok(result);
             }
@@ -104,23 +104,29 @@ namespace FIM.Server.Controllers
         public async Task<IActionResult> GetAllDeletedSpoolsAsync()
         {
             var result = await spoolService.GetAllDeletedSpoolsAsync(UserId);
-            if(result != null) return Ok(result);
-            else return NotFound(); 
+            if (result != null) return Ok(result);
+            else return NotFound();
         }
         [HttpPut("ChangeDeletedStatus")]
         public async Task<IActionResult> SetSpoolAsDeletedAsync([FromBody] SpoolDto dto)
         {
             var result = await spoolService.ChangeDeletedStatusAsync(dto, UserId);
-            if(result != null) return Ok(result);
+            if (result != null) return Ok(result);
             else return NotFound();
         }
         [HttpGet("GetGroupSpools")]
         public async Task<ActionResult<SpoolGroupDto>> GetGroupedSpoolsAsync()
         {
             var result = await spoolService.GroupBySpoolIdentifier(UserId);
-            if(result != null) return Ok(result);
+            if (result != null) return Ok(result);
             else return NotFound();
         }
-
+        [HttpDelete("HardDeleteSpool")]
+        public async Task<IActionResult> HardDeleteSpoolAsync([FromBody] SpoolDto dto)
+        {
+            var result = await spoolService.HardDeleteSpoolAsync(dto, UserId);
+            if (result) return Ok();
+            else return NotFound();
+        }
     }
 }

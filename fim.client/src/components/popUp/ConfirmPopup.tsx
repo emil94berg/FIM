@@ -10,6 +10,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
+
 type ConfirmDialogProps = {
     children: React.ReactNode
     title?: string
@@ -18,7 +19,7 @@ type ConfirmDialogProps = {
     cancelText?: string
     confirmButtonClassName?: string
     cancelButtonClassName?: string
-    onConfirm: () => void
+    onConfirm?: () => void
 }
 
 export function ConfirmDialog({
