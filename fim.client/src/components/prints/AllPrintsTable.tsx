@@ -24,7 +24,6 @@ type AllPrintsListProps = {
 
 export function AllPrintsTable({ Print, statusMap, onEdit, onDelete, onStart }: AllPrintsListProps) {
 
-
     return (
         <div>
             <Table border={1}>
