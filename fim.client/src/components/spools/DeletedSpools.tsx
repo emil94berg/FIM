@@ -68,13 +68,6 @@ export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool
                 onCancel()
             }
         }}>
-
-            <DialogTrigger asChild>
-                <Button variant="outline" className="bg-red-500 text-white">
-                    <TrashIcon />
-                    Deleted Spools
-                </Button>
-            </DialogTrigger>
             <DialogContent className="bg-white text-black max-w-4xl">
                 <div className="flex flex-col gap-4">
                     <DialogHeader>
