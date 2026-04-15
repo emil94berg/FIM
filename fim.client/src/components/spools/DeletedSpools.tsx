@@ -16,9 +16,7 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
-import { TrashIcon } from "../icons/mynaui-trash";
 
 type Spool = components["schemas"]["SpoolDto"];
 
@@ -74,7 +72,7 @@ export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool
                     <DialogTitle>Deleted Spools</DialogTitle>
                     <DialogDescription>Here you can see all deleted spools. You can either activate them again or delete them permanently.</DialogDescription>
                 </DialogHeader>
-                    <Table>
+                <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead>Identifier</TableHead>
@@ -92,19 +90,22 @@ export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool
                                     day: "2-digit"
                                 })}</TableCell>
                                 <TableCell>
-                                    <Button className="bg-blue-500 text-black"
-                                        onClick={() => ChangeDeletedStatusAsync(s)}
-                                    >Activate</Button>
-                                    <ConfirmDialog
-                                        title={`Delete ${s.identifier}?`}
-                                        description={`This action cannot be undone!`}
-                                        confirmText={"Delete"}
-                                        cancelText={"Cancel"}
-                                        confirmButtonClassName={"bg-red-500 text-white"}
-                                        cancelButtonClassName={"bg-gray-400 text-white"}
-                                        onConfirm={() => HandleHardDeleteAsync(s)}
-                                    ><Button className="bg-red-500 text-white">Delete</Button>
-                                    </ConfirmDialog>
+                                    <div className="flex gap-4">
+                                        <Button className="bg-blue-500 text-black"
+                                            onClick={() => ChangeDeletedStatusAsync(s)}
+                                        >Activate</Button>
+                                        <ConfirmDialog
+                                            title={`Delete ${s.identifier}?`}
+                                            description={`This action cannot be undone!`}
+                                            confirmText={"Delete"}
+                                            cancelText={"Cancel"}
+                                            confirmButtonClassName={"bg-red-500 text-white"}
+                                            cancelButtonClassName={"bg-gray-400 text-white"}
+                                            onConfirm={() => HandleHardDeleteAsync(s)}
+                                        ><Button className="bg-red-500 text-white">Delete</Button>
+                                        </ConfirmDialog>
+                                    </div>
+                                    
                                 </TableCell>
                             </TableRow>
                         ))}

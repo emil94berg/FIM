@@ -140,11 +140,17 @@ export default function CreatePrint() {
     
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-                <div style={{ width: "50%" }}>
-                    <Button className="bg-blue-500 text-white" onClick={() => setAddingPrint(true)}>Add Print</Button>
-                    
+        <div className="gap-4">
+            <div className="bg-blue-500 p-4 rounded gap-4 m-4">
+                <div className="gap-4 m-4">
+                    <h1 className="text-3xl font-bold text-white">Prints</h1>
+                </div>
+                <div className="flex flex-grow gap-4 m-4">
+                    <Button className="bg-green-500 text-white" onClick={() => setAddingPrint(true)}>Add Print</Button>
+                    <Button className="bg-red-500 text-white" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
+                </div>
+            </div>
+                <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
                     <AllPrintsTable
                         Print={print}
                         statusMap={statusMap}
@@ -153,23 +159,7 @@ export default function CreatePrint() {
                         onStart={handleStartPrint}
                     ></AllPrintsTable>
                 </div>
-
-                {showDeleted ? (
-                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border:"1px solid black",borderRadius: "10px"}}>
-                        <Button className="bg-transparent" onClick={handleSetShowDeleted} style={{ margin: "5px" }}><TrashIcon className="size-8"></TrashIcon>Deleted</Button>
-                        <HandleDeletedPrints
-                            prints={deletedPrints}
-                            onPrintsChanged={handleDeleteFromComponent}
-                            onHandlePrintsHardDelete={handleHardDeleteFromComponent}
-                        ></HandleDeletedPrints>
-                    </div>
-                ) : (
-                        <div style={{ marginTop: "10px" }}>
-                            <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
-                    </div>
-                        
-                )}
-            </div>
+            
             <div style={{ display: "flex" }}>
                 {editingPrint ? (
                     <EditPrintForm
@@ -181,6 +171,14 @@ export default function CreatePrint() {
                         onSubmit={handleCreatePrint}
                         onCancel={() => setAddingPrint(false)}></AddPrintForm>
                 ) : null}
+                {showDeleted ? (
+                    <HandleDeletedPrints
+                        prints={deletedPrints}
+                        onPrintsChanged={handleDeleteFromComponent}
+                        onHandlePrintsHardDelete={handleHardDeleteFromComponent}
+                        onCancel={() => setShowDeleted(prev => !prev)}
+                    ></HandleDeletedPrints>
+                ): null}
             </div>
         </div>
     )

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMemo, useContext} from "react";
+import { useContext, useEffect} from "react";
 import type { components } from "../../types/schema";
 import {
     Dialog,
@@ -31,7 +31,7 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
         const { name, value } = e.target;
         setFormData(prev => ({ 
             ...prev,
-            [name]: name === "totalWeight" || name === "spoolCost" || name === "diameter" ? parseFloat(value) : value }));
+            [name]: name === "totalWeight" || name === "spoolCost" || name === "diameter" ? value ===""? null : parseFloat(value) : value }));
     }
     
     function getChangedFields<T>(original: T, updated: T): Partial<T> {
@@ -50,9 +50,9 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
         await onSubmit(spool.id!, changed);
     }
 
-    useMemo(() => {
+    useEffect(() => {
         setFormData(spool);
-    }, [spool]);
+    },[setFormData, spool]);
 
     return (
         <Dialog open onOpenChange={(open) => {

@@ -25,9 +25,9 @@ type AllPrintsListProps = {
 export function AllPrintsTable({ Print, statusMap, onEdit, onDelete, onStart }: AllPrintsListProps) {
 
     return (
-        <div>
+        <div className="bg-gray-50 p-4 rounded">
             <Table border={1}>
-                <TableHeader>
+                <TableHeader className="bg-gray-100">
                     <TableRow>
                         <TableHead>Name</TableHead>
                         <TableHead>Spool-Brand</TableHead>

@@ -71,7 +71,6 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
                     <div className="flex flex-col gap-1">
                         <Label>Name: </Label>
                         <Input
-                            className="bg-gray-300"
                             value={formData.name}
                             onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                         ></Input>
@@ -87,7 +86,7 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
                             name="Status"
 
                         >
-                            <SelectTrigger className="w-full bg-gray-300">
+                            <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Status"></SelectValue>
                             </SelectTrigger>
                             <SelectContent className="bg-white border shadow-md">
@@ -112,7 +111,7 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
                                 }))}
                             name="spoolId"
                         >
-                            <SelectTrigger className="w-full bg-gray-300">
+                            <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select a spool"></SelectValue>
                             </SelectTrigger>
                             <SelectContent className="bg-white border shadow-md">
@@ -128,7 +127,6 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
                     <div className="flex flex-col gap-1">
                         <Label>Grams used: </Label>
                         <Input
-                            className="bg-gray-300"
                             value={formData.gramsUsed}
                             onChange={e => setFormData(prev => ({ ...prev, gramsUsed: Number(e.target.value) }))}
                         ></Input>

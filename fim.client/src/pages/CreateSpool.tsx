@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
 import { TrashIcon } from "@/components/icons/mynaui-trash"
 import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
-import { ExistingSpoolContext } from "@/components/context/AddSpoolContextType"
+import { ExistingSpoolContext, defaultSpool } from "@/components/context/AddSpoolContextType"
 
 
 
@@ -159,23 +159,29 @@ export default function GetSpools() {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-                <div style={{ width: "50vw" }}>
-                    <AllSpoolsGrouped
-                        groupedSpools={groupedSpools}
-                        onEditSpool={setEditingSpool}
-                        onDelete={handleDeleteSpool}
-                        handleGrouped={handleGroupedSpoolsActivate}
-                        onSetExisting={onHandleExisting}
-                    ></AllSpoolsGrouped>
+        <div className="gap-4">
+            <div className="bg-blue-500 p-4 rounded gap-4 m-4">
+                <div className="gap-4 m-4">
+                    <h1 className="text-3xl font-bold mb-4 text-white">Spools</h1>
                 </div>
-
-                <div>
-                    <Button className="bg-transparent" onClick={() => setShowDeleted(prev => !prev)} style={{ margin: "5px" }} ><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
+                <div className="flex flex-row gap-4 m-4">
+                    <Button className="bg-green-500 text-white" onClick={() => {
+                        setFormData(defaultSpool);
+                        setAddingSpool(true)}}>Add Spool</Button>
+                    <Button className="bg-red-500 text-white" onClick={() => setShowDeleted(prev => !prev)}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
                 </div>
-
             </div>
+            <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
+                <AllSpoolsGrouped
+                    groupedSpools={groupedSpools}
+                    onEditSpool={setEditingSpool}
+                    onDelete={handleDeleteSpool}
+                    handleGrouped={handleGroupedSpoolsActivate}
+                    onSetExisting={onHandleExisting}
+                ></AllSpoolsGrouped>
+            </div>
+
+            
             <div style={{ display: "flex" }}>
                 {editingSpool ? (
                     <EditSpoolForm
@@ -185,15 +191,12 @@ export default function GetSpools() {
                     />
                 ) : addingSpool ? (
                     <AddSpoolForm onSubmit={handleCreateSpool} onCancel={() => setAddingSpool(false)} />
-                ) : (
-                    <Button className="bg-green-500 text-white" onClick={() => setAddingSpool(true)}>Add Spool</Button>
-                )}
-                {showDeleted ? (
+                ) : showDeleted ? (
                     <HandleDeletedSpools
                         spools={deletedSpools}
                         onActivateSpool={handleActiveFromComponent}
                         onHardDeleteSpool={onHardDeleteSpool}
-                        onCancel={() => setShowDeleted(prev => !prev)}
+                        onCancel={() => setShowDeleted(false)}
                     ></HandleDeletedSpools>
                 ) : null}
             </div>
