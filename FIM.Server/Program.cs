@@ -54,6 +54,7 @@ builder.Services.AddHostedService<NotificationBackgroundService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPublicFilamentCatalogService, PublicFilamentCatalogService>();
 builder.Services.AddScoped<IUserFavoriteFilamentService, UserFavoriteFilamentService>();
+builder.Services.AddScoped<IForumPostService, ForumPostService>();
 
 var app = builder.Build();
 

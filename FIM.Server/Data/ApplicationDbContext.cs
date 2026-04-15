@@ -11,6 +11,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<PublicFilamentCatalog> PublicFilamentCatalogs { get; set; }
     public DbSet<UserFavoriteFilament> UserFavoriteFilaments { get; set; }
+    public DbSet<ForumPost> ForumPosts { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
