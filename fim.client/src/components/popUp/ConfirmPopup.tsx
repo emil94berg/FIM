@@ -44,13 +44,13 @@ export function ConfirmDialog({
                     <AlertDialogTitle>{title}</AlertDialogTitle>
                     <AlertDialogDescription>{description}</AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
+                    <AlertDialogFooter>
+                        <AlertDialogAction onClick={onConfirm}
+                        className={confirmButtonClassName}>
+                        {confirmText}
+                    </AlertDialogAction>
                     <AlertDialogCancel className={cancelButtonClassName}>{cancelText}</AlertDialogCancel>
                 </AlertDialogFooter>
-                <AlertDialogAction onClick={onConfirm}
-                    className={confirmButtonClassName}>
-                    {confirmText}
-                </AlertDialogAction>
             </AlertDialogContent>
         </AlertDialog>
     )

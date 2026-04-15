@@ -1,19 +1,19 @@
 import { useState } from "react"
 import type { components } from "src/types/schema"
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
 import { authFetch } from "../../auth/authFetch";
+import { Button } from "../ui/button";
 
 type Print = components["schemas"]["PrintDto"];
 
@@ -26,7 +26,7 @@ type StartPrintPopupPropts = {
 export function StartPrintPopup({
     print,
     children,
-    onStarted
+    onStarted,
 }: StartPrintPopupPropts) { 
     const [estimatedTime, setEstimatedTime] = useState<number>(0);
 
@@ -47,23 +47,25 @@ export function StartPrintPopup({
     }
 
     return (
-        <AlertDialog>
-            <AlertDialogTrigger asChild>
+        <Dialog>
+            <DialogTrigger asChild>
                 {children}
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white text-black">
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Start print</AlertDialogTitle>
-                    <AlertDialogDescription>Start print {print.name}</AlertDialogDescription>
-                </AlertDialogHeader>
+            </DialogTrigger>
+            <DialogContent className="bg-white text-black sm:max-w-sm">
+                <DialogHeader>
+                    <DialogTitle>Start print</DialogTitle>
+                    <DialogDescription>Start print {print.name}</DialogDescription>
+                </DialogHeader>
                 <Label>Estimated print time (minutes):</Label>
                 <Input type="number" placeholder="e.g. 120" onChange={(e) => setEstimatedTime(Number(e.target.value))}></Input>
-                <AlertDialogFooter>
-                    <AlertDialogAction  className="bg-blue-500 text-black" onClick={() => startPrint(print)}>Start {print.name}</AlertDialogAction>
-                    <AlertDialogCancel className="bg-red-500 text-black" >Cancel</AlertDialogCancel>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+                <DialogFooter>
+                    <Button  className="bg-blue-500 text-black" onClick={() => startPrint(print)}>Start {print.name}</Button>
+                    <DialogClose asChild>
+                        <Button className="bg-red-500 text-black">Cancel</Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     )
     
 }

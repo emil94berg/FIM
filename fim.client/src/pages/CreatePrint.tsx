@@ -33,6 +33,7 @@ const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
 export default function CreatePrint() {
     const [print, setPrint] = useState<Print[]>([]);
     const [editingPrint, setEditingPrint] = useState<Print | null>(null);
+    const [addingPrint, setAddingPrint] = useState(false);
     const [deletedPrints, setDeletedPrints] = useState<Print[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
@@ -120,6 +121,7 @@ export default function CreatePrint() {
         try {
             const newPrint = await handleSubmit(print);
             setPrint(prev => [...prev, newPrint]);
+            setAddingPrint(false);
         } catch (error: unknown) {
             alert(error instanceof Error ? error.message : "Failed to create print.");
         }
@@ -138,10 +140,17 @@ export default function CreatePrint() {
     
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-                <div style={{ width: "50%" }}>
-                    
+        <div className="gap-4">
+            <div className="bg-blue-500 p-4 rounded gap-4 m-4">
+                <div className="gap-4 m-4">
+                    <h1 className="text-3xl font-bold text-white">Prints</h1>
+                </div>
+                <div className="flex flex-grow gap-4 m-4">
+                    <Button className="bg-green-500 text-white" onClick={() => setAddingPrint(true)}>Add Print</Button>
+                    <Button className="bg-red-500 text-white" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
+                </div>
+            </div>
+                <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
                     <AllPrintsTable
                         Print={print}
                         statusMap={statusMap}
@@ -150,31 +159,27 @@ export default function CreatePrint() {
                         onStart={handleStartPrint}
                     ></AllPrintsTable>
                 </div>
-
+            
+            <div style={{ display: "flex" }}>
+                {editingPrint ? (
+                    <EditPrintForm
+                        print={editingPrint}
+                        onSubmit={handleUpdatePrint}
+                        onCancel={() => setEditingPrint(null)}></EditPrintForm>
+                ) : addingPrint ? (
+                    <AddPrintForm
+                        onSubmit={handleCreatePrint}
+                        onCancel={() => setAddingPrint(false)}></AddPrintForm>
+                ) : null}
                 {showDeleted ? (
-                    <div style={{ width: "30%", backgroundColor: "lightcoral", marginTop: "10px", border:"1px solid black",borderRadius: "10px"}}>
-                        <Button className="bg-transparent" onClick={handleSetShowDeleted} style={{ margin: "5px" }}><TrashIcon className="size-8"></TrashIcon>Deleted</Button>
-                        <HandleDeletedPrints
-                            prints={deletedPrints}
-                            onPrintsChanged={handleDeleteFromComponent}
-                            onHandlePrintsHardDelete={handleHardDeleteFromComponent}
-                        ></HandleDeletedPrints>
-                    </div>
-                ) : (
-                        <div style={{ marginTop: "10px" }}>
-                            <Button className="bg-transparent" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
-                    </div>
-                        
-                )}
+                    <HandleDeletedPrints
+                        prints={deletedPrints}
+                        onPrintsChanged={handleDeleteFromComponent}
+                        onHandlePrintsHardDelete={handleHardDeleteFromComponent}
+                        onCancel={() => setShowDeleted(prev => !prev)}
+                    ></HandleDeletedPrints>
+                ): null}
             </div>
-            {editingPrint ? (
-                <EditPrintForm
-                    print={editingPrint}
-                    onSubmit={handleUpdatePrint}
-                    onCancel={() => setEditingPrint(null)}></EditPrintForm>
-            ) : (
-                    <AddPrintForm onSubmit={handleCreatePrint}></AddPrintForm>
-            )}
         </div>
     )
 }
