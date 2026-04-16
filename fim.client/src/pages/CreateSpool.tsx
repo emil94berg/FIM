@@ -8,6 +8,7 @@ import { HandleDeletedSpools } from "@/components/spools/DeletedSpools"
 import { TrashIcon } from "@/components/icons/mynaui-trash"
 import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
 import { ExistingSpoolContext, defaultSpool } from "@/components/context/AddSpoolContextType"
+import { CatalogList } from "@/components/FilamentCatalog"
 
 
 
@@ -29,6 +30,7 @@ export default function GetSpools() {
     const [groupedSpools, setGroupedSpools] = useState<GroupedSpool[]>([]);
     const { setFormData } = useContext(ExistingSpoolContext);
     const [addingSpool, setAddingSpool] = useState(false);
+    const [activeView, setActiveView] = useState<"inventory" | "catalog">("inventory");
 
     useEffect(() => {
         const loadAllGroupedSpool = async () => {
@@ -165,21 +167,29 @@ export default function GetSpools() {
                     <h1 className="text-3xl font-bold mb-4 text-white">Spools</h1>
                 </div>
                 <div className="flex flex-row gap-4 m-4">
+                    <Button className={activeView === "inventory" ? "bg-gray-500 text-white" : "bg-green-500 text-white"} onClick={() => setActiveView("inventory")}>Inventory</Button>
+                    <Button className={activeView === "catalog" ? "bg-gray-500 text-white" : "bg-green-500 text-white"} onClick={() => setActiveView("catalog")}>Catalog</Button>
                     <Button className="bg-green-500 text-white" onClick={() => {
                         setFormData(defaultSpool);
                         setAddingSpool(true)}}>Add Spool</Button>
                     <Button className="bg-red-500 text-white" onClick={() => setShowDeleted(prev => !prev)}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
                 </div>
             </div>
-            <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
-                <AllSpoolsGrouped
-                    groupedSpools={groupedSpools}
-                    onEditSpool={setEditingSpool}
-                    onDelete={handleDeleteSpool}
-                    handleGrouped={handleGroupedSpoolsActivate}
-                    onSetExisting={onHandleExisting}
-                ></AllSpoolsGrouped>
-            </div>
+            {activeView === "inventory" ? (
+                <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
+                    <AllSpoolsGrouped
+                        groupedSpools={groupedSpools}
+                        onEditSpool={setEditingSpool}
+                        onDelete={handleDeleteSpool}
+                        handleGrouped={handleGroupedSpoolsActivate}
+                        onSetExisting={onHandleExisting}
+                    ></AllSpoolsGrouped>
+                </div>
+            ) : (
+                <div className="gap-4 m-4 bg-slate-200 p-4 rounded">
+                    <CatalogList />
+                </div>
+            )}
 
             
             <div style={{ display: "flex" }}>
