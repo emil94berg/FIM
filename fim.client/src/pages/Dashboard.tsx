@@ -79,17 +79,20 @@ export default function DashboardHome() {
     return (
         <div className="flex flex-col h-screen p-4 gap-4 overflow-hidden"> 
             
-            <div className="flex items-center">
-                <h1 className="text-3xl font-extrabold tracking-tight">Dashboard</h1>
-            </div>
+            
+                
+            
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden w-full">
-                <TabsList className="w-fit">
-                    <TabsTrigger value="overview" className="bg-transparent">Overview</TabsTrigger>
-                    <TabsTrigger value="inventory" className="bg-transparent">Inventory</TabsTrigger>
-                    <TabsTrigger value="stats" className="bg-transparent">Statistics</TabsTrigger>
-                    <TabsTrigger value="test" className="bg-transparent">Test</TabsTrigger>
-                </TabsList>
+                <div className="flex items-start bg-blue-500 text-white rounded-lg px-4 py-4 flex-col">
+                    <h1 className="text-3xl font-extrabold tracking-tight">Dashboard</h1>
+                    <TabsList className="w-fit gap-4">
+                        <TabsTrigger value="overview" className="bg-transparent bg-green-500">Overview</TabsTrigger>
+                        <TabsTrigger value="inventory" className="bg-transparent bg-green-500">Inventory</TabsTrigger>
+                        <TabsTrigger value="stats" className="bg-transparent bg-green-500">Statistics</TabsTrigger>
+                        <TabsTrigger value="test" className="bg-transparent bg-green-500">Test</TabsTrigger>
+                    </TabsList>
+                </div>
 
                 <TabsContent value="overview" className="flex-1 overflow-auto mt-4">
                     <div className="mb-4 flex flex-wrap gap-2">
@@ -101,11 +104,14 @@ export default function DashboardHome() {
                         </Button>
                     </div>
 
-                    <OverviewTab 
+                    <div className="p-4">
+                        <OverviewTab 
                         pending={data.pending}
                         printing={data.printing}
                         lowSpools={data.lowSpools}
-                    />
+                        />
+                    </div>
+                   
                 </TabsContent>
 
                 <TabsContent value="inventory" className="flex-1 overflow-auto mt-4">

@@ -210,12 +210,11 @@ export function CatalogList() {
                         setPage(1); 
                     }}/>
                 </div>
-                
-
             </div>
 
-            <Table>
-                <TableHeader className="bg-slate-100">
+            <div>
+            <Table className="table-fixed" containerClassName="h-[600px] overflow-auto">
+                <TableHeader className="bg-slate-100 [&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-slate-100">
                     <TableRow>
                         <SortableHeader label="Name" value={SortOrder.Name} currentConfig={sortConfig} onSort={handleSort} />
                         <SortableHeader label="Spool-Brand" value={SortOrder.Brand} currentConfig={sortConfig} onSort={handleSort} />
@@ -254,38 +253,39 @@ export function CatalogList() {
                         <TableRow><TableCell colSpan={10} className="text-center">No results found.</TableCell></TableRow>
                     ) : result?.items.map(s => (
                         <TableRow key={s.identifier}>
-                            <TableCell>{s.name}</TableCell>
+                            <TableCell className="whitespace-normal break-words align-top">{s.name}</TableCell>
                             <TableCell>{s.brand}</TableCell>
                             <TableCell>{s.diameter}mm</TableCell>
                             <TableCell>{s.material}</TableCell>
                             <TableCell>
-                                {s.colorHexes != null ? (
-                                    s.colorHexes.slice(0, 6).map((hex, i) => (
-                                        <div key={i}
-                                            title={`#${hex}`}
-                                            style={{
-                                            backgroundColor: `#${hex}`,
-                                            height: "16px",
-                                            width: "32px",
-                                            border: "1px solid black",
-                                            borderRadius: "3px"
-                                            }}
-                                        />
-                                    )) 
-                                ) : (
-                                    s.colorHex && (
-                                        <div title={`#${s.colorHex}`}
-                                            style={{
-                                            width: "32px",
-                                            height: "16px",
-                                            backgroundColor: `#${s.colorHex}`,
-                                            border: "1px solid black",
-                                            borderRadius: "3px"
-                                        }}></div>
-                                    )     
-                                )
-                            }
-    
+                                <div className="flex flex-wrap gap-1">
+                                    {s.colorHexes != null ? (
+                                        s.colorHexes.slice(0, 6).map((hex, i) => (
+                                            <div key={i}
+                                                title={`#${hex}`}
+                                                style={{
+                                                backgroundColor: `#${hex}`,
+                                                height: "16px",
+                                                width: "32px",
+                                                border: "1px solid black",
+                                                borderRadius: "3px"
+                                                }}
+                                            />
+                                        )) 
+                                    ) : (
+                                        s.colorHex && (
+                                            <div title={`#${s.colorHex}`}
+                                                style={{
+                                                width: "32px",
+                                                height: "16px",
+                                                backgroundColor: `#${s.colorHex}`,
+                                                border: "1px solid black",
+                                                borderRadius: "3px"
+                                            }}></div>
+                                        )     
+                                    )
+                                }
+                            </div>
                             </TableCell>
                             <TableCell>{s.weight}gr</TableCell>
                             <TableCell>{s.finish ? s.finish : "N/A" }</TableCell>
@@ -325,6 +325,7 @@ export function CatalogList() {
                 
                 </TableBody>
             </Table>
+            </div>
             <div className="flex justify-between items-center mt-4">
                 <div className="text-sm text-muted-foreground">
                     Showing <strong>{startEntry}</strong> to <strong>{endEntry}</strong> of <strong>{totalCount}</strong> entries
