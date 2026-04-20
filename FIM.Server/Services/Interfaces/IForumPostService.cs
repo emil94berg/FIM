@@ -7,5 +7,6 @@ namespace FIM.Server.Services.Interfaces
     {
         Task<List<ForumPost>> GetAllPostsAsync();
         Task<ForumPost> CreatePostAsync(string userId, CreateForumPostDto createDto);
+        Task<bool> DeletePostAsync(int id);
     }
 }

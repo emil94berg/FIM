@@ -1,4 +1,5 @@
 ﻿using FIM.Server.DTOs.Forum;
+using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,19 @@ namespace FIM.Server.Controllers
             var result = await _forumPostService.CreatePostAsync(UserId, createDto);
             if (result != null) return Ok(result);
             else return BadRequest();
+        }
+        [HttpDelete("DeleteForumPost")]
+        public async Task<IActionResult> DeletePostAsync([FromBody] ForumPostDto deleteDto)
+        {
+            var result = await _forumPostService.DeletePostAsync(deleteDto.Id);
+            if (result) return Ok();
+            else return BadRequest();
+        }
+        [HttpGet("GetAllTags")]
+        public async Task<string[]> GetAllTasksAsync()
+        {
+            var result = Enum.GetNames(typeof(ForumPostTags));
+            return result;
         }
     }
 }

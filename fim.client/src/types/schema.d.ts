@@ -4,6 +4,117 @@
  */
 
 export interface paths {
+    "/ForumPost": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ForumPost/CreateForumPost": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateForumPostDto"];
+                    "text/json": components["schemas"]["CreateForumPostDto"];
+                    "application/*+json": components["schemas"]["CreateForumPostDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ForumPost/DeleteForumPost": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ForumPostDto"];
+                    "text/json": components["schemas"]["ForumPostDto"];
+                    "application/*+json": components["schemas"]["ForumPostDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/Notification": {
         parameters: {
             query?: never;
@@ -296,6 +407,45 @@ export interface paths {
             };
         };
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/Print/HardDeletePrint": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PrintDto"];
+                    "text/json": components["schemas"]["PrintDto"];
+                    "application/*+json": components["schemas"]["PrintDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -596,6 +746,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Spool/HardDeleteSpool": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SpoolDto"];
+                    "text/json": components["schemas"]["SpoolDto"];
+                    "application/*+json": components["schemas"]["SpoolDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/UserFavoriteFilament/SetFavorite/{filamentId}": {
         parameters: {
             query?: never;
@@ -670,6 +859,12 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CreateForumPostDto: {
+            title: string;
+            text: string;
+            subject: string;
+            tag: null | string;
+        };
         CreatePrintDto: {
             name: string;
             /** Format: int32 */
@@ -721,6 +916,15 @@ export interface components {
             translucent: boolean;
             glow: boolean;
             isFavorite: boolean;
+        };
+        ForumPostDto: {
+            /** Format: int32 */
+            id: number | string;
+            title: string;
+            userId: string;
+            text: string;
+            subject: string;
+            tag: null | string;
         };
         NotificationDto: {
             /** Format: int32 */

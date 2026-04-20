@@ -1,6 +1,14 @@
-﻿namespace FIM.Server.DTOs.Forum
+﻿using FIM.Server.Models;
+
+namespace FIM.Server.DTOs.Forum
 {
-    public class ForumPostDto
-    {
-    }
+    public record ForumPostDto
+    (
+        int Id,
+        string Title,
+        string UserId,
+        string Text,
+        string Subject,
+        ForumPostTags Tag
+    );
 }

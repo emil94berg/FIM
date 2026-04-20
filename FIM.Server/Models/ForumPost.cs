@@ -7,7 +7,7 @@
         public string UserId { get; set; }
         public string Text { get; set; }
         public string Subject { get; set; }
-        public string? Tag { get; set; }
+        public ForumPostTags Tag { get; set; }
         public bool IsDeleted { get; set; } = false;
 
     }

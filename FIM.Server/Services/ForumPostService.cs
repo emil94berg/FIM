@@ -33,5 +33,16 @@ namespace FIM.Server.Services
             await _dbContext.SaveChangesAsync();
             return newPost;
         }
+        public async Task<bool> DeletePostAsync(int id)
+        {
+            var deletePost = await _dbContext.ForumPosts.FirstOrDefaultAsync(p => p.Id == id);
+            if(deletePost != null)
+            {
+                _dbContext.Remove(deletePost);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }
