@@ -3,6 +3,7 @@ import { authFetch } from "@/auth/authFetch"
 import { useState, useEffect } from "react"
 import { ForumHeader } from "@/components/forum/ForumHeader"
 import { ForumHomeBody } from "@/components/forum/ForumHomeBody"
+import { CreateForumPost } from "@/components/forum/CreateForumPost"
 
 
 type ForumPost = components["schemas"]["ForumPostDto"]
@@ -29,6 +30,7 @@ export default function ForumHomePage() {
         <div style={{ display: "flex", flexDirection: "column" }}>
             <ForumHeader></ForumHeader>
             <ForumHomeBody allPosts={allPosts}></ForumHomeBody>
+            <CreateForumPost></CreateForumPost>
         </div>
     )
 }
