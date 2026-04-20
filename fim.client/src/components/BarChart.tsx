@@ -121,7 +121,7 @@ export default function PrintsChart() {
                         />
                         <Bar 
                             dataKey="count" 
-                            fill="hsl(var(--primary))" 
+                            fill="#3b82f6" 
                             radius={[4, 4, 0, 0]}
                             barSize={range === "week" ? 45 : 12} 
                         />
