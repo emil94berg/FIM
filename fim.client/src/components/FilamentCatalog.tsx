@@ -14,6 +14,7 @@ import { StarIcon } from "@/components/icons/mynaui-star"
 import { StarSolidIcon } from "@/components/icons/mynaui-star-solid"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
 import { SetSpoolPrice } from "@/components/popUp/SpoolPricePopup"
+import { Skeleton } from "./ui/skeleton";
 
 
 
@@ -54,6 +55,7 @@ export function CatalogList() {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const isInitialLoading = isLoading && !result;
     const pageSize = 10;
     const [mySpools, setMySpools] = useState<Spool[]>([]);
 
@@ -195,21 +197,24 @@ export function CatalogList() {
     return (
 
         <div>
-            <div className="flex justify-end mb-4">
-                <input type="text" 
-                id="searchInput"
-                placeholder="Search name, brand, material..." 
-                className="border rounded px-4 py-2 w-full md:w-64 bg-transparent"
-                value={searchTerm}
-                onChange={(e) => { 
-                    setSearchTerm(e.target.value); 
-                    setPage(1); 
-                }}/>
-
+            <div className="flex justify-start mb-4 gap-4">
+                <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
+                    <h1 className="text-2xl font-semibold tracking-tight">Filament Catalog</h1>
+                    <input type="text" 
+                    id="searchInput"
+                    placeholder="Search name, brand, material..." 
+                    className="border rounded-2xl px-2 w-full sm:w-72 md:w-80 bg-white"
+                    value={searchTerm}
+                    onChange={(e) => { 
+                        setSearchTerm(e.target.value); 
+                        setPage(1); 
+                    }}/>
+                </div>
             </div>
 
-            <Table>
-                <TableHeader>
+            <div>
+            <Table className="table-fixed" containerClassName="h-[600px] overflow-auto">
+                <TableHeader className="bg-slate-100 [&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-slate-100">
                     <TableRow>
                         <SortableHeader label="Name" value={SortOrder.Name} currentConfig={sortConfig} onSort={handleSort} />
                         <SortableHeader label="Spool-Brand" value={SortOrder.Brand} currentConfig={sortConfig} onSort={handleSort} />
@@ -223,53 +228,70 @@ export function CatalogList() {
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
-                <TableBody>
-                    {isLoading ? (
-                        <TableRow><TableCell colSpan={10} className="text-center">Loading...</TableCell></TableRow>
+                <TableBody className="bg-slate-50">
+                    {isInitialLoading ? (
+                        Array.from({ length: 10 }).map((_, index) => (
+                        <TableRow key={index}>
+                            <TableCell><Skeleton className="h-4 w-28" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-10" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                            <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                            <TableCell>
+                            <div className="flex flex-wrap gap-2">
+                                <Skeleton className="h-9 w-9 rounded-md" />
+                                <Skeleton className="h-9 w-24 rounded-md" />
+                            </div>
+                            </TableCell>
+                        </TableRow>
+                        ))
                     ) :  result?.items.length === 0 ? (
                         <TableRow><TableCell colSpan={10} className="text-center">No results found.</TableCell></TableRow>
                     ) : result?.items.map(s => (
                         <TableRow key={s.identifier}>
-                            <TableCell>{s.name}</TableCell>
+                            <TableCell className="whitespace-normal break-words align-top">{s.name}</TableCell>
                             <TableCell>{s.brand}</TableCell>
                             <TableCell>{s.diameter}mm</TableCell>
                             <TableCell>{s.material}</TableCell>
                             <TableCell>
-                                {s.colorHexes != null ? (
-                                    s.colorHexes.slice(0, 6).map((hex, i) => (
-                                        <div key={i}
-                                            title={`#${hex}`}
-                                            style={{
-                                            backgroundColor: `#${hex}`,
-                                            height: "16px",
-                                            width: "32px",
-                                            border: "1px solid black",
-                                            borderRadius: "3px"
-                                            }}
-                                        />
-                                    )) 
-                                ) : (
-                                    s.colorHex && (
-                                        <div title={`#${s.colorHex}`}
-                                            style={{
-                                            width: "32px",
-                                            height: "16px",
-                                            backgroundColor: `#${s.colorHex}`,
-                                            border: "1px solid black",
-                                            borderRadius: "3px"
-                                        }}></div>
-                                    )     
-                                )
-                                
-                                    
+                                <div className="flex flex-wrap gap-1">
+                                    {s.colorHexes != null ? (
+                                        s.colorHexes.slice(0, 6).map((hex, i) => (
+                                            <div key={i}
+                                                title={`#${hex}`}
+                                                style={{
+                                                backgroundColor: `#${hex}`,
+                                                height: "16px",
+                                                width: "32px",
+                                                border: "1px solid black",
+                                                borderRadius: "3px"
+                                                }}
+                                            />
+                                        )) 
+                                    ) : (
+                                        s.colorHex && (
+                                            <div title={`#${s.colorHex}`}
+                                                style={{
+                                                width: "32px",
+                                                height: "16px",
+                                                backgroundColor: `#${s.colorHex}`,
+                                                border: "1px solid black",
+                                                borderRadius: "3px"
+                                            }}></div>
+                                        )     
+                                    )
                                 }
-
+                            </div>
                             </TableCell>
                             <TableCell>{s.weight}gr</TableCell>
                             <TableCell>{s.finish ? s.finish : "N/A" }</TableCell>
                             <TableCell>{s.translucent ? "Yes" : "No"}</TableCell>
                             <TableCell>{s.glow ? "Yes" : "No"}</TableCell>
-                            <TableCell>
+                            <TableCell className="flex flex-wrap gap-2">
                                 {s.isFavorite == false ? (
                                     <div>
                                         <Button className="bg-transparent"
@@ -303,6 +325,7 @@ export function CatalogList() {
                 
                 </TableBody>
             </Table>
+            </div>
             <div className="flex justify-between items-center mt-4">
                 <div className="text-sm text-muted-foreground">
                     Showing <strong>{startEntry}</strong> to <strong>{endEntry}</strong> of <strong>{totalCount}</strong> entries
@@ -310,7 +333,7 @@ export function CatalogList() {
 
                 <div className="flex items-center space-x-2">
                     <Button
-                        className="bg-transparent"
+                        className="bg-blue-500 text-white"
                         variant="outline"
                         disabled={page === 1 || isLoading}
                         onClick={() => setPage((p) => Math.max(1, p - 1))}>
@@ -322,7 +345,7 @@ export function CatalogList() {
                     </div>
 
                     <Button
-                        className="bg-transparent"
+                        className="bg-blue-500 text-white"
                         variant="outline"
                         onClick={() => setPage((p) => p + 1)}
                         disabled={endEntry >= totalCount || isLoading}>

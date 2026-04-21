@@ -32,6 +32,11 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
         href: "/ACtivePrints",
         icon: <ActivitySquareIcon className="w-5 h-5" ></ActivitySquareIcon>
     },
+    {
+        title: "Profile Page",
+        href: "/profile",
+        icon: <HomeIcon className="w-5 h-5" ></HomeIcon>
+    }
 ]
 
 

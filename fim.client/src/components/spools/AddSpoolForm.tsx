@@ -4,68 +4,27 @@ import { Label } from "@/components/ui/label";
 import { useContext } from "react";
 import type { components } from "../../types/schema";
 import { ColorCheckBox } from "@/components/ColorPickerComponent"
-import { ExistingSpoolContext, defaultSpool } from "@/components/Context/AddSpoolContextType"
+import { ExistingSpoolContext, defaultSpool } from "@/components/context/AddSpoolContextType"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog"
+import { Checkbox } from "../ui/checkbox";
 
 
 type CreateSpoolDto = components["schemas"]["CreateSpoolDto"];
 
 type AddSpoolFormProps = {
     onSubmit: (spool: CreateSpoolDto) => Promise<void>;
+    onCancel: () => void;
 }
 
-export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
-    //const [formData, setFormData] = useState<CreateSpoolDto>({
-    //    brand: existingSpool ? existingSpool.brand : "",
-    //    material: existingSpool ? existingSpool.material : "",
-    //    colorName: existingSpool ? existingSpool.colorName : "",
-    //    diameter: existingSpool ? existingSpool.diameter : 1.75,
-    //    totalWeight: existingSpool ? existingSpool.totalWeight : 0,
-    //    spoolCost: existingSpool ? existingSpool.spoolCost : 0,
-    //    bedTemp: existingSpool ? existingSpool.bedTemp : 0,
-    //    colorHex: existingSpool ? existingSpool.colorHex : "",
-    //    colorHexes: existingSpool ? existingSpool.colorHexes : [],
-    //    extruderTemp: existingSpool ? existingSpool.extruderTemp : 0,
-    //    finish: existingSpool ? existingSpool.finish : "",
-    //    glow: existingSpool ? existingSpool.glow : false,
-    //    translucent: existingSpool ? existingSpool.translucent : false
-    //})
-
+export const AddSpoolForm = ({ onSubmit, onCancel }: AddSpoolFormProps) => {
     const { formData, setFormData } = useContext(ExistingSpoolContext)
-
-    //const memoExisting = useMemo(() => ({
-    //    brand: existingSpool ? existingSpool.brand : "",
-    //    material: existingSpool ? existingSpool.material : "",
-    //    colorName: existingSpool ? existingSpool.colorName : "",
-    //    diameter: existingSpool ? existingSpool.diameter : 1.75,
-    //    totalWeight: existingSpool ? existingSpool.totalWeight : 0,
-    //    spoolCost: existingSpool ? existingSpool.spoolCost : 0,
-    //    bedTemp: existingSpool ? existingSpool.bedTemp : 0,
-    //    colorHex: existingSpool ? existingSpool.colorHex : "",
-    //    colorHexes: existingSpool ? existingSpool.colorHexes : [],
-    //    extruderTemp: existingSpool ? existingSpool.extruderTemp : 0,
-    //    finish: existingSpool ? existingSpool.finish : "",
-    //    glow: existingSpool ? existingSpool.glow : false,
-    //    translucent: existingSpool ? existingSpool.translucent : false
-    //}), [existingSpool])
-
-
-    //useEffect(() => {
-    //    setFormData({
-    //        brand: existingSpool ? existingSpool.brand : "",
-    //        material: existingSpool ? existingSpool.material : "",
-    //        colorName: existingSpool ? existingSpool.colorName : "",
-    //        diameter: existingSpool ? existingSpool.diameter : 1.75,
-    //        totalWeight: existingSpool ? existingSpool.totalWeight : 0,
-    //        spoolCost: existingSpool ? existingSpool.spoolCost : 0,
-    //        bedTemp: existingSpool ? existingSpool.bedTemp : 0,
-    //        colorHex: existingSpool ? existingSpool.colorHex : "",
-    //        colorHexes: existingSpool ? existingSpool.colorHexes : [],
-    //        extruderTemp: existingSpool ? existingSpool.extruderTemp : 0,
-    //        finish: existingSpool ? existingSpool.finish : "",
-    //        glow: existingSpool ? existingSpool.glow : false,
-    //        translucent: existingSpool ? existingSpool.translucent : false
-    //    })
-    //}, [existingSpool])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -89,63 +48,121 @@ export const AddSpoolForm = ({ onSubmit }: AddSpoolFormProps) => {
         e.preventDefault();
         await onSubmit(formData);
         setFormData(defaultSpool);
+        onCancel();
     }
 
-   
-            
-    
-
     return (
-        <div>
-            <h1>Add a New Spool</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <Label>
-                    Spool Brand:
-                    <Input type="text" name="brand" value={formData?.brand} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Material: 
-                    <Input type="text" name="material" value={formData?.material} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Color name:
-                    <Input type="text" name="colorName" value={formData?.colorName} onChange={handleChange} />
-                </Label>
-                <ColorCheckBox formData={formData} setFormData={setFormData}></ColorCheckBox>
-                <Label>
-                    Diameter (mm):
-                    <Input type="number" name="diameter" step="0.01" value={formData?.diameter} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Total Weight:
-                    <Input type="number" name="totalWeight" value={formData?.totalWeight} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Extruder temp:
-                    <Input type="number" name="extruderTemp" value={formData?.extruderTemp ?? ""} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Bed temp:
-                    <Input type="number" name="bedTemp" value={formData?.bedTemp ?? ""} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Glow:
-                    <Input className="bg-transparent" type="checkbox" name="glow" checked={formData?.glow} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Translucent:
-                    <Input className="bg-transparent" type="checkbox" name="translucent" checked={formData?.translucent} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Finish:
-                    <Input type="text" name="finish" value={formData?.finish ?? ""} onChange={handleChange} />
-                </Label>
-                <Label>
-                    Cost: 
-                    <Input type="number" name="spoolCost" step="10" value={formData?.spoolCost} onChange={handleChange} />
-                </Label>
-                <Button className="bg-blue-500 text-black" type="submit">Create Spool</Button>
-            </form>
-        </div>
+        <Dialog open onOpenChange={(open) => {
+            if (!open) {
+                setFormData(defaultSpool);
+                onCancel();
+            }
+        }}>
+            <DialogContent className="bg-white sm:max-w-md max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                    <DialogTitle>Add a New Spool</DialogTitle>
+                    <DialogDescription>Fill out the details of the spool below.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-6">
+
+                    {/* General Info */}
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">General</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Label htmlFor="brand">Brand</Label>
+                                <Input id="brand" name="brand" value={formData?.brand} onChange={handleChange} />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="material">Material</Label>
+                                <Input id="material" name="material" value={formData?.material} onChange={handleChange} />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="colorName">Color Name</Label>
+                                <Input id="colorName" name="colorName" value={formData?.colorName} onChange={handleChange} />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="finish">Finish</Label>
+                                <Input id="finish" name="finish" value={formData?.finish ?? ""} onChange={handleChange} />
+                            </div>
+                        </div>
+
+                        <ColorCheckBox formData={formData} setFormData={setFormData} />
+                    </div>
+
+                    {/* Physical Properties */}
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Physical Properties</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Label htmlFor="diameter">Diameter (mm)</Label>
+                                <Input type="number" step="0.01" id="diameter" name="diameter" value={formData?.diameter} onChange={handleChange} />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="totalWeight">Total Weight (g)</Label>
+                                <Input type="number" id="totalWeight" name="totalWeight" value={formData?.totalWeight} onChange={handleChange} />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="spoolCost">Cost</Label>
+                                <Input type="number" step="10" id="spoolCost" name="spoolCost" value={formData?.spoolCost} onChange={handleChange} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Print Settings */}
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Print Settings</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Label htmlFor="extruderTemp">Extruder Temp (°C)</Label>
+                                <Input type="number" id="extruderTemp" name="extruderTemp" value={formData?.extruderTemp ?? ""} onChange={handleChange} />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="bedTemp">Bed Temp (°C)</Label>
+                                <Input type="number" id="bedTemp" name="bedTemp" value={formData?.bedTemp ?? ""} onChange={handleChange} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Checkboxes */}
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Properties</h3>
+
+                        <div className="flex flex-wrap gap-6">
+                            <div className="flex items-center space-x-2">
+                                <Checkbox id="glow" className="bg-gray-200" checked={!!formData?.glow}
+                                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, glow: !!checked }))}
+                                />
+                                <Label htmlFor="glow">Glow</Label>
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                                <Checkbox id="translucent" className="bg-gray-200" checked={!!formData?.translucent}
+                                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, translucent: !!checked }))}
+                                />
+                                <Label htmlFor="translucent">Translucent</Label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Actions */}
+                    <DialogFooter className="pt-4">
+                        <Button className="bg-blue-500 text-white" type="submit">Create Spool</Button>
+                        <Button className="bg-red-500 text-white" type="button" onClick={() => { setFormData(defaultSpool); onCancel(); }}>
+                        Cancel
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     )
 }

@@ -10,6 +10,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 
 type Spool = components["schemas"]["SpoolDto"];
 
@@ -17,12 +24,13 @@ type DeletedSpoolsProps = {
     spools: Spool[]
     onActivateSpool: (s: Spool) => void;
     onHardDeleteSpool: (spool: Spool) => void;
+    onCancel: () => void;
 }
 
 
 
 
-export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool }: DeletedSpoolsProps) {
+export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool, onCancel }: DeletedSpoolsProps) {
     
 
     const ChangeDeletedStatusAsync = async (spool: Spool) => {
@@ -53,43 +61,58 @@ export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool
 
 
     return (
-        <div>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Identifier</TableHead>
-                        <TableHead>Created At</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {spools.map(s => (
-                        <TableRow key={s.id}>
-                            <TableCell>{s.identifier}</TableCell>
-                            <TableCell>{new Date(s.createdAt).toLocaleString("sv-SE", {
-                                year: "2-digit",
-                                month: "2-digit",
-                                day: "2-digit"
-                            })}</TableCell>
-                            <TableCell>
-                                <Button className="bg-blue-500 text-black"
-                                    onClick={() => ChangeDeletedStatusAsync(s)}
-                                >Activate</Button>
-                                <ConfirmDialog
-                                    title={`Delete ${s.identifier}?`}
-                                    description={`This action cannot be undone!`}
-                                    confirmText={"Delete"}
-                                    cancelText={"Cancel"}
-                                    confirmButtonClassName={"bg-red-500 text-white"}
-                                    cancelButtonClassName={"bg-gray-400 text-white"}
-                                    onConfirm={() => HandleHardDeleteAsync(s)}
-                                ><Button className="bg-red-500 text-white">Delete</Button>
-                                </ConfirmDialog>
-                            </TableCell>
+        <Dialog open onOpenChange={(open) => {
+            if (!open) {
+                onCancel()
+            }
+        }}>
+            <DialogContent className="bg-white text-black max-w-4xl">
+                <div className="flex flex-col gap-4">
+                    <DialogHeader>
+                    <DialogTitle>Deleted Spools</DialogTitle>
+                    <DialogDescription>Here you can see all deleted spools. You can either activate them again or delete them permanently.</DialogDescription>
+                </DialogHeader>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Identifier</TableHead>
+                            <TableHead>Created At</TableHead>
+                            <TableHead>Actions</TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>
+                    </TableHeader>
+                    <TableBody>
+                        {spools.map(s => (
+                            <TableRow key={s.id}>
+                                <TableCell>{s.identifier}</TableCell>
+                                <TableCell>{new Date(s.createdAt).toLocaleString("sv-SE", {
+                                    year: "2-digit",
+                                    month: "2-digit",
+                                    day: "2-digit"
+                                })}</TableCell>
+                                <TableCell>
+                                    <div className="flex gap-4">
+                                        <Button className="bg-blue-500 text-black"
+                                            onClick={() => ChangeDeletedStatusAsync(s)}
+                                        >Activate</Button>
+                                        <ConfirmDialog
+                                            title={`Delete ${s.identifier}?`}
+                                            description={`This action cannot be undone!`}
+                                            confirmText={"Delete"}
+                                            cancelText={"Cancel"}
+                                            confirmButtonClassName={"bg-red-500 text-white"}
+                                            cancelButtonClassName={"bg-gray-400 text-white"}
+                                            onConfirm={() => HandleHardDeleteAsync(s)}
+                                        ><Button className="bg-red-500 text-white">Delete</Button>
+                                        </ConfirmDialog>
+                                    </div>
+                                    
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                </div>
+        </DialogContent>
+    </Dialog>
     )
 }

@@ -9,6 +9,7 @@ import CreatePrint from './pages/CreatePrint';
 import DashBoard from './pages/Dashboard'
 import ActivePrints from './pages/ActivePrints'
 import SpoolProvider from "@/components/context/AddSpoolContext"
+import ProfilePage from './pages/ProfilePage';
 import ForumHomePage from './pages/ForumHomePage'
 import ForumPost from '@/pages/ForumPost'
 
@@ -25,6 +26,7 @@ export default function App() {
                         <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
                         <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
                         <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
+                        <Route path="/profile" element={<SideBarLayout component={<ProfilePage />} />} />
                         <Route path="/forum" element={<SideBarLayout component={<ForumHomePage />} />} />
                         <Route path="/forum/post/:id" element={<SideBarLayout component={< ForumPost />} />} />
                     </Route>

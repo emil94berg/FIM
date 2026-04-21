@@ -35,80 +35,73 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
     return (
         <div>
             {groupedSpools.map(gs => (
-                <Collapsible key={gs.identifier}>
-                    <div className="flex flex-row">
-                        <CollapsibleTrigger asChild>
-                            <Button size="icon"
-                                className="bg-transparent">
-                                <ChevronsUpDown></ChevronsUpDown>
-                                <span className="sr-only">Toggle details</span>
-                            </Button>
+                <Collapsible key={gs.identifier} className="mb-3">
+                    
+                    <div className="border-2 border-gray-400 rounded">
+                        <CollapsibleTrigger className="bg-transparent w-full flex items-center gap-2 px-3 py-2">
+                            <ChevronsUpDown className="h-4 w-4"/>
+                            
+                            <span>{gs.identifier}</span>
                         </CollapsibleTrigger>
-                        <span>{gs.identifier}</span>
-                    </div>
-                    <div className="flex flex-col">
-                        {gs.spools.map(s => (
-                            <div key={s.id} className="flex flex-row">
-                                <CollapsibleContent className="flex flex-col gap-2">
-                                    <Table className="bg-gray-100">
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Brand</TableHead>
-                                                <TableHead>Material</TableHead>
-                                                <TableHead>Color</TableHead>
-                                                <TableHead>Diameter</TableHead>
-                                                <TableHead>Total Weight</TableHead>
-                                                <TableHead>Remaining</TableHead>
-                                                <TableHead>Created</TableHead>
-                                                <TableHead>Actions</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
+                        <div className="flex flex-row">
+                            <CollapsibleContent className="flex flex-col  w-full">
+                                <Table className="border rounded bg-gray-50">
+                                    <TableHeader className="bg-gray-100">
+                                        <TableRow>
+                                            <TableHead>Brand</TableHead>
+                                            <TableHead>Material</TableHead>
+                                            <TableHead>Color</TableHead>
+                                            <TableHead>Diameter</TableHead>
+                                            <TableHead>Total Weight</TableHead>
+                                            <TableHead>Remaining</TableHead>
+                                            <TableHead>Created</TableHead>
+                                            <TableHead>Actions</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
 
-                                        <TableBody>
-                                            
-                                                <TableRow key={s.id}>
-                                                    <TableCell>{s.brand}</TableCell>
-                                                    <TableCell>{s.material}</TableCell>
-                                                    <TableCell>{s.colorName}</TableCell>
-                                                    <TableCell>{s.diameter}</TableCell>
-                                                    <TableCell>{s.totalWeight}</TableCell>
-                                                    <TableCell>
-                                                        {getRemainingWeightValue(s) < 0 ? (
-                                                            <span className="font-semibold text-red-600">
-                                                                {s.remainingWeight} (Warning: Negative)
-                                                            </span>
-                                                        ) : (
-                                                            s.remainingWeight
-                                                        )}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {new Date(s.createdAt).toLocaleString("sv-SE", {
-                                                            year: "numeric",
-                                                            month: "2-digit",
-                                                            day: "2-digit"
-                                                        })}
-                                                    </TableCell>
-                                                <TableCell>
-                                                    <Button className="bg-green-500" onClick={() => onSetExisting(s)}>+</Button>
-                                                    <Button className="bg-blue-500 text-black" onClick={() => onEditSpool(s)}>Edit</Button>
-                                                        <ConfirmDialog
-                                                            onConfirm={async () => { await onDelete(s.id); handleGrouped(gs, Number(s.id)) }}
-                                                            title={`Delete ${s.identifier}`}
-                                                            description="You activate your deleted spools for up to 1 week after removal"
-                                                            confirmText="Delete"
-                                                            confirmButtonClassName="bg-red-500 text-white"
-                                                            cancelButtonClassName="bg-red-500 text-white"
-                                                            ><Button className="bg-red-500 text-white">Delete</Button>
-                                                        </ConfirmDialog>
-                                                    </TableCell>
-                                                </TableRow>
-
-                                         
-                                        </TableBody>
-                                    </Table>
-                                </CollapsibleContent>
-                            </div>
-                        ))}
+                                    <TableBody>
+                                        {gs.spools.map(s => (
+                                        <TableRow key={s.id}>
+                                            <TableCell>{s.brand}</TableCell>
+                                            <TableCell>{s.material}</TableCell>
+                                            <TableCell>{s.colorName}</TableCell>
+                                            <TableCell>{s.diameter}</TableCell>
+                                            <TableCell>{s.totalWeight}</TableCell>
+                                            <TableCell>
+                                                {getRemainingWeightValue(s) < 0 ? (
+                                                    <span className="font-semibold text-red-600">
+                                                        {s.remainingWeight} (Warning: Negative)
+                                                    </span>
+                                                ) : (
+                                                    s.remainingWeight
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {new Date(s.createdAt).toLocaleString("sv-SE", {
+                                                    year: "numeric",
+                                                    month: "2-digit",
+                                                    day: "2-digit"
+                                                })}
+                                            </TableCell>
+                                        <TableCell>
+                                            <Button className="bg-green-500 text-white" onClick={() => onSetExisting(s)}>Copy</Button>
+                                            <Button className="bg-blue-500 text-white" onClick={() => onEditSpool(s)}>Edit</Button>
+                                                <ConfirmDialog
+                                                    onConfirm={async () => { await onDelete(s.id); handleGrouped(gs, Number(s.id)) }}
+                                                    title={`Delete ${s.identifier}`}
+                                                    description="This will remove the spool, you can later reactivate it in the deleted spools tab. Do you want to proceed?"
+                                                    confirmText="Delete"
+                                                    confirmButtonClassName="bg-red-500 text-white"
+                                                    cancelButtonClassName="bg-blue-500 text-white"
+                                                    ><Button className="bg-red-500 text-white">Delete</Button>
+                                                </ConfirmDialog>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                    </TableBody>
+                                </Table>
+                            </CollapsibleContent>
+                        </div>
                     </div>
                 </Collapsible>
             ))}

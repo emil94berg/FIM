@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { authFetch } from "../auth/authFetch";
 import PrintsChart from "@/components/BarChart";
 import { EditSpoolForm } from "@/components/spools/EditSpoolForm";
+import SpoolProvider from "@/components/context/AddSpoolContext";
 import { SpoolItem } from "@/components/dashboard/SpoolItem";
 import { OverviewTab } from "@/components/dashboard/OverviewTab";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,9 @@ import { CompletedPrintsChart } from "@/components/dashboard/CompletedRadarChart
 import { ChartSpoolMaterialLeft } from "@/components/dashboard/ChartSpoolMaterialLeft";
 import { ChartPrintOutcome } from "@/components/dashboard/ChartPrintOutcome";
 import { CardTotalSpoolCost } from "@/components/dashboard/CardTotalSpoolCost";
+import { CardTotalPrintCost } from "@/components/dashboard/CardTotalPrintCost";
+import { ChartPrintMaterialUsed } from "@/components/dashboard/ChartPrintMaterialUsed";
+import { ChartPrintGramsUsed } from "@/components/dashboard/ChartPrintGramsUsed";
 
 
 type PrintDto = components["schemas"]["PrintDto"];
@@ -78,21 +82,19 @@ export default function DashboardHome() {
     );
     return (
         <div className="flex flex-col h-screen p-4 gap-4 overflow-hidden"> 
-            
-            <div className="flex items-center">
-                <h1 className="text-3xl font-extrabold tracking-tight">Dashboard</h1>
-            </div>
-
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden w-full">
-                <TabsList className="w-fit">
-                    <TabsTrigger value="overview" className="bg-transparent">Overview</TabsTrigger>
-                    <TabsTrigger value="inventory" className="bg-transparent">Inventory</TabsTrigger>
-                    <TabsTrigger value="stats" className="bg-transparent">Statistics</TabsTrigger>
-                    <TabsTrigger value="test" className="bg-transparent">Test</TabsTrigger>
-                </TabsList>
+                <div className="flex items-start bg-blue-500 text-white rounded-lg px-4 py-4 flex-col">
+                    <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                    <TabsList className="w-fit gap-4">
+                        <TabsTrigger value="overview" className="bg-transparent bg-green-500">Overview</TabsTrigger>
+                        <TabsTrigger value="inventory" className="bg-transparent bg-green-500">Inventory</TabsTrigger>
+                        <TabsTrigger value="stats" className="bg-transparent bg-green-500">Statistics</TabsTrigger>
+                        <TabsTrigger value="fun-stats" className="bg-transparent bg-green-500">Fun Stats</TabsTrigger>
+                    </TabsList>
+                </div>
 
                 <TabsContent value="overview" className="flex-1 overflow-auto mt-4">
-                    <div className="mb-4 flex flex-wrap gap-2">
+                    <div className="mb-4 flex flex-wrap gap-2 bg-slate-100 p-4 rounded-lg">
                         <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
                             <Link to="/create-print">Create Print</Link>
                         </Button>
@@ -101,31 +103,36 @@ export default function DashboardHome() {
                         </Button>
                     </div>
 
-                    <OverviewTab 
+                    <div className="p-4">
+                        <OverviewTab 
                         pending={data.pending}
                         printing={data.printing}
                         lowSpools={data.lowSpools}
-                    />
+                        />
+                    </div>
+                   
                 </TabsContent>
 
                 <TabsContent value="inventory" className="flex-1 overflow-auto mt-4">
-                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                        <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
-                            <Link to="/create-spool">Create Spool</Link>
-                        </Button>
-                        <Input
-                            className="w-full sm:max-w-xs"
-                            placeholder="Search inventory..."
-                            value={searchString}
-                            onChange={(e) => setSearchString(e.target.value)}
-                        />
+                    <div className="pt-4 px-4 mb-4 gap-2 bg-slate-100 p-4 rounded-lg">
+                        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                            <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
+                                <Link to="/create-spool">Create Spool</Link>
+                            </Button>
+                            <Input
+                                className="w-full sm:max-w-xs bg-white border-slate-400"
+                                placeholder="Search inventory..."
+                                value={searchString}
+                                onChange={(e) => setSearchString(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {filteredSpools.map(s => (
+                                <SpoolItem key={s.id} spool={s} onEdit={setEditingSpool} />
+                            ))}
+                        </div>
                     </div>
-                    <CardTotalSpoolCost spools={data.allSpools} />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {filteredSpools.map(s => (
-                            <SpoolItem key={s.id} spool={s} onEdit={setEditingSpool} />
-                        ))}
-                    </div>
+                    
                 </TabsContent>
 
                 {/* <TabsContent value="stats" className="flex-1 mt-4 outline-none overflow-auto">
@@ -151,44 +158,48 @@ export default function DashboardHome() {
                     <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
                         <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
 
-                        <div className="flex-row flex gap-4">
-                            
-                            {/* Show Stats */}
-                            <div className="flex-[3]"> 
+                        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+                            <div className="xl:col-span-8 flex flex-col gap-4">
                                 <PrintsChart />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <ChartPrintOutcome prints={data.allCompletedPrints} />
+                                    <ChartPrintGramsUsed prints={data.allCompletedPrints} />
+                                </div>
                             </div>
 
-                            {/* PieCharts */}
-                            <div className="flex-[1]">
+                            <div className="xl:col-span-4 flex flex-col gap-4">
                                 <ChartSpoolMaterialLeft spools={data.allSpools} />
-                                <div className="mt-4" /> {/* Ugly solution for spacing */}
-                                <ChartPrintOutcome prints={data.allCompletedPrints} />
+                                <ChartPrintMaterialUsed prints={data.allCompletedPrints} />
                             </div>
                         </div>
                     </div>
                 </TabsContent>
-                <TabsContent value="test" className="flex-1 mt-4 outline-none">
+                <TabsContent value="fun-stats" className="flex-1 mt-4 outline-none">
                     <div className="border rounded-xl p-6 bg-slate-50 min-h-[500px] flex flex-col">
-                        <h2 className="text-xl font-bold mb-4">Print Statistics</h2>
+                        <h2 className="text-xl font-bold mb-4">Various Statistics</h2>
 
-                        <div className="flex-row flex">
-                            
+                        <div className="mb-4 pt-4 gap-4 px-4">
                             {/* Show Stats */}
-                            <div className="flex-[3]"> 
+                            <div className="flex-[3] mb-4"> 
                                 <CompletedPrintsChart
                                     prints={data.allCompletedPrints}
                                 ></CompletedPrintsChart>
                             </div>
+                            <CardTotalSpoolCost spools={data.allSpools} />
+                            <CardTotalPrintCost prints={data.allCompletedPrints} />
                         </div>
                     </div>
                 </TabsContent>
             </Tabs>
             {editingSpool && (
-                <EditSpoolForm 
-                    spool={editingSpool} 
-                    onCancel={() => setEditingSpool(null)} 
-                    onSubmit={handleUpdateSpool}
-                />
+                <SpoolProvider>
+                    <EditSpoolForm 
+                        spool={editingSpool} 
+                        onCancel={() => setEditingSpool(null)} 
+                        onSubmit={handleUpdateSpool}
+                    />
+                </SpoolProvider>
             )}
         </div>
     );

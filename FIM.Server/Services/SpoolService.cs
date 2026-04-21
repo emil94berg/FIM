@@ -86,6 +86,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         if (dto.BedTemp.HasValue) spool.BedTemp = dto.BedTemp.Value;
         if (dto.Finish != null) spool.Finish = dto.Finish;
         if (dto.Glow.HasValue) spool.Glow = dto.Glow.Value;
+        if (dto.Translucent.HasValue) spool.Translucent = dto.Translucent.Value;
         if (dto.Favorite.HasValue) spool.Favorite = dto.Favorite.Value;
         if (dto.TotalWeight.HasValue) spool.TotalWeight = dto.TotalWeight.Value;
         if (dto.RemainingWeight.HasValue) spool.RemainingWeight = dto.RemainingWeight.Value;
