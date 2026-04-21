@@ -1,5 +1,6 @@
 ﻿using FIM.Server.Data;
 using FIM.Server.DTOs.Forum;
+using FIM.Server.Helpers.DTOMapper;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -36,13 +37,19 @@ namespace FIM.Server.Services
         public async Task<bool> DeletePostAsync(int id)
         {
             var deletePost = await _dbContext.ForumPosts.FirstOrDefaultAsync(p => p.Id == id);
-            if(deletePost != null)
+            if (deletePost != null)
             {
                 _dbContext.Remove(deletePost);
                 await _dbContext.SaveChangesAsync();
                 return true;
             }
             return false;
+        }
+        public async Task<ForumPostDto> GetSpecifikPostAsync(int id)
+        {
+            var post = await _dbContext.ForumPosts.FirstOrDefaultAsync(p => p.Id == id);
+            if (post != null) return post.ToForumPostDto();
+            else return null;
         }
     }
 }

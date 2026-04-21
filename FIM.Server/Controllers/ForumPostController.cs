@@ -44,6 +44,14 @@ namespace FIM.Server.Controllers
             var result = Enum.GetNames(typeof(ForumPostTags));
             return result;
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSpecifikPostAsync(int id)
+        {
+            var result = await _forumPostService.GetSpecifikPostAsync(id);
+            if (result != null) return Ok(result);
+            else return NotFound();
+
+        }
     }
 }
 
