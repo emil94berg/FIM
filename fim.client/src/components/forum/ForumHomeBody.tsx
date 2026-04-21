@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import {
     Card,
-    CardAction,
     CardContent,
     CardDescription,
     CardFooter,
@@ -15,10 +14,11 @@ type ForumPost = components["schemas"]["ForumPostDto"]
 
 type ForumHomeBodyProps = {
     allPosts: ForumPost[]
+    onShowCreate: () => void
 }
 
 
-export function ForumHomeBody({ allPosts }: ForumHomeBodyProps){
+export function ForumHomeBody({ allPosts, onShowCreate }: ForumHomeBodyProps){
 
     const cutText = (text: string, cutNumber: number) => {
         if (text.length > cutNumber) {
@@ -29,7 +29,7 @@ export function ForumHomeBody({ allPosts }: ForumHomeBodyProps){
 
     return (
         <div>
-            <Button className="bg-green-500 mt-2">Create</Button>
+            <Button className="bg-green-500 mt-2" onClick={onShowCreate}>Create</Button>
             {allPosts.map(p => (
                 <Card key={p.id} className="mt-2" style={{textAlign: "center"}}>
                     <CardHeader>

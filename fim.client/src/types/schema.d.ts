@@ -115,6 +115,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/ForumPost/GetAllTags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string[];
+                        "application/json": string[];
+                        "text/json": string[];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/Notification": {
         parameters: {
             query?: never;
@@ -863,7 +900,7 @@ export interface components {
             title: string;
             text: string;
             subject: string;
-            tag: null | string;
+            tag: components["schemas"]["ForumPostTags"];
         };
         CreatePrintDto: {
             name: string;
@@ -924,8 +961,10 @@ export interface components {
             userId: string;
             text: string;
             subject: string;
-            tag: null | string;
+            tag: components["schemas"]["ForumPostTags"];
         };
+        /** @enum {unknown} */
+        ForumPostTags: "AMA" | "Help" | "Question" | "Discussion" | "Showcase";
         NotificationDto: {
             /** Format: int32 */
             id: number | string;
