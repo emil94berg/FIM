@@ -8,6 +8,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import type { components } from "@/types/schema"
+import { Link } from "react-router-dom"
 
 type ForumPost = components["schemas"]["ForumPostDto"]
 
@@ -31,7 +32,8 @@ export function ForumHomeBody({ allPosts, onShowCreate }: ForumHomeBodyProps){
         <div>
             <Button className="bg-green-500 mt-2" onClick={onShowCreate}>Create</Button>
             {allPosts.map(p => (
-                <Card key={p.id} className="mt-2" style={{textAlign: "center"}}>
+                <Link key={p.id} to={`/forum/post/${p.id}`}>
+                    <Card key={p.id} className="mt-2" style={{ textAlign: "center" }}>
                     <CardHeader>
                         <CardTitle>{p.title}</CardTitle>
                     </CardHeader>
@@ -39,9 +41,10 @@ export function ForumHomeBody({ allPosts, onShowCreate }: ForumHomeBodyProps){
                         <CardDescription>{cutText(p.text, 200)}</CardDescription>
                     </CardContent>
                     <CardFooter>
-                        <Button className="bg-blue-100" style={{ width: "100%" }}>Go to post</Button>
+                        <p>UserName</p>
                     </CardFooter>
-                </Card>
+                    </Card>
+                </Link>
             ))}
         </div>
     )

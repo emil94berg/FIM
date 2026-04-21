@@ -40,13 +40,17 @@ export default function ForumPost() {
     return (
         <div>
             <h1>Post sida</h1>
-            {post === null ? ("Loading...")
+            {post.id === 1 ? ("Loading...")
                 :
                 (
                     <h1>{post.id} {post.title}</h1>
+
+
+
+
+
                 )
             }
-            
         </div>
     )
 
