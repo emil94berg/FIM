@@ -9,6 +9,7 @@ import CreatePrint from './pages/CreatePrint';
 import DashBoard from './pages/Dashboard'
 import ActivePrints from './pages/ActivePrints'
 import SpoolProvider from "@/components/context/AddSpoolContext"
+import ProfilePage from './pages/ProfilePage';
 
 export default function App() {
     return (
@@ -22,6 +23,7 @@ export default function App() {
                         <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
                         <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
                         <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
+                        <Route path="/profile" element={<SideBarLayout component={<ProfilePage />} />} />
                     </Route>
                  </Routes>
         </>
