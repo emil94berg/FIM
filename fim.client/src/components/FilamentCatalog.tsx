@@ -15,6 +15,7 @@ import { StarSolidIcon } from "@/components/icons/mynaui-star-solid"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
 import { SetSpoolPrice } from "@/components/popUp/SpoolPricePopup"
 import { Skeleton } from "./ui/skeleton";
+import { toast } from "sonner";
 
 
 
@@ -116,10 +117,11 @@ export function CatalogList() {
                 await authFetch(`https://localhost:7035/UserFavoriteFilament/SetFavorite/${id}`, {
                     method: "POST"
                 });
-                
+                toast.success("Added to favourites");
             }
             catch (error) {
-                console.log("Failed to post to UserFavoriteFilament " + error)
+                console.log("Failed to post to UserFavoriteFilament " + error);
+                toast.error("Failed to add favourite");
             }
     }
 
@@ -139,10 +141,12 @@ export function CatalogList() {
         try {
             await authFetch(`https://localhost:7035/UserFavoriteFilament/DeleteFavorite/${id}`, {
                 method: "POST"
-            })
+            });
+            toast.success("Removed from favourites");
         }
         catch (error) {
             console.log("Failed to post to UserFavoriteFilament " + error);
+            toast.error("Failed to remove favourite");
         }
     }
 
@@ -162,9 +166,11 @@ export function CatalogList() {
                 });
                 
                 setMySpools(prev => [...prev, response]);
+                toast.success("Spool added to inventory");
             }
             catch (error) {
                 console.log("Failed to fetch" + error);
+                toast.error("Failed to add spool to inventory");
             }
         }
         

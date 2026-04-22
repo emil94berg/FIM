@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
 import { authFetch } from "../../auth/authFetch";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 type Print = components["schemas"]["PrintDto"];
 
@@ -40,9 +41,11 @@ export function StartPrintPopup({
                 })
             });
             onStarted(data);
+            toast.success(`Print "${print.name}" started`);
         }
         catch (error) {
             console.log("Failed to fetch from print..." + error);
+            toast.error("Failed to start print");
         }
     }
 

@@ -17,6 +17,7 @@ import { CardTotalSpoolCost } from "@/components/dashboard/CardTotalSpoolCost";
 import { CardTotalPrintCost } from "@/components/dashboard/CardTotalPrintCost";
 import { ChartPrintMaterialUsed } from "@/components/dashboard/ChartPrintMaterialUsed";
 import { ChartPrintGramsUsed } from "@/components/dashboard/ChartPrintGramsUsed";
+import { toast } from "sonner";
 
 
 type PrintDto = components["schemas"]["PrintDto"];
@@ -70,8 +71,10 @@ export default function DashboardHome() {
             const nextData = await fetchDashBoardData();
             setData(nextData);
             setEditingSpool(null);
+            toast.success("Spool updated successfully");
         } catch (error) {
             console.error("Error updating spool", error);
+            toast.error("Failed to update spool");
         }
     };
 
