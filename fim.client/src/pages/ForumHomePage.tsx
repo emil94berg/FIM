@@ -52,11 +52,17 @@ export default function ForumHomePage() {
 
 
     return (
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        
+            <div style={{ display: "flex", flexDirection: "column" }}>
             <ForumHeader tags={allTags}></ForumHeader>
-            <ForumHomeBody allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
-            {showCreate ? (<CreateForumPost updateForumPostList={updateAllPosts} tags={allTags} onCancel={showCreateForumPost}></CreateForumPost>) : (null)}
-            
-        </div>
+            <div className="m-8 rounded-xl border bg-card p-6 shadow-sm bg-slate-100" style={{ alignSelf: "center" }}>
+                <div className="mx-auto" style={{ maxWidth: "80%" }}>
+                    <ForumHomeBody allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
+                </div>
+                    {showCreate ? (<CreateForumPost updateForumPostList={updateAllPosts} tags={allTags} onCancel={showCreateForumPost}></CreateForumPost>) : (null)}
+                </div>
+            </div>
+        
+        
     )
 }

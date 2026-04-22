@@ -29,23 +29,27 @@ export function ForumHomeBody({ allPosts, onShowCreate }: ForumHomeBodyProps){
     }
 
     return (
-        <div>
-            <Button className="bg-green-500 mt-2" onClick={onShowCreate}>Create</Button>
-            {allPosts.map(p => (
-                <Link key={p.id} to={`/forum/post/${p.id}`}>
-                    <Card key={p.id} className="mt-2" style={{ textAlign: "center" }}>
-                    <CardHeader>
-                        <CardTitle>{p.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <CardDescription>{cutText(p.text, 200)}</CardDescription>
-                    </CardContent>
-                    <CardFooter>
-                        <p>UserName</p>
-                    </CardFooter>
-                    </Card>
-                </Link>
-            ))}
-        </div>
+        <>
+            <Button className="bg-green-500 mt-2" onClick={onShowCreate}>Create a new post</Button>
+
+            <div className="flex flex-col items-center">
+                {allPosts.map(p => (
+                    <Link key={p.id} to={`/forum/post/${p.id}`} className="w-full max-w-x1">
+                        <Card key={p.id} className="mt-4 text-center">
+                            <CardHeader>
+                                <CardTitle>{p.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <CardDescription>{cutText(p.text, 200)}</CardDescription>
+                            </CardContent>
+                            <CardFooter>
+                                <p>UserName</p>
+                            </CardFooter>
+                        </Card>
+                    </Link>
+                ))}
+            </div>
+            
+        </>
     )
 }

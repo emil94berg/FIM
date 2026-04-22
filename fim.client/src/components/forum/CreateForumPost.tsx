@@ -27,7 +27,6 @@ type createForumPostProps = {
 
 
 export function CreateForumPost({ tags, onCancel, updateForumPostList} : createForumPostProps) {
-   /* const [userName, setUserName] = useState<string>("");*/
     const [formData, setFormData] = useState<CreateForumPost>({
         title: "",
         text: "",
@@ -71,7 +70,7 @@ export function CreateForumPost({ tags, onCancel, updateForumPostList} : createF
                         <Label>Title:</Label>
                         <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} required={true}></Input>
                         <Label>Content:</Label>
-                        <textarea className="bg-white" rows={4} cols={50} onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))} required={true}></textarea>
+                        <textarea className="bg-white" rows={10} cols={180} onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))} required={true} style={{border: "1px solid black"} }></textarea>
                         <Label>Subject:</Label>
                         <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))} required={true}></Input>
                         <Label>Tag:</Label>
