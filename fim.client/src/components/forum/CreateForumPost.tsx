@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -12,7 +12,9 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog"
 import { authFetch } from "@/auth/authFetch"
+import { supabase } from "@/auth/supabaseClient"
 import type { components } from "../../types/schema"
+
 
 type CreateForumPost = components["schemas"]["CreateForumPostDto"];
 type ForumTag = components["schemas"]["ForumPostTags"]
@@ -26,13 +28,16 @@ type createForumPostProps = {
 }
 
 
-export function CreateForumPost({ tags, onCancel, updateForumPostList} : createForumPostProps) {
+export function CreateForumPost({ tags, onCancel, updateForumPostList }: createForumPostProps) {
+    
     const [formData, setFormData] = useState<CreateForumPost>({
         title: "",
         text: "",
         subject: "",
-        tag: "Help"
+        tag: "Help",
+        username: ""
     })
+    
 
     const url = "https://localhost:7035/ForumPost"
 
@@ -54,6 +59,29 @@ export function CreateForumPost({ tags, onCancel, updateForumPostList} : createF
         e.preventDefault();
         await onCreateForumPostSubmit(formData);
     }
+
+    useEffect(() => {
+        const loadUserName = async () => {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+
+                let finishedUsername = user?.user_metadata.username || "";
+
+                if (!finishedUsername && user?.email) {
+                    finishedUsername = user.email?.split("@");
+                }
+
+                setFormData(prev => ({
+                    ...prev,
+                    username: finishedUsername
+                }))
+            }
+            catch (error) {
+                console.log("could not find user..." + error);
+            }
+        };
+        loadUserName();
+    }, []);
 
     return (
         <div>

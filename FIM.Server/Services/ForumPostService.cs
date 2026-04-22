@@ -22,6 +22,7 @@ namespace FIM.Server.Services
         }
         public async Task<ForumPostDto> CreatePostAsync(string userId, CreateForumPostDto createDto)
         {
+            
             var newPost = new ForumPost
             {
                 UserId = userId,
@@ -30,7 +31,9 @@ namespace FIM.Server.Services
                 Subject = createDto.Subject,
                 Tag = createDto.Tag,
                 Text = createDto.Text,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Username = createDto.Username
+                
             };
             _dbContext.ForumPosts.Add(newPost);
             await _dbContext.SaveChangesAsync();
@@ -56,32 +59,7 @@ namespace FIM.Server.Services
 
         public async Task<List<ForumPostDto>> GetLatestPostsAsync(int takePerTagNumber)
         {
-            //var amaList = await _dbContext.ForumPosts
-            //    .Where(fp => fp.Tag == ForumPostTags.AMA)
-            //    .OrderBy(fp => fp.CreatedAt)
-            //    .Take(5).ToListAsync();
-
-            //var helpList = await _dbContext.ForumPosts
-            //    .Where(fp => fp.Tag == ForumPostTags.Help)
-            //    .OrderBy(fp => fp.CreatedAt)
-            //    .Take(5).ToListAsync();
-
-            //var questionList = await _dbContext.ForumPosts
-            //    .Where(fp => fp.Tag == ForumPostTags.Question)
-            //    .OrderBy(fp => fp.CreatedAt)
-            //    .Take(5).ToListAsync();
-
-            //var discussionList = await _dbContext.ForumPosts
-            //    .Where(fp => fp.Tag == ForumPostTags.Discussion)
-            //    .OrderBy(fp => fp.CreatedAt)
-            //    .Take(5).ToListAsync();
-
-            //var showcaseList = await _dbContext.ForumPosts
-            //    .Where(fp => fp.Tag == ForumPostTags.Showcase)
-            //    .OrderBy(fp => fp.CreatedAt)
-            //    .Take(5).ToListAsync();
-
-
+           
             var forumPostReturnList = new List<ForumPostDto>(); 
 
             var enumTypes = Enum.GetValues<ForumPostTags>();

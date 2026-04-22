@@ -20,7 +20,9 @@ type ForumHomeBodyProps = {
 }
 
 
-export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHomeBodyProps){
+export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHomeBodyProps) {
+
+    const colorArray = ["bg-green-200", "bg-orange-200", "bg-blue-200", "bg-yellow-200", "bg-purple-200", "bg-pink-200", "bg-red-200"];
 
     const cutText = (text: string, cutNumber: number) => {
         if (text.length > cutNumber) {
@@ -51,8 +53,8 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                 {sortPostsByTag(latestPosts).map((p, index) => (
                     <div key={p.id}>
                         {(index === 0 || p.tag !== sortPostsByTag(latestPosts)[index - 1].tag) && (
-                            <div className="mt-4 text-center bg-red-200 rounded-xl border">
-                                <p style={{ color: "aliceblue", fontSize: "40px" }}>{p.tag}</p>
+                            <div className={`mt-4 text-center rounded-xl border ${colorArray[index % colorArray.length]}`}>
+                                <p style={{ color: "gray", fontSize: "40px" }}>{p.tag}</p>
                             </div>
                         )}
                         <Link to={`/forum/post/${p.id}`} className="w-full max-w-x1">
@@ -64,12 +66,11 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                                     <CardDescription>{cutText(p.text, 200)}</CardDescription>
                                 </CardContent>
                                 <CardFooter>
-                                    <p>UserName</p>
+                                    <p>Created by: {p.username} - {new Date(p.createdAt).toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" })}</p>
                                 </CardFooter>
                             </Card>
                         </Link>
                     </div>
-                    
                 ))}
             </div>
             

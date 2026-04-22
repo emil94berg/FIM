@@ -71,7 +71,7 @@ export default function ForumHomePage() {
         
             <div style={{ display: "flex", flexDirection: "column" }}>
             <ForumHeader tags={allTags}></ForumHeader>
-            <div className="m-8 rounded-xl border bg-card p-6 shadow-sm bg-slate-100" style={{ alignSelf: "center" }}>
+            <div className="m-8 rounded-xl border bg-card p-6 shadow-sm bg-slate-100" style={{ alignSelf: "center", maxWidth: "80%" }}>
                 <div className="mx-auto" style={{ maxWidth: "80%" }}>
                     <ForumHomeBody latestPosts={latestPosts} allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
                 </div>

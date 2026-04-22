@@ -6,6 +6,7 @@ namespace FIM.Server.DTOs.Forum
         string Title,
         string Text,
         string Subject,
-        ForumPostTags Tag
+        ForumPostTags Tag,
+        string Username
     );
 }

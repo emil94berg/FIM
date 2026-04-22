@@ -8,7 +8,7 @@ namespace FIM.Server.Helpers.DTOMapper
     {
         public static ForumPostDto ToForumPostDto(this ForumPost post)
         {
-            return new ForumPostDto(post.Id, post.Title, post.UserId, post.Text, post.Subject, post.Tag, post.IsDeleted, post.CreatedAt);
+            return new ForumPostDto(post.Id, post.Title, post.UserId, post.Text, post.Subject, post.Tag, post.IsDeleted, post.CreatedAt, post.Username);
         }
     }
 }

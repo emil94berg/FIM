@@ -11,6 +11,7 @@ namespace FIM.Server.DTOs.Forum
         string Subject,
         ForumPostTags Tag,
         bool IsDeleted,
-        DateTime CreatedAt
+        DateTime CreatedAt,
+        string Username
     );
 }
