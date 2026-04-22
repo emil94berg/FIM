@@ -18,20 +18,19 @@ import ForumPost from '@/pages/ForumPost'
 export default function App() {
     return (
         <>
-                <Routes>
-                    <Route path="/" element={<SideBarLayout component={ <Home /> } />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route element={<ProtectedRoute />}>
-                    <Route path="/create-spool" element={<SpoolProvider><SideBarLayout component={<CreateSpool />} /> </SpoolProvider> } />
-                        <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
-                        <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
-                        <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
-                        <Route path="/profile" element={<SideBarLayout component={<ProfilePage />} />} />
-                        <Route path="/forum" element={<SideBarLayout component={<ForumHomePage />} />} />
-                        <Route path="/forum/post/:id" element={<SideBarLayout component={< ForumPost />} />} />
+            <Routes>
+                <Route path="/" element={<SideBarLayout component={ <Home /> } />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route element={<ProtectedRoute />}>
+                <Route path="/create-spool" element={<SpoolProvider><SideBarLayout component={<CreateSpool />} /> </SpoolProvider> } />
+                    <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
+                    <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
+                    <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
+                    <Route path="/profile" element={<SideBarLayout component={<ProfilePage />} />} />
+                    <Route path="/forum" element={<SideBarLayout component={<ForumHomePage />} />} />
+                    <Route path="/forum/post/:id" element={<SideBarLayout component={< ForumPost />} />} />
                 </Route>
-
             </Routes>
             <Toaster richColors closeButton position="top-right" />
         </>

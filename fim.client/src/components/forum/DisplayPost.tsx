@@ -16,11 +16,22 @@ export function DisplayPost({ post }: DisplayPostProps) {
 
 
     return (
-        <div className="mx-auto bg-blue-100 border rounded-xl mt-4" style={{maxWidth: "80%", textAlign: "center"} }>
+        <div className="mx-auto bg-blue-100 border rounded-xl mt-4" style={{maxWidth: "80%"} }>
             <h1 className="m-4">{post.title}</h1>
-            <div className="bg-gray-100 m-2 p-2 border rounded-xl">
-                <p>{post.text}</p>
-                <img src={imgSource}></img>
+            <div className="bg-gray-100 m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }}>
+                <div className="flex-shrink-0 text-center">
+                    <img className="h-24 w-24 rounded-full object-cover ring-2 ring-border m-4" src={imgSource}></img>
+                    <p>{post.username}</p>
+                    <p>{new Date(post.createdAt).toLocaleString("sv-SE", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}</p>
+                </div>
+               
+                <p className="m-4 p-4" style={{borderLeft:"1px solid black"}}>{post.text}</p>
             </div>
         </div>
 
