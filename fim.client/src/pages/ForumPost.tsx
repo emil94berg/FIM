@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import type { components } from "@/types/schema"
 import { authFetch } from "../auth/authFetch";
+import { DisplayPost } from "@/components/forum/DisplayPost";
 
 type ForumPost = components["schemas"]["ForumPostDto"];
 
@@ -18,7 +19,10 @@ export default function ForumPost() {
         userId: "",
         text: "",
         subject: "",
-        tag: "Help"
+        tag: "Help",
+        isDeleted: false,
+        createdAt: "",
+        username: ""
     });
 
     useEffect(() => {
@@ -32,23 +36,17 @@ export default function ForumPost() {
             }
         };
         loadPost();
-    }, [id]);
+    }, [url, id]);
 
 
 
 
     return (
         <div>
-            <h1>Post sida</h1>
             {post.id === 1 ? ("Loading...")
                 :
                 (
-                    <h1>{post.id} {post.title}</h1>
-
-
-
-
-
+                    <DisplayPost post={post}></DisplayPost>
                 )
             }
         </div>
