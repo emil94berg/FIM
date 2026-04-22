@@ -9,6 +9,8 @@ namespace FIM.Server.DTOs.Forum
         string UserId,
         string Text,
         string Subject,
-        ForumPostTags Tag
+        ForumPostTags Tag,
+        bool IsDeleted,
+        DateTime CreatedAt
     );
 }

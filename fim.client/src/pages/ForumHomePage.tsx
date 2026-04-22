@@ -10,9 +10,12 @@ type ForumPost = components["schemas"]["ForumPostDto"]
 type ForumTag = components["schemas"]["ForumPostTags"]
 
 export default function ForumHomePage() {
+    const url = "https://localhost:7035/ForumPost";
+
     const [allPosts, setAllPosts] = useState<ForumPost[]>([]);
     const [allTags, setAllTags] = useState<ForumTag[]>([]);
     const [showCreate, setShowCreate] = useState<boolean>(false);
+    const [latestPosts, setLatestPosts] = useState<ForumPost[]>([]);
 
     useEffect(() => {
         const loadTagsName = async () => {
@@ -31,7 +34,7 @@ export default function ForumHomePage() {
     useEffect(() => {
         const loadForumPosts = async () => {
             try {
-                const data: ForumPost[] = await authFetch(`https://localhost:7035/ForumPost`);
+                const data: ForumPost[] = await authFetch(url);
                 setAllPosts(data);
             }
             catch (error) {
@@ -39,6 +42,19 @@ export default function ForumHomePage() {
             }
         };
         loadForumPosts();
+    }, [])
+
+    useEffect(() => {
+        const loadLatestPosts = async () => {
+            try {
+                const data: ForumPost[] = await authFetch(url + "/GetLatestPosts");
+                setLatestPosts(data);
+            }
+            catch (error) {
+                console.log("Error fetching data from ForumPost... " + error);
+            }
+        };
+        loadLatestPosts();
     }, [])
 
     const showCreateForumPost = () => {
@@ -57,7 +73,7 @@ export default function ForumHomePage() {
             <ForumHeader tags={allTags}></ForumHeader>
             <div className="m-8 rounded-xl border bg-card p-6 shadow-sm bg-slate-100" style={{ alignSelf: "center" }}>
                 <div className="mx-auto" style={{ maxWidth: "80%" }}>
-                    <ForumHomeBody allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
+                    <ForumHomeBody latestPosts={latestPosts} allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
                 </div>
                     {showCreate ? (<CreateForumPost updateForumPostList={updateAllPosts} tags={allTags} onCancel={showCreateForumPost}></CreateForumPost>) : (null)}
                 </div>

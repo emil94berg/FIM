@@ -9,6 +9,6 @@
         public string Subject { get; set; }
         public ForumPostTags Tag { get; set; }
         public bool IsDeleted { get; set; } = false;
-
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

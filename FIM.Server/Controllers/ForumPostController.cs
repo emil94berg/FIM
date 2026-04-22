@@ -52,6 +52,13 @@ namespace FIM.Server.Controllers
             else return NotFound();
 
         }
+        [HttpGet ("GetLatestPosts")]
+        public async Task<IActionResult> GetLatestPostsAsync()
+        {
+            var result = await _forumPostService.GetLatestPostsAsync(5);
+            if (result != null) return Ok(result);
+            else return NotFound(); 
+        }
     }
 }
 
