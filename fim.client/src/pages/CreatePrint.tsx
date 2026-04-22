@@ -1,5 +1,6 @@
 import type { components } from "../types/schema" 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { AddPrintForm } from "../components/prints/AddPrintForm";
 import { EditPrintForm } from "../components/prints/EditPrintForm";
 import { authFetch } from "../auth/authFetch"
@@ -20,7 +21,8 @@ type UpdatePrintResponse = Print | { print: Print; warning?: string };
 const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
     
     if (print.spoolId === 0) {
-        alert("Please select a valid spool");
+        toast.error("Please select a valid spool");
+        return Promise.reject(new Error("No spool selected"));
     }
 
     return await authFetch("https://localhost:7035/Print", {
@@ -89,9 +91,11 @@ export default function CreatePrint() {
             
             setPrint(prev => prev.filter(p => p.id !== print.id));
             setDeletedPrints(prev => [...prev, print]);
+            toast.success("Print deleted");
         }
         catch (error) {
             console.error("Error deleting print: ", error);
+            toast.error("Failed to delete print");
         }
     }
 
@@ -106,14 +110,16 @@ export default function CreatePrint() {
             const warning = "print" in data ? data.warning : undefined;
 
             if (warning) {
-                alert(warning);
+                toast.warning(warning);
+            } else {
+                toast.success("Print updated successfully");
             }
 
             setPrint(prev => prev.map(p => (p.id === updatedPrint.id ? updatedPrint : p)));
             setEditingPrint(null);
         }
         catch (error: unknown) {
-            alert(error instanceof Error ? error.message : "Error updating print.");
+            toast.error(error instanceof Error ? error.message : "Error updating print.");
         }
     }
 
@@ -122,8 +128,9 @@ export default function CreatePrint() {
             const newPrint = await handleSubmit(print);
             setPrint(prev => [...prev, newPrint]);
             setAddingPrint(false);
+            toast.success("Print created successfully");
         } catch (error: unknown) {
-            alert(error instanceof Error ? error.message : "Failed to create print.");
+            toast.error(error instanceof Error ? error.message : "Failed to create print.");
         }
     }
     const handleDeleteFromComponent = async (print: Print) => {

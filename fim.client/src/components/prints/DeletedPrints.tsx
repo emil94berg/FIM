@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+import { toast } from "sonner"
 import {
     Dialog,
     DialogContent,
@@ -44,10 +45,12 @@ export function HandleDeletedPrints({ prints, onPrintsChanged, onHandlePrintsHar
             })
             if (data !== null) {
                 onPrintsChanged(print);
+                toast.success("Print restored successfully");
             }
         }
         catch (error) {
             console.log("Could not fetch from Print... " + error);
+            toast.error("Failed to restore print");
         }
     }
     const HandleHardDeleteAsync = async (print: Print) => {
@@ -57,9 +60,11 @@ export function HandleDeletedPrints({ prints, onPrintsChanged, onHandlePrintsHar
                 body: JSON.stringify(print)
             })
             onHandlePrintsHardDelete(print);
+            toast.success("Print permanently deleted");
         }
         catch (error) {
-            console.log("Failed to fetch from print..." + error)
+            console.log("Failed to fetch from print..." + error);
+            toast.error("Failed to permanently delete print");
         }
     }
 

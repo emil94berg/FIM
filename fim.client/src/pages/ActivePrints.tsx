@@ -1,6 +1,7 @@
 
 
 import { useState, useEffect, useCallback } from "react"
+import { toast } from "sonner"
 import type { components } from "src/types/schema"
 import { authFetch } from "../auth/authFetch"
 import {
@@ -41,9 +42,11 @@ export default function EditActivePrints() {
                 }
             });
             setActivePrints(prev => prev.filter(p => p.id !== updatedPrint.id));
+            toast.success("Print cancelled");
         }
         catch (error) {
             console.log("Failed to fetch from Spools " + error);
+            toast.error("Failed to cancel print");
         }
     };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { toast } from 'sonner';
 import type { components } from "../types/schema";
 import { AddSpoolForm } from '../components/spools/AddSpoolForm';
 import { EditSpoolForm } from '../components/spools/EditSpoolForm';
@@ -62,6 +63,7 @@ export default function GetSpools() {
 
     const handleCreateSpool = async (spool: CreateSpoolDto) => {
         const newSpool = await CreateSpool(spool);
+        toast.success("Spool created successfully");
         if (!groupedSpools.some(sg => sg.identifier == newSpool.identifier)) {
             const newSpoolGroup: GroupedSpool = { identifier: newSpool.identifier, spools: [newSpool] }
             setGroupedSpools(prev => [...prev, newSpoolGroup])
@@ -93,8 +95,10 @@ export default function GetSpools() {
 
 
             setEditingSpool(null);
+            toast.success("Spool updated successfully");
         } catch (error) {
             console.error("Error updating spool", error);
+            toast.error("Failed to update spool");
         }
     }
 
@@ -104,9 +108,11 @@ export default function GetSpools() {
                 method: "DELETE"
             });
             setDeletedSpools(prev => [...prev, data]);
+            toast.success("Spool deleted");
         }
         catch (error) {
             console.error("Error deleting spool", error);
+            toast.error("Failed to delete spool");
         }
     }
  

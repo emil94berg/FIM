@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+import { toast } from "sonner"
 import {
     Dialog,
     DialogContent,
@@ -40,9 +41,11 @@ export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool
                 body: JSON.stringify(spool)
             });
             onActivateSpool(data);
+            toast.success("Spool restored successfully");
         }
         catch (error) {
             console.log("Could not fetch from spools..." + error);
+            toast.error("Failed to restore spool");
         }
     }
     const HandleHardDeleteAsync = async (spool: Spool) => {
@@ -52,10 +55,12 @@ export function HandleDeletedSpools({ spools, onActivateSpool, onHardDeleteSpool
                 body: JSON.stringify(spool)
             });
             onHardDeleteSpool(spool);
+            toast.success("Spool permanently deleted");
             /*onActivateSpool(data);*/
         }
         catch (error) {
             console.log("Could not fetch from spools..." + error);
+            toast.error("Failed to permanently delete spool");
         }
     }
 
