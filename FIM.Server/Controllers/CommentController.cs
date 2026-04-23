@@ -1,4 +1,5 @@
-﻿using FIM.Server.DTOs.Forum;
+﻿using FIM.Server.DTOs.CommentDto;
+using FIM.Server.DTOs.Forum;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -27,9 +28,18 @@ namespace FIM.Server.Controllers
             return BadRequest();
         }
         [HttpPost("CreateComment")]
-        public async Task<IActionResult> CreateCommentAsync()
+        public async Task<IActionResult> CreateCommentAsync([FromBody] CreateCommentDto createDto)
         {
-            return Ok();
+            var result = await _commentService.CreateCommentAsync(createDto);
+            if (result != null) return Ok(result);
+            return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<CommentDto> GetSchema()
+        {
+            var date = DateTime.UtcNow;
+            return new CommentDto(1, 1, 1, "hej", "hej", date, false, 1);
         }
 
     }
