@@ -32,4 +32,6 @@ public class Spool
     public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool Favorite { get; set; } = false;
     public bool IsDeleted { get; set; } = false;
+    public string? Notes { get; set; }
+    public string? ProductUrl { get; set; }
 }

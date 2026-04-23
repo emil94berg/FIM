@@ -92,6 +92,12 @@ export const AddSpoolForm = ({ onSubmit, onCancel }: AddSpoolFormProps) => {
                         </div>
 
                         <ColorCheckBox formData={formData} setFormData={setFormData} />
+
+                        <div>
+                            <Label htmlFor="productUrl">Product URL</Label>
+                            <Input id="productUrl" name="productUrl" type="url" value={formData?.productUrl ?? ""} onChange={handleChange} />
+                        </div>
+
                     </div>
 
                     {/* Physical Properties */}
