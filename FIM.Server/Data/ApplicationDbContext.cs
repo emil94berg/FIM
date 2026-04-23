@@ -12,6 +12,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<PublicFilamentCatalog> PublicFilamentCatalogs { get; set; }
     public DbSet<UserFavoriteFilament> UserFavoriteFilaments { get; set; }
     public DbSet<ForumPost> ForumPosts { get; set; }
+    public DbSet<Comment> Comments { get; set; }
+    public DbSet<UserVotes> UserVotes { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
