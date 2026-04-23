@@ -30,17 +30,12 @@ namespace FIM.Server.Controllers
         [HttpPost("CreateComment")]
         public async Task<IActionResult> CreateCommentAsync([FromBody] CreateCommentDto createDto)
         {
-            var result = await _commentService.CreateCommentAsync(createDto);
+            var result = await _commentService.CreateCommentAsync(createDto, UserId);
             if (result != null) return Ok(result);
             return BadRequest();
         }
 
-        [HttpGet]
-        public async Task<CommentDto> GetSchema()
-        {
-            var date = DateTime.UtcNow;
-            return new CommentDto(1, 1, 1, "hej", "hej", date, false, 1);
-        }
+       
 
     }
 }

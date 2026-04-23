@@ -1089,14 +1089,15 @@ export interface components {
             isDeleted: boolean;
             /** Format: int32 */
             upVotes: number | string;
+            username: string;
         };
         CreateCommentDto: {
             /** Format: int32 */
             forumPostId: number | string;
             /** Format: int32 */
             parentId: null | number | string;
-            userId: string;
             content: string;
+            username: string;
         };
         CreateForumPostDto: {
             title: string;

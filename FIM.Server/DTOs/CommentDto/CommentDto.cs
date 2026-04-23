@@ -10,14 +10,15 @@ namespace FIM.Server.DTOs.CommentDto
         string Content,
         DateTime CreatedAt,
         bool IsDeleted,
-        int UpVotes
+        int UpVotes,
+        string Username
         );
 
     public record CreateCommentDto(
         int ForumPostId,
         int? ParentId,
-        string UserId,
-        string Content
+        string Content,
+        string Username
         );
 
     public static class CommentDtoExtensions
@@ -32,7 +33,8 @@ namespace FIM.Server.DTOs.CommentDto
                 comment.Content,
                 comment.CreatedAt,
                 comment.IsDeleted,
-                comment.UpVotes
+                comment.UpVotes,
+                comment.Username
             );
         }
         

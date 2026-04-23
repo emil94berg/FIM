@@ -10,5 +10,6 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsDeleted { get; set; } = false;
         public int UpVotes { get; set; }
+        public string Username { get; set; }
     }
 }

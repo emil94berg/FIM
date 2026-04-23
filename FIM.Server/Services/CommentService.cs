@@ -24,17 +24,18 @@ namespace FIM.Server.Services
             if (comments != null) return comments.ToCommentDtoList();
             return new List<CommentDto>();
         }
-        public async Task<CommentDto> CreateCommentAsync(CreateCommentDto createDto)
+        public async Task<CommentDto> CreateCommentAsync(CreateCommentDto createDto, string userId)
         {
             var newComment = new Comment
             {
                 ForumPostId = createDto.ForumPostId,
                 ParentId = createDto.ParentId,
-                UserId = createDto.UserId,
+                UserId = userId,
                 Content = createDto.Content,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
-                UpVotes = 0
+                UpVotes = 0,
+                Username = createDto.Username
             };
             _dbContext.Add(newComment);
             await _dbContext.SaveChangesAsync();

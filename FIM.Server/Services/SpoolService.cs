@@ -92,6 +92,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         if (dto.RemainingWeight.HasValue) spool.RemainingWeight = dto.RemainingWeight.Value;
         if (dto.Diameter.HasValue) spool.Diameter = dto.Diameter.Value;
         if (dto.SpoolCost.HasValue) spool.SpoolCost = dto.SpoolCost.Value;
+
         //if (dto.TotalWeight.HasValue)        
         //{
         //    if (spool.TotalWeight != spool.RemainingWeight)
