@@ -301,6 +301,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Print/HardDeletePrint": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PrintDto"];
+                    "text/json": components["schemas"]["PrintDto"];
+                    "application/*+json": components["schemas"]["PrintDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/PublicFilamentCatalog": {
         parameters: {
             query?: never;
@@ -596,6 +635,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/Spool/HardDeleteSpool": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SpoolDto"];
+                    "text/json": components["schemas"]["SpoolDto"];
+                    "application/*+json": components["schemas"]["SpoolDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/UserFavoriteFilament/SetFavorite/{filamentId}": {
         parameters: {
             query?: never;
@@ -696,6 +774,8 @@ export interface components {
             totalWeight: number | string;
             /** Format: double */
             spoolCost: number | string;
+            productUrl: null | string;
+            notes: null | string;
         };
         FavoriteToSpoolRequest: {
             filamentDto?: components["schemas"]["FilamentRecordDto"];
@@ -790,6 +870,8 @@ export interface components {
             createdAt: string;
             favorite?: boolean;
             isDeleted?: boolean;
+            notes?: null | string;
+            productUrl?: null | string;
         };
         SpoolDto: {
             /** Format: int32 */
@@ -819,6 +901,8 @@ export interface components {
             createdAt: string;
             favorite: boolean;
             isDeleted: boolean;
+            productUrl: null | string;
+            notes: null | string;
         };
         SpoolGroupDto: {
             identifier: string;
@@ -877,6 +961,8 @@ export interface components {
             spoolCost: null | number | string;
             favorite: null | boolean;
             isDeleted: null | boolean;
+            productUrl: null | string;
+            notes: null | string;
         };
     };
     responses: never;

@@ -45,7 +45,9 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
             SpoolCost = dto.SpoolCost,
             CreatedAt = DateTime.UtcNow,
             Favorite = false,
-            IsDeleted = false
+            IsDeleted = false,
+            ProductUrl = dto.ProductUrl,
+            Notes = dto.Notes
         };
         dbContext.Spools.Add(spool);
         await dbContext.SaveChangesAsync();
@@ -92,6 +94,8 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         if (dto.RemainingWeight.HasValue) spool.RemainingWeight = dto.RemainingWeight.Value;
         if (dto.Diameter.HasValue) spool.Diameter = dto.Diameter.Value;
         if (dto.SpoolCost.HasValue) spool.SpoolCost = dto.SpoolCost.Value;
+        if (dto.ProductUrl != null) spool.ProductUrl = dto.ProductUrl;
+        if (dto.Notes != null) spool.Notes = dto.Notes;
         //if (dto.TotalWeight.HasValue)        
         //{
         //    if (spool.TotalWeight != spool.RemainingWeight)

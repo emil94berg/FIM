@@ -94,6 +94,17 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
                         </div>
 
                         <ColorCheckBox formData={formData} setFormData={setFormData} />
+
+                        <div>
+                            <Label htmlFor="productUrl">Product URL</Label>
+                            <Input id="productUrl" name="productUrl" type="url" value={formData?.productUrl ?? ""} onChange={handleChange} />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="notes">Notes</Label>
+                            <Input id="notes" name="notes" value={formData?.notes ?? ""} onChange={handleChange} />
+                        </div>
+
                     </div>
 
                     {/* Physical Properties */}

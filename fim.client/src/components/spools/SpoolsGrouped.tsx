@@ -27,6 +27,13 @@ type AllSpoolsGroupedProps = {
     onSetExisting: (existingSpool: CreateSpool) => void
 }
 
+const hasUrl = (s: Spool) => !!s.productUrl;
+
+const handleOpen = (s: Spool) => {
+    if (!hasUrl(s)) return;
+    window.open(s.productUrl);
+}
+
 
 export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleGrouped, onSetExisting }: AllSpoolsGroupedProps)  {
    
@@ -55,6 +62,7 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
                                             <TableHead>Total Weight</TableHead>
                                             <TableHead>Remaining</TableHead>
                                             <TableHead>Created</TableHead>
+                                            <TableHead>Notes</TableHead>
                                             <TableHead>Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -83,9 +91,11 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
                                                     day: "2-digit"
                                                 })}
                                             </TableCell>
+                                            <TableCell className="text-wrap">{s.notes}</TableCell>
                                         <TableCell>
                                             <Button className="bg-green-500 text-white" onClick={() => onSetExisting(s)}>Copy</Button>
                                             <Button className="bg-blue-500 text-white" onClick={() => onEditSpool(s)}>Edit</Button>
+                                            <Button className={`${hasUrl(s) ? "bg-yellow-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`} type="link" onClick={() => handleOpen(s)}>Link</Button>
                                                 <ConfirmDialog
                                                     onConfirm={async () => { await onDelete(s.id); handleGrouped(gs, Number(s.id)) }}
                                                     title={`Delete ${s.identifier}`}
