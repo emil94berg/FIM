@@ -55,7 +55,7 @@ export default function SideBar() {
         //        </nav>
         //    )}
         //</div>
-        <div className="flex" style={{marginRight: "20px"} }>
+        <div className="flex">
             <div className={`flex flex-col bg-gray-100 h-screen transition-all duration-300 ${open ? "w-48" : "w-12"}`}>
                 <Button className="m-2 p-2 bg-blue-500 text-white" onClick={() => setOpen(!open)}>☰</Button>
                 <nav className="flex flex-col mt-4 gap-2">
