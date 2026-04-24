@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dialog"
 import { supabase } from "@/auth/supabaseClient"
 import type { components } from "@/types/schema"
-import { authFetch } from "../../auth/authFetch";
+import { authFetch } from "../../auth/authFetch"
+import { RichTextEditor } from "@/components/RichTextEditor"
 
 
 
@@ -24,11 +25,13 @@ type ForumPost = components["schemas"]["ForumPostDto"];
 
 type CreateCommentProps = {
     forumPost: ForumPost;
+    commentId?: number;
+    children: React.ReactNode;
 }
 
 
 
-export function CreateComment({ forumPost }: CreateCommentProps){
+export function CreateComment({ forumPost, commentId, children }: CreateCommentProps){
     const [content, setContent] = useState<string>("");
     const [username, setUsername] = useState<string>("");
 
@@ -39,7 +42,7 @@ export function CreateComment({ forumPost }: CreateCommentProps){
     async function handleCreateCommentAsync() {
         const newComment: Comment = {
             forumPostId: forumPost.id,
-            parentId: null,
+            parentId: commentId ? commentId : null,
             content: content,
             username: username
         }
@@ -82,7 +85,8 @@ export function CreateComment({ forumPost }: CreateCommentProps){
         <div>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className="bg-green-500 m-4">Add Comment</Button>
+                    {children}
+                    {/*<Button className="bg-green-500 m-4">Add Comment</Button>*/}
                 </DialogTrigger>
                 <DialogContent className="bg-white sm:max-w-sm">
                     <DialogHeader>
@@ -91,7 +95,9 @@ export function CreateComment({ forumPost }: CreateCommentProps){
                     </DialogHeader>
                     <form>
                         <Label>Content:</Label>
-                        <textarea cols={50} rows={10} className="bg-slate-50 border" value={content} onChange={(e) => setContent(e.target.value)}></textarea>
+                        <RichTextEditor
+                            onChange={(value) => setContent(value)}
+                        ></RichTextEditor>
                     </form>
                      <DialogFooter>
                         <Button className="bg-green-500 text-white" onClick={handleCreateCommentAsync}>Create Comment</Button>

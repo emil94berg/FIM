@@ -4,6 +4,7 @@ import type { components } from "@/types/schema"
 import { DisplayComments } from "../comments/DisplayComments";
 import { authFetch } from "../../auth/authFetch";
 import DOMPurify from "dompurify";
+import { Button } from "@/components/ui/button"
 
 
 type ForumPost = components["schemas"]["ForumPostDto"];
@@ -46,7 +47,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
         <div className="mx-auto bg-blue-100 border rounded-xl mt-4" style={{maxWidth: "80%"} }>
             <h1 className="m-4">{post.title}</h1>
             <div className="bg-gray-100 m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }}>
-                <div className="flex-shrink-0 text-center">
+                <div className="flex-shrink-0 text-center border-r m-4">
                     <img className="h-24 w-24 rounded-full object-cover ring-2 ring-border m-4" src={imgSource}></img>
                     <p>{post.username}</p>
                     <p>{new Date(post.createdAt).toLocaleString("sv-SE", {
@@ -64,8 +65,10 @@ export function DisplayPost({ post }: DisplayPostProps) {
                 
 
             </div>
-            <CreateComment forumPost={post}></CreateComment>
-            <DisplayComments comments={comments}></DisplayComments>
+            <CreateComment forumPost={post}>
+                <Button className="bg-green-500">Add Comment</Button>
+            </CreateComment>
+            <DisplayComments comments={comments} forumPost={post}></DisplayComments>
         </div>
 
     )
