@@ -32,7 +32,9 @@ export function DisplayPost({ post }: DisplayPostProps) {
         loadComments();
     }, [post.id])
     
-
+    const handleUpdateList = (comment: Comments) => {
+        setComments(prev => [...prev, comment]);
+    }
 
     const imgSource = "https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/"
         + post.userId + "/profilepictures/avatar"
@@ -65,7 +67,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
                 
 
             </div>
-            <CreateComment forumPost={post}>
+            <CreateComment forumPost={post} handleUpdateList={handleUpdateList}>
                 <Button className="bg-green-500">Add Comment</Button>
             </CreateComment>
             <DisplayComments comments={comments} forumPost={post}></DisplayComments>

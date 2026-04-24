@@ -22,16 +22,18 @@ import { RichTextEditor } from "@/components/RichTextEditor"
 
 type Comment = components["schemas"]["CreateCommentDto"];
 type ForumPost = components["schemas"]["ForumPostDto"];
+type CommentDto = components["schemas"]["CommentDto"];
 
 type CreateCommentProps = {
     forumPost: ForumPost;
     commentId?: number;
     children: React.ReactNode;
+    handleUpdateList?: (comment: CommentDto) => void;
 }
 
 
 
-export function CreateComment({ forumPost, commentId, children }: CreateCommentProps){
+export function CreateComment({ forumPost, commentId, children, handleUpdateList }: CreateCommentProps){
     const [content, setContent] = useState<string>("");
     const [username, setUsername] = useState<string>("");
 
@@ -47,13 +49,14 @@ export function CreateComment({ forumPost, commentId, children }: CreateCommentP
             username: username
         }
         try {
-            const data = await authFetch("https://localhost:7035/Comment/CreateComment", {
+            const data: CommentDto = await authFetch("https://localhost:7035/Comment/CreateComment", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(newComment)
             });
+            handleUpdateList?.(data);
         } catch (error) {
             console.error("Error creating comment:", error);
         }
@@ -94,13 +97,15 @@ export function CreateComment({ forumPost, commentId, children }: CreateCommentP
                         <DialogDescription>Enter your comment below:</DialogDescription>
                     </DialogHeader>
                     <form>
-                        <Label>Content:</Label>
+                        <Label className="mb-2">Content:</Label>
                         <RichTextEditor
                             onChange={(value) => setContent(value)}
                         ></RichTextEditor>
                     </form>
-                     <DialogFooter>
-                        <Button className="bg-green-500 text-white" onClick={handleCreateCommentAsync}>Create Comment</Button>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button className="bg-green-500 text-white" onClick={handleCreateCommentAsync}>Create Comment</Button>
+                        </DialogClose>
                         <DialogClose asChild>
                             <Button className="bg-red-500 text-white" onClick={() => setContent("")}>Cancel</Button>
                         </DialogClose>
