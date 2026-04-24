@@ -21,7 +21,9 @@ namespace FIM.Server.DTOs.SpoolDtos
         decimal SpoolCost,
         DateTime CreatedAt,
         bool Favorite,
-        bool isDeleted
+        bool IsDeleted,
+        string? ProductUrl,
+        string? Notes
     )
     {
         public static SpoolDto FromSpool(Spool spool) =>
@@ -44,7 +46,9 @@ namespace FIM.Server.DTOs.SpoolDtos
                 spool.SpoolCost,
                 spool.CreatedAt,
                 spool.Favorite,
-                spool.IsDeleted
+                spool.IsDeleted,
+                spool.ProductUrl,
+                spool.Notes
             );
         public static List<SpoolDto> ToListSpoolDto(List<Spool> spools)
         {

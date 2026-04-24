@@ -13,6 +13,8 @@ namespace FIM.Server.DTOs.SpoolDtos
         string ColorName,
         double Diameter,
         double TotalWeight,
-        decimal SpoolCost
+        decimal SpoolCost,
+        string? ProductUrl,
+        string? Notes
     );
 }

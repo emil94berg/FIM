@@ -1132,6 +1132,8 @@ export interface components {
             totalWeight: number | string;
             /** Format: double */
             spoolCost: number | string;
+            productUrl: null | string;
+            notes: null | string;
         };
         FavoriteToSpoolRequest: {
             filamentDto?: components["schemas"]["FilamentRecordDto"];
@@ -1241,6 +1243,8 @@ export interface components {
             createdAt: string;
             favorite?: boolean;
             isDeleted?: boolean;
+            notes?: null | string;
+            productUrl?: null | string;
         };
         SpoolDto: {
             /** Format: int32 */
@@ -1270,6 +1274,8 @@ export interface components {
             createdAt: string;
             favorite: boolean;
             isDeleted: boolean;
+            productUrl: null | string;
+            notes: null | string;
         };
         SpoolGroupDto: {
             identifier: string;
@@ -1328,6 +1334,8 @@ export interface components {
             spoolCost: null | number | string;
             favorite: null | boolean;
             isDeleted: null | boolean;
+            productUrl: null | string;
+            notes: null | string;
         };
     };
     responses: never;
