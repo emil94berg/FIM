@@ -68,7 +68,7 @@ namespace FIM.Server.Services
             {
                 var newList = await _dbContext.ForumPosts
                     .Where(fp => fp.Tag == type)
-                    .OrderBy(fp => fp.CreatedAt)
+                    .OrderByDescending(fp => fp.CreatedAt)
                     .Take(takePerTagNumber).ToListAsync();
 
                 foreach(var obj in newList)

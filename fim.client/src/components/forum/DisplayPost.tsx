@@ -3,6 +3,7 @@ import { CreateComment } from "@/components/comments/CreateComment";
 import type { components } from "@/types/schema"
 import { DisplayComments } from "../comments/DisplayComments";
 import { authFetch } from "../../auth/authFetch";
+import DOMPurify from "dompurify";
 
 
 type ForumPost = components["schemas"]["ForumPostDto"];
@@ -35,7 +36,8 @@ export function DisplayPost({ post }: DisplayPostProps) {
     const imgSource = "https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/"
         + post.userId + "/profilepictures/avatar"
 
-
+    
+    const cleanHtml = DOMPurify.sanitize(post.text)
 
 
 
@@ -54,8 +56,13 @@ export function DisplayPost({ post }: DisplayPostProps) {
                         hour: "2-digit",
                         minute: "2-digit"
                     })}</p>
+                    
+
                 </div>
-                <p className="m-4 p-4" style={{borderLeft:"1px solid black"}}>{post.text}</p>
+                <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html: cleanHtml }}></div>
+                
+                
+
             </div>
             <CreateComment forumPost={post}></CreateComment>
             <DisplayComments comments={comments}></DisplayComments>
