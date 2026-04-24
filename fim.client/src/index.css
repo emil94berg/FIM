@@ -87,6 +87,56 @@ button {
     }
 }
 
+.forum-rich-text {
+    color: inherit;
+    line-height: 1.7;
+}
+
+.forum-rich-text > :first-child {
+    margin-top: 0;
+}
+
+.forum-rich-text > :last-child {
+    margin-bottom: 0;
+}
+
+.forum-rich-text p {
+    margin: 0 0 0.75rem;
+}
+
+.forum-rich-text ul {
+    margin: 0 0 0.75rem;
+    list-style: disc;
+    padding-left: 1.5rem;
+}
+
+.forum-rich-text ol {
+    margin: 0 0 0.75rem;
+    list-style: decimal;
+    padding-left: 1.5rem;
+}
+
+.forum-rich-text li {
+    margin: 0.25rem 0;
+}
+
+.forum-rich-text blockquote {
+    margin: 0 0 0.75rem;
+    border-left: 4px solid oklch(0.708 0 0);
+    background: oklch(0.97 0 0);
+    padding: 0.75rem 1rem;
+    color: oklch(0.35 0 0);
+    font-style: italic;
+}
+
+.forum-rich-text strong {
+    font-weight: 700;
+}
+
+.forum-rich-text em {
+    font-style: italic;
+}
+
 /* 4. Shadcn base layer */
 @layer base {
     :root {
