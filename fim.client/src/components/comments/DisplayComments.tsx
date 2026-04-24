@@ -1,4 +1,5 @@
 import type { components } from "@/types/schema"
+import { Button } from "@/components/ui/button"
 
 type Comments = components["schemas"]["CommentDto"];
 
@@ -15,7 +16,7 @@ export function DisplayComments({ comments }: DisplayCommentsProps){
         <div>
             {comments.map(comment => (
                 
-                <div key={comment.id} className="mx-auto bg-blue-100 border rounded-xl mt-4" style={{ maxWidth: "80%" }}>
+                <div key={comment.id} className="mx-auto bg-blue-200 border rounded-xl mt-4" style={{ maxWidth: "80%" }}>
                     
                     <div className="bg-gray-200 m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }}>
                         <div className="flex-shrink-0 text-center">
@@ -31,7 +32,7 @@ export function DisplayComments({ comments }: DisplayCommentsProps){
                         </div>
                         <p className="m-4 p-4" style={{ borderLeft: "1px solid black" }}>{comment.content}</p>
                     </div>
-                    
+                    <Button className="bg-transparent block ml-auto">Reply</Button>
                 </div>
             ))}
         </div>
