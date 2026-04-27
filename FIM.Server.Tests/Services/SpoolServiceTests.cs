@@ -11,6 +11,7 @@ public class SpoolServiceTests
     [Fact]
     public async Task CreateSpoolAsync_SetsExpectedDefaultsAndIdentifier()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
         var service = new SpoolService(context);
@@ -32,8 +33,10 @@ public class SpoolServiceTests
             "https://example.com/spool",
             "Test spool");
 
+        // Act
         var result = await service.CreateSpoolAsync(dto, "user-1");
 
+        // Assert
         Assert.NotNull(result);
         Assert.Equal("Prusament_PLA_Arctic White_175", result.Identifier);
         Assert.Equal(1000, result.TotalWeight);
@@ -50,6 +53,7 @@ public class SpoolServiceTests
     [Fact]
     public async Task UpdateSpoolAsync_WhenSpoolExists_UpdatesFieldsAndRebuildsIdentifier()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
 
@@ -94,8 +98,10 @@ public class SpoolServiceTests
             null,
             "Updated notes");
 
+        // Act
         var result = await service.UpdateSpoolAsync(existing.Id, updateDto, "user-1");
 
+        // Assert
         Assert.NotNull(result);
         Assert.Equal("Bambu_PETG_Green_175", result.Identifier);
         Assert.Equal("Bambu", result.Brand);
@@ -109,6 +115,7 @@ public class SpoolServiceTests
     [Fact]
     public async Task GroupBySpoolIdentifier_ReturnsGroupedSpoolsForUserAndExcludesDeleted()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
 
@@ -173,8 +180,10 @@ public class SpoolServiceTests
 
         var service = new SpoolService(context);
 
+        // Act
         var result = await service.GroupBySpoolIdentifier("user-1");
 
+        // Assert
         Assert.Single(result);
         Assert.Equal("GroupA", result[0].Identifier);
         Assert.Equal(2, result[0].Spools.Count);
@@ -184,6 +193,7 @@ public class SpoolServiceTests
     [Fact]
     public async Task GetAllSpoolsAsync_ReturnsOnlyCurrentUserAndNotDeleted()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
 
@@ -196,8 +206,11 @@ public class SpoolServiceTests
         await context.SaveChangesAsync();
 
         var service = new SpoolService(context);
+
+        // Act
         var result = (await service.GetAllSpoolsAsync("user-1")).ToList();
 
+        // Assert
         Assert.Equal(2, result.Count);
         Assert.Contains(result, s => s.Identifier == "KeepA");
         Assert.Contains(result, s => s.Identifier == "KeepB");
@@ -208,6 +221,7 @@ public class SpoolServiceTests
     [Fact]
     public async Task GetSpoolByIdAsync_ReturnsNullForWrongUserAndMissingId()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
 
@@ -217,9 +231,11 @@ public class SpoolServiceTests
 
         var service = new SpoolService(context);
 
+        // Act
         var wrongUserResult = await service.GetSpoolByIdAsync(spool.Id, "user-2");
         var missingResult = await service.GetSpoolByIdAsync(99999, "user-1");
 
+        // Assert
         Assert.Null(wrongUserResult);
         Assert.Null(missingResult);
     }
@@ -227,6 +243,7 @@ public class SpoolServiceTests
     [Fact]
     public async Task DeleteSpoolAsync_WhenSpoolExists_SetsIsDeletedTrue()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
 
@@ -235,8 +252,11 @@ public class SpoolServiceTests
         await context.SaveChangesAsync();
 
         var service = new SpoolService(context);
+
+        // Act
         var result = await service.DeleteSpoolAsync(spool.Id, "user-1");
 
+        // Assert
         Assert.NotNull(result);
         Assert.True(result.IsDeleted);
 
@@ -248,18 +268,22 @@ public class SpoolServiceTests
     [Fact]
     public async Task DeleteSpoolAsync_WhenSpoolDoesNotExist_ReturnsNull()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
         var service = new SpoolService(context);
 
+        // Act
         var result = await service.DeleteSpoolAsync(12345, "user-1");
 
+        // Assert
         Assert.Null(result);
     }
 
     [Fact]
     public async Task UpdateSpoolAsync_WhenOnlyOneFieldProvided_LeavesOtherFieldsUnchanged()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
 
@@ -297,8 +321,11 @@ public class SpoolServiceTests
             null);
 
         var service = new SpoolService(context);
+
+        // Act
         var result = await service.UpdateSpoolAsync(spool.Id, updateDto, "user-1");
 
+        // Assert
         Assert.NotNull(result);
         Assert.True(result.Favorite);
         Assert.Equal("BrandBefore", result.Brand);
@@ -314,6 +341,7 @@ public class SpoolServiceTests
     [Fact]
     public async Task GetLowSpools_IncludesThresholdAndExcludesAboveThresholdAndDeleted()
     {
+        // Arrange
         using var factory = new SqliteInMemoryDbContextFactory();
         await using var context = factory.CreateDbContext();
 
@@ -336,8 +364,11 @@ public class SpoolServiceTests
         await context.SaveChangesAsync();
 
         var service = new SpoolService(context);
+
+        // Act
         var result = await service.GetLowSpools("user-1");
 
+        // Assert
         Assert.Equal(2, result.Count);
         Assert.Contains(result, s => s.Identifier == "At100");
         Assert.Contains(result, s => s.Identifier == "Below100");
