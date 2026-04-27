@@ -56,6 +56,7 @@ builder.Services.AddScoped<IPublicFilamentCatalogService, PublicFilamentCatalogS
 builder.Services.AddScoped<IUserFavoriteFilamentService, UserFavoriteFilamentService>();
 builder.Services.AddScoped<IForumPostService, ForumPostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IUserVotesService, UserVotesService>();
 
 var app = builder.Build();
 

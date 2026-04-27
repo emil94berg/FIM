@@ -14,6 +14,7 @@ import {
 import { authFetch } from "@/auth/authFetch"
 import { supabase } from "@/auth/supabaseClient"
 import type { components } from "../../types/schema"
+import { RichTextEditor } from "@/components/RichTextEditor"
 
 
 type CreateForumPost = components["schemas"]["CreateForumPostDto"];
@@ -97,8 +98,10 @@ export function CreateForumPost({ tags, onCancel, updateForumPostList }: createF
                     <form onSubmit={handleSubmit}>
                         <Label>Title:</Label>
                         <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} required={true}></Input>
+
                         <Label>Content:</Label>
-                        <textarea className="bg-white" rows={10} cols={180} onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))} required={true} style={{border: "1px solid black"} }></textarea>
+                        <RichTextEditor onChange={(value) => setFormData(prev => ({ ...prev, text: value }))} ></RichTextEditor>
+
                         <Label>Subject:</Label>
                         <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))} required={true}></Input>
                         <Label>Tag:</Label>

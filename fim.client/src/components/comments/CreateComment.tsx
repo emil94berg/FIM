@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dialog"
 import { supabase } from "@/auth/supabaseClient"
 import type { components } from "@/types/schema"
-import { authFetch } from "../../auth/authFetch";
+import { authFetch } from "../../auth/authFetch"
+import { RichTextEditor } from "@/components/RichTextEditor"
 
 
 
@@ -21,14 +22,18 @@ import { authFetch } from "../../auth/authFetch";
 
 type Comment = components["schemas"]["CreateCommentDto"];
 type ForumPost = components["schemas"]["ForumPostDto"];
+type CommentDto = components["schemas"]["CommentDto"];
 
 type CreateCommentProps = {
     forumPost: ForumPost;
+    commentId?: number;
+    children: React.ReactNode;
+    handleUpdateList?: (comment: CommentDto) => void;
 }
 
 
 
-export function CreateComment({ forumPost }: CreateCommentProps){
+export function CreateComment({ forumPost, commentId, children, handleUpdateList }: CreateCommentProps){
     const [content, setContent] = useState<string>("");
     const [username, setUsername] = useState<string>("");
 
@@ -39,18 +44,19 @@ export function CreateComment({ forumPost }: CreateCommentProps){
     async function handleCreateCommentAsync() {
         const newComment: Comment = {
             forumPostId: forumPost.id,
-            parentId: null,
+            parentId: commentId ? commentId : null,
             content: content,
             username: username
         }
         try {
-            const data = await authFetch("https://localhost:7035/Comment/CreateComment", {
+            const data: CommentDto = await authFetch("https://localhost:7035/Comment/CreateComment", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(newComment)
             });
+            handleUpdateList?.(data);
         } catch (error) {
             console.error("Error creating comment:", error);
         }
@@ -82,7 +88,8 @@ export function CreateComment({ forumPost }: CreateCommentProps){
         <div>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className="bg-green-500 m-4">Add Comment</Button>
+                    {children}
+                    {/*<Button className="bg-green-500 m-4">Add Comment</Button>*/}
                 </DialogTrigger>
                 <DialogContent className="bg-white sm:max-w-sm">
                     <DialogHeader>
@@ -90,11 +97,15 @@ export function CreateComment({ forumPost }: CreateCommentProps){
                         <DialogDescription>Enter your comment below:</DialogDescription>
                     </DialogHeader>
                     <form>
-                        <Label>Content:</Label>
-                        <textarea cols={50} rows={10} className="bg-slate-50 border" value={content} onChange={(e) => setContent(e.target.value)}></textarea>
+                        <Label className="mb-2">Content:</Label>
+                        <RichTextEditor
+                            onChange={(value) => setContent(value)}
+                        ></RichTextEditor>
                     </form>
-                     <DialogFooter>
-                        <Button className="bg-green-500 text-white" onClick={handleCreateCommentAsync}>Create Comment</Button>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button className="bg-green-500 text-white" onClick={handleCreateCommentAsync}>Create Comment</Button>
+                        </DialogClose>
                         <DialogClose asChild>
                             <Button className="bg-red-500 text-white" onClick={() => setContent("")}>Cancel</Button>
                         </DialogClose>

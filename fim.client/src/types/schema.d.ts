@@ -1071,6 +1071,156 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/UserVotes/{postId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    postId: number | string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/UserVotes/CreateVoteForUserOnPost": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateUserVotesDto"];
+                    "text/json": components["schemas"]["CreateUserVotesDto"];
+                    "application/*+json": components["schemas"]["CreateUserVotesDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/UserVotes/CreateDownVoteForUserPost": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UserVotesDto"];
+                    "text/json": components["schemas"]["UserVotesDto"];
+                    "application/*+json": components["schemas"]["UserVotesDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/UserVotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["UserVotesDto"];
+                        "application/json": components["schemas"]["UserVotesDto"];
+                        "text/json": components["schemas"]["UserVotesDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1134,6 +1284,12 @@ export interface components {
             spoolCost: number | string;
             productUrl: null | string;
             notes: null | string;
+        };
+        CreateUserVotesDto: {
+            /** Format: int32 */
+            commentId: number | string;
+            /** Format: int32 */
+            postId: number | string;
         };
         FavoriteToSpoolRequest: {
             filamentDto?: components["schemas"]["FilamentRecordDto"];
@@ -1336,6 +1492,15 @@ export interface components {
             isDeleted: null | boolean;
             productUrl: null | string;
             notes: null | string;
+        };
+        UserVotesDto: {
+            /** Format: int32 */
+            id: number | string;
+            userId: string;
+            /** Format: int32 */
+            commentId: number | string;
+            /** Format: int32 */
+            postId: number | string;
         };
     };
     responses: never;

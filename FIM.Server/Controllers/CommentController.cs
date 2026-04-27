@@ -35,6 +35,12 @@ namespace FIM.Server.Controllers
             return BadRequest();
         }
 
+        [HttpGet]
+        public async Task<CommentDto> GetSchema()
+        {
+            return new CommentDto(1, 1, 1, "testUserId", "Content", new DateTime(), false, 0, "Emil");
+        }
+
        
 
     }

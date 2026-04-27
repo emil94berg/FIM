@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card"
 import type { components } from "@/types/schema"
 import { Link } from "react-router-dom"
+import DOMPurify from "dompurify";
 
 type ForumPost = components["schemas"]["ForumPostDto"]
 
@@ -46,6 +47,13 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
         return posts;
     }
 
+    const cleanContent = (content: string) => {
+        const newText = cutText(content, 200);
+        const cleanHtml = DOMPurify.sanitize(newText);
+        return cleanHtml;
+    }
+    
+
     return (
         <>
             <Button className="bg-green-500 mt-2" onClick={onShowCreate}>Create a new post</Button>
@@ -58,12 +66,17 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                             </div>
                         )}
                         <Link to={`/forum/post/${p.id}`} className="w-full max-w-x1">
-                            <Card key={p.id} className="mt-4 text-center">
+                            <Card key={p.id} className="mt-4">
                                 <CardHeader>
                                     <CardTitle>{p.title}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <CardDescription>{cutText(p.text, 200)}</CardDescription>
+                                    <CardDescription>
+                                        <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html:cleanContent(p.text)}}>
+                                           
+                                        </div>
+                                    </CardDescription>
+                                       
                                 </CardContent>
                                 <CardFooter>
                                     <p>Created by: {p.username} - {new Date(p.createdAt).toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" })}</p>

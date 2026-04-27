@@ -43,12 +43,7 @@ export default function ForumPost() {
 
     return (
         <div>
-            {post.id === 1 ? ("Loading...")
-                :
-                (
-                    <DisplayPost post={post}></DisplayPost>
-                )
-            }
+            <DisplayPost post={post}></DisplayPost>
         </div>
     )
 
