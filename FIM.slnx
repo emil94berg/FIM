@@ -3,5 +3,6 @@
     <Build />
     <Deploy />
   </Project>
+  <Project Path="FIM.Server.Tests/FIM.Server.Tests.csproj" />
   <Project Path="FIM.Server/FIM.Server.csproj" />
 </Solution>
