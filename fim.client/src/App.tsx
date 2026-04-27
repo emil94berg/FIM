@@ -1,12 +1,39 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from './Pages/Home';
+import Home from './pages/Home';
+import SideBarLayout from './layouts/SidebarLayout';
+import CreateSpool from './pages/CreateSpool';
+import Login from './pages/Login';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import Signup from './pages/Signup';
+import CreatePrint from './pages/CreatePrint';
+import DashBoard from './pages/Dashboard'
+import ActivePrints from './pages/ActivePrints'
+import SpoolProvider from "@/components/context/AddSpoolContext"
+import ProfilePage from './pages/ProfilePage';
+import { Toaster } from "@/components/ui/sonner"
+import ForumHomePage from './pages/ForumHomePage'
+import ForumPost from '@/pages/ForumPost'
 
 
 export default function App() {
     return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-        </Routes>
+        <>
+            <Routes>
+                <Route path="/" element={<SideBarLayout component={ <Home /> } />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route element={<ProtectedRoute />}>
+                <Route path="/create-spool" element={<SpoolProvider><SideBarLayout component={<CreateSpool />} /> </SpoolProvider> } />
+                    <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
+                    <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
+                    <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
+                    <Route path="/profile" element={<SideBarLayout component={<ProfilePage />} />} />
+                    <Route path="/forum" element={<SideBarLayout component={<ForumHomePage />} />} />
+                    <Route path="/forum/post/:id" element={<SideBarLayout component={< ForumPost />} />} />
+                </Route>
+            </Routes>
+            <Toaster richColors closeButton position="top-right" />
+        </>
     );
 }
 //Usestate useeffect
