@@ -24,7 +24,7 @@ namespace FIM.Server.Services
             }
             return new List<UserVotesDto>();
         }
-        public async Task<bool> CreateUpVoteForPostAsync(CreateUserVotesDto createDto, string userId)
+        public async Task<UserVotesDto> CreateUpVoteForPostAsync(CreateUserVotesDto createDto, string userId)
         {
             var userVote = new UserVotes{
                 UserId = userId,
@@ -37,7 +37,7 @@ namespace FIM.Server.Services
 
             if(alreadyVoted)
             {
-                return false;
+                return null;
             }
             else
             {
@@ -48,8 +48,29 @@ namespace FIM.Server.Services
                     comment.UpVotes += 1;
                 }
                 await _dbContext.SaveChangesAsync();
+                return userVote.ToUserVotesDto();
+            }
+        }
+        public async Task<bool> RemoveUpvoteForCommentAsync(UserVotesDto dto, string userId)
+        {
+            var deleteVote = await _dbContext.UserVotes.Where(v =>
+            v.UserId == userId && 
+            v.PostId == dto.postId &&
+            v.CommentId == dto.commentId)
+                .FirstOrDefaultAsync();
+
+            if(deleteVote != null)
+            {
+                _dbContext.UserVotes.Remove(deleteVote);
+                var comment = _dbContext.Comments.Where(c => c.Id == dto.commentId).FirstOrDefault();
+                if (comment != null)
+                {
+                    comment.UpVotes -= 1;
+                }
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
+            return false;
         }
     }
 }

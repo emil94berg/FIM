@@ -33,11 +33,23 @@ namespace FIM.Server.Controllers
         public async Task<IActionResult> CreateUpvote([FromBody] CreateUserVotesDto createDto)
         {
             var result = await _userVotesService.CreateUpVoteForPostAsync(createDto, UserId);
-            if(result == true)
+            if(result != null)
             {
-                return Ok(true);
+                return Ok(result);
             }
+            return BadRequest();
+        }
+        [HttpDelete("CreateDownVoteForUserPost")]
+        public async Task<IActionResult> CreateDownVote([FromBody] UserVotesDto dto)
+        {
+            var result = await _userVotesService.RemoveUpvoteForCommentAsync(dto, UserId);
+            if (result) return Ok(true);
             return BadRequest(false);
+        }
+        [HttpGet]
+        public async Task <UserVotesDto> GetSchema()
+        {
+            return new UserVotesDto(1, "test", 1, 1);
         }
     }
 }

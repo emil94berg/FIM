@@ -5,6 +5,7 @@ namespace FIM.Server.Services.Interfaces
     public interface IUserVotesService
     {
         Task<List<UserVotesDto>> GetUserVotesFromPostIdAsync(int postId);
-        Task<bool> CreateUpVoteForPostAsync(CreateUserVotesDto createDto, string userId);
+        Task<UserVotesDto> CreateUpVoteForPostAsync(CreateUserVotesDto createDto, string userId);
+        Task<bool> RemoveUpvoteForCommentAsync(UserVotesDto dto, string userId);
     }
 }

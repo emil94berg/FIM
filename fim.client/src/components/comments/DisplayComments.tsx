@@ -3,12 +3,17 @@ import { Button } from "@/components/ui/button"
 import DOMPurify from "dompurify"
 import { CreateComment } from "./CreateComment"
 import { FatArrowUpIcon } from "@/components/icons/mynaui-fat-arrow-up"
+import { FatArrowUpSolidIcon } from "@/components/icons/mynaui-fat-arrow-up-solid"
 import { authFetch } from "../../auth/authFetch"
+import { useState, useEffect } from "react"
+import { supabase } from "@/auth/supabaseClient"
+import { toast } from "sonner"
 
 
 type Comment = components["schemas"]["CommentDto"];
 type ForumPost = components["schemas"]["ForumPostDto"];
 type CreateUserVote = components["schemas"]["CreateUserVotesDto"];
+type UserVote = components["schemas"]["UserVotesDto"];
 
 
 type DisplayCommentsProps = {
@@ -26,7 +31,12 @@ interface Props {
     comment: CommentNode;
 }
 
-export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes }: DisplayCommentsProps){
+export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes }: DisplayCommentsProps) {
+    const [userVotes, setUserVotes] = useState<UserVote[]>([]);
+    const [currentUserId, setCurrentUserId] = useState<string>("");
+
+    
+
     const cleanContent = (content: string) => {
         const cleanHtml = DOMPurify.sanitize(content);
         return cleanHtml;
@@ -67,7 +77,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                 commentId: comment.id,
                 postId: Number(forumPost.id)
             }
-            const data: boolean = await authFetch(url + "/" + "CreateVoteForUserOnPost", {
+            const data: UserVote = await authFetch(url + "/" + "CreateVoteForUserOnPost", {
                 method: "POST",
                 body: JSON.stringify(newVote)
             });
@@ -77,6 +87,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                     upVotes: Number(comment.upVotes) + 1
                 };
                 onUpdateUpvotes(updatedComment);
+                setUserVotes(prev => [...prev, data]);
             }
             
         }
@@ -84,6 +95,45 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
             console.log("Could not fetch from UserVotes..." + error);
         }
     };
+
+    const upVoted = (comment: Comment) => {
+        //Kan inte kolla uv.userId utan måste kolla på den inloggade användaren (uv.userId === currentUserId)
+        const voted = userVotes.find(uv => uv.commentId === comment.id &&
+            uv.postId === comment.forumPostId &&
+            uv.userId === currentUserId
+        );
+        if (voted) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
+    useEffect(() => {
+        const loadUserVotes = async () => {
+            try {
+                const data: UserVote[] = await authFetch(url + "/" + forumPost.id);
+                setUserVotes(data);
+            }
+            catch (error) {
+                console.log("Failed to fetch from UserVotes..." + error);
+            }
+
+        };
+        loadUserVotes();
+    }, [forumPost.id]);
+
+    useEffect(() => {
+        const loadUser = async () => {
+            const { data, error } = await supabase.auth.getUser();
+            setCurrentUserId(data.user?.id || "");
+            if (error) {
+                toast.error("Failed to load user data");
+            }
+        };
+        loadUser();
+    },[])
     
     function CommentItem({ comment }: Props) {
         return (
@@ -106,7 +156,12 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                     <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
                         <Button className="bg-transparent block ml-auto">Reply</Button>
                     </CreateComment>
-                    <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
+                    {upVoted(comment) ? (
+                        <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
+                    ) : (
+                        <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
+                    )}
+                    
                     <p>{comment.upVotes}</p>
                     
                 </div>
