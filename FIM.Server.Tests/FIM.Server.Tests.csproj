@@ -24,8 +24,4 @@
     <ProjectReference Include="..\FIM.Server\FIM.Server.csproj" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-  </PropertyGroup>
-
 </Project>

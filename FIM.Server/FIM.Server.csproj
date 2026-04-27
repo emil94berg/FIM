@@ -9,6 +9,10 @@
     <SpaProxyServerUrl>https://localhost:55157</SpaProxyServerUrl>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Services\Interface\**" />
     <Content Remove="Services\Interface\**" />
