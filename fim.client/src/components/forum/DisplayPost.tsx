@@ -42,8 +42,13 @@ export function DisplayPost({ post }: DisplayPostProps) {
     
     const cleanHtml = DOMPurify.sanitize(post.text)
 
-
-
+    const updateCommentsUpvotes = (updatedComment: Comments) => {
+        setComments(prev =>
+            prev.map(c =>
+                c.id === updatedComment.id ? { ...updatedComment } : c
+            )
+        );
+    };
 
     return (
         <div className="mx-auto bg-blue-100 border rounded-xl mt-4" style={{maxWidth: "80%"} }>
@@ -70,7 +75,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
             <CreateComment forumPost={post} handleUpdateList={handleUpdateList}>
                 <Button className="bg-green-500">Add Comment</Button>
             </CreateComment>
-            <DisplayComments comments={comments} forumPost={post}></DisplayComments>
+            <DisplayComments onAddComment={handleUpdateList} comments={comments} forumPost={post} onUpdateUpvotes={updateCommentsUpvotes}></DisplayComments>
         </div>
 
     )
