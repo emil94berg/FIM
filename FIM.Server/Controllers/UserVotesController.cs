@@ -4,6 +4,7 @@ using FIM.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace FIM.Server.Controllers
 {
@@ -39,17 +40,25 @@ namespace FIM.Server.Controllers
             }
             return BadRequest();
         }
-        [HttpDelete("CreateDownVoteForUserPost")]
-        public async Task<IActionResult> CreateDownVote([FromBody] UserVotesDto dto)
-        {
-            var result = await _userVotesService.RemoveUpvoteForCommentAsync(dto, UserId);
-            if (result) return Ok(true);
-            return BadRequest(false);
-        }
+        //[HttpDelete("CreateDownVoteForUserPost")]
+        //public async Task<IActionResult> CreateDownVote([FromBody] CreateUserVotesDto dto)
+        //{
+        //    var result = await _userVotesService.RemoveUpvoteForCommentAsync(dto, UserId);
+        //    if (result) return Ok(true);
+        //    return BadRequest(false);
+        //}
         [HttpGet]
         public async Task <UserVotesDto> GetSchema()
         {
             return new UserVotesDto(1, "test", 1, 1);
+        }
+
+        [HttpDelete("RemoveUserVoteForComment")]
+        public async Task<IActionResult> OnDeleteUserVoteAsync([FromBody] CreateUserVotesDto dto)
+        {
+            var result = await _userVotesService.RemoveUpvoteForCommentAsync(dto, UserId);
+            if(result != 0) return Ok(result);
+            return BadRequest(0);
         }
     }
 }

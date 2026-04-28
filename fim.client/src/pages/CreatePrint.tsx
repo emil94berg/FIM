@@ -9,7 +9,7 @@ import { AllPrintsTable } from "@/components/prints/AllPrintsTable"
 import { Button } from "../components/ui/button";
 import { TrashIcon } from "@/components/icons/mynaui-trash"
 
-
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 type Print = components["schemas"]["PrintDto"];  
 type CreatePrindDto = components["schemas"]["CreatePrintDto"]; 
@@ -39,11 +39,12 @@ export default function CreatePrint() {
     const [deletedPrints, setDeletedPrints] = useState<Print[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
 
+    
 
     useEffect(() => {
         const loadPrints = async () => {
             try {
-                const data = await authFetch(`https://localhost:7035/Print/GetAllDeletedPrints`)
+                const data = await authFetch(`${apiUrl}/Print/GetAllDeletedPrints`)
                 setDeletedPrints(data);
             }
             catch (error) {
@@ -64,7 +65,7 @@ export default function CreatePrint() {
     useEffect(() => {
         const loadPrint = async () => {
             try {
-                const data: Print[] = await authFetch("https://localhost:7035/Print");
+                const data: Print[] = await authFetch(`${apiUrl}/Print`);
                 setPrint(data);
             }
             catch (error) {
