@@ -37,7 +37,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
 
-    
+
 
     const cleanContent = (content: string) => {
         const cleanHtml = DOMPurify.sanitize(content);
@@ -89,7 +89,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                 onUpdateUpvotes(updatedComment);
                 setUserVotes(prev => [...prev, data]);
             }
-            
+
         }
         catch (error) {
             console.log("Could not fetch from UserVotes..." + error);
@@ -156,8 +156,8 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
             }
         };
         loadUser();
-    },[])
-    
+    }, [])
+
     function CommentItem({ comment }: Props) {
         return (
             <div key={comment.id} className="mx-auto bg-blue-200 border rounded-xl mt-4" style={{ maxWidth: "90%" }}>
@@ -174,7 +174,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                         })}</p>
                     </div>
                     <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }}>
-                        
+
                     </div>
                     <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
                         <Button className="bg-transparent block ml-auto">Reply</Button>
@@ -184,9 +184,9 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                     ) : (
                         <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
                     )}
-                    
+
                     <p>{comment.upVotes}</p>
-                    
+
                 </div>
                 <div>
                     {comment.replies.map(reply => (

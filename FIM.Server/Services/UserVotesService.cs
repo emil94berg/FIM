@@ -26,52 +26,63 @@ namespace FIM.Server.Services
         }
         public async Task<UserVotesDto?> CreateUpVoteForPostAsync(CreateUserVotesDto createDto, string userId)
         {
-            var userVote = new UserVotes{
+            var userVote = new UserVotes
+            {
                 UserId = userId,
                 CommentId = createDto.commentId,
                 PostId = createDto.postId
             };
+            var alreadyVoted = await _dbContext.UserVotes.AnyAsync(v => v.UserId == userId &&
+            v.CommentId == createDto.commentId &&
+            v.PostId == createDto.postId);
 
-            _dbContext.UserVotes.Add(userVote);
-
-            var comment = await _dbContext.Comments
-                .FirstOrDefaultAsync(c => c.Id == createDto.commentId);
-
-            if(comment != null)
-            {
-                comment.UpVotes += 1;
-            }
-
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-                return userVote.ToUserVotesDto();
-            }
-            catch
+            if (alreadyVoted)
             {
                 return null;
             }
+            else
+            {
+                _dbContext.UserVotes.Add(userVote);
+
+                var comment = await _dbContext.Comments
+                    .FirstOrDefaultAsync(c => c.Id == createDto.commentId);
+
+                if (comment != null)
+                {
+                    comment.UpVotes += 1;
+                }
+
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    return userVote.ToUserVotesDto();
+                }
+                catch
+                {
+                    return null;
+                }
 
 
-            //var alreadyVoted = await _dbContext.UserVotes.AnyAsync(v => v.UserId == userId &&
-            //v.CommentId == createDto.commentId &&
-            //v.PostId == createDto.postId);
+                //var alreadyVoted = await _dbContext.UserVotes.AnyAsync(v => v.UserId == userId &&
+                //v.CommentId == createDto.commentId &&
+                //v.PostId == createDto.postId);
 
-            //if(alreadyVoted)
-            //{
-            //    return null;
-            //}
-            //else
-            //{
-            //    _dbContext.UserVotes.Add(userVote);
-            //    var comment = _dbContext.Comments.Where(c => c.Id == createDto.commentId).FirstOrDefault();
-            //    if (comment != null)
-            //    {
-            //        comment.UpVotes += 1;
-            //    }
-            //    await _dbContext.SaveChangesAsync();
-            //    return userVote.ToUserVotesDto();
-            //}
+                //if(alreadyVoted)
+                //{
+                //    return null;
+                //}
+                //else
+                //{
+                //    _dbContext.UserVotes.Add(userVote);
+                //    var comment = _dbContext.Comments.Where(c => c.Id == createDto.commentId).FirstOrDefault();
+                //    if (comment != null)
+                //    {
+                //        comment.UpVotes += 1;
+                //    }
+                //    await _dbContext.SaveChangesAsync();
+                //    return userVote.ToUserVotesDto();
+                //}
+            }
         }
         public async Task<int> RemoveUpvoteForCommentAsync(CreateUserVotesDto dto, string userId)
         {
