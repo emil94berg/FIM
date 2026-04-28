@@ -4,12 +4,22 @@ using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Globalization;
 using static FIM.Server.DTOs.Filament.FilamentRecord;
 
 namespace FIM.Server.Services;
 
 public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
 {
+    // Helper method to format diameter
+    private static string FormatDiameterForIdentifier(double diameter)
+    {
+        return diameter
+            .ToString(CultureInfo.InvariantCulture)
+            .Replace(".", "")
+            .Replace(",", "");
+    }
+
     public async Task<IEnumerable<SpoolDto>> GetAllSpoolsAsync(string userId)
     {
         var spools = await dbContext.Spools.Where(s => s.UserId == userId && s.IsDeleted == false).ToListAsync();
@@ -24,7 +34,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
 
     public async Task<SpoolDto> CreateSpoolAsync(CreateSpoolDto dto, string userId)
     {
-        string diameterText = dto.Diameter.ToString().Replace(",", "");
+        string diameterText = FormatDiameterForIdentifier(dto.Diameter);
         var spool = new Spool
         {
             UserId = userId,
@@ -110,7 +120,7 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         //    }
         //}
 
-        string diameterText = spool.Diameter.ToString().Replace(",", "");
+        string diameterText = FormatDiameterForIdentifier(spool.Diameter);
         spool.Identifier = $"{spool.Brand}_{spool.Material}_{spool.ColorName}_{diameterText}";
 
         await dbContext.SaveChangesAsync();
@@ -216,5 +226,4 @@ public class SpoolService(ApplicationDbContext dbContext) : ISpoolService
         }
         else return false;
     }
-
 }
