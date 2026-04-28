@@ -9,6 +9,8 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/auth/supabaseClient"
 import { toast } from "sonner"
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+
 
 type Comment = components["schemas"]["CommentDto"];
 type ForumPost = components["schemas"]["ForumPostDto"];
@@ -35,14 +37,12 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
 
-    
+
 
     const cleanContent = (content: string) => {
         const cleanHtml = DOMPurify.sanitize(content);
         return cleanHtml;
     }
-
-    const url = "https://localhost:7035/UserVotes";
 
     const buildTree = (commentList: Comment[]): CommentNode[] => {
         const map: Record<number, CommentNode> = {};
@@ -77,7 +77,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                 commentId: comment.id,
                 postId: Number(forumPost.id)
             }
-            const data: UserVote = await authFetch(url + "/" + "CreateVoteForUserOnPost", {
+            const data: UserVote = await authFetch(apiUrl + "/UserVotes/" + "CreateVoteForUserOnPost", {
                 method: "POST",
                 body: JSON.stringify(newVote)
             });
@@ -89,12 +89,35 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                 onUpdateUpvotes(updatedComment);
                 setUserVotes(prev => [...prev, data]);
             }
-            
+
         }
         catch (error) {
             console.log("Could not fetch from UserVotes..." + error);
         }
     };
+    const onRemoveUpvotedComment = async (comment: Comment) => {
+        try {
+            const removeVote: CreateUserVote = {
+                commentId: comment.id,
+                postId: Number(forumPost.id)
+            }
+            const data: number = await authFetch(`${apiUrl}/UserVotes/RemoveUserVoteForComment`, {
+                method: "DELETE",
+                body: JSON.stringify(removeVote)
+            })
+            if (data !== 0) {
+                const updatedComment: Comment = {
+                    ...comment,
+                    upVotes: Number(comment.upVotes) - 1
+                };
+                onUpdateUpvotes(updatedComment);
+                setUserVotes(prev => prev.filter(uv => uv.id !== data));
+            }
+        }
+        catch (error) {
+            console.log("Failed to fetch from UserVotes..." + error);
+        }
+    }
 
     const upVoted = (comment: Comment) => {
         //Kan inte kolla uv.userId utan måste kolla på den inloggade användaren (uv.userId === currentUserId)
@@ -113,7 +136,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     useEffect(() => {
         const loadUserVotes = async () => {
             try {
-                const data: UserVote[] = await authFetch(url + "/" + forumPost.id);
+                const data: UserVote[] = await authFetch(apiUrl + "/UserVotes/" + forumPost.id);
                 setUserVotes(data);
             }
             catch (error) {
@@ -133,8 +156,8 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
             }
         };
         loadUser();
-    },[])
-    
+    }, [])
+
     function CommentItem({ comment }: Props) {
         return (
             <div key={comment.id} className="mx-auto bg-blue-200 border rounded-xl mt-4" style={{ maxWidth: "90%" }}>
@@ -151,19 +174,19 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                         })}</p>
                     </div>
                     <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }}>
-                        
+
                     </div>
                     <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
                         <Button className="bg-transparent block ml-auto">Reply</Button>
                     </CreateComment>
                     {upVoted(comment) ? (
-                        <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
+                        <Button className="bg-transparent" onClick={() => onRemoveUpvotedComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
                     ) : (
                         <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
                     )}
-                    
+
                     <p>{comment.upVotes}</p>
-                    
+
                 </div>
                 <div>
                     {comment.replies.map(reply => (
