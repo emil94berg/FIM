@@ -95,7 +95,7 @@ namespace FIM.Server.Services
                 var comment = await _dbContext.Comments.FirstOrDefaultAsync(c => c.Id == dto.commentId);
                 if (comment != null)
                 {
-                    comment.UpVotes += 1;
+                    comment.UpVotes -= 1;
                     await _dbContext.SaveChangesAsync();
                 }
                 return returnInt;
