@@ -3,6 +3,7 @@ using FIM.Server.DTOs.CommentDto;
 using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace FIM.Server.Services
 {
@@ -41,7 +42,28 @@ namespace FIM.Server.Services
             await _dbContext.SaveChangesAsync();
             return newComment.ToCommentDto();
         }
-
+        public async Task<CommentDto> SoftDeleteCommentsAsync(int commentId, string userId)
+        {
+            var commentToDelete = await _dbContext.Comments.FirstOrDefaultAsync(c => c.Id == commentId && c.UserId == userId);
+            if (commentToDelete != null)
+            {
+                commentToDelete.IsDeleted = true;
+                _dbContext.Update(commentToDelete);
+                await _dbContext.SaveChangesAsync();
+                return commentToDelete.ToCommentDto();
+            }
+            else return null;
+        } 
+        public async Task<int> HardDeleteCommentsAsync(int commentId, string userId)
+        {
+            var commentToDelete = await _dbContext.Comments.FirstOrDefaultAsync(c => c.Id == commentId && c.UserId == userId);
+            if (commentToDelete != null)
+            {
+                _dbContext.Remove(commentToDelete);
+                await _dbContext.SaveChangesAsync();
+                return commentToDelete.Id;
+            }
+            else return 0;
+        }
     }
-
 }

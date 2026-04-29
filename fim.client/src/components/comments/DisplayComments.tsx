@@ -8,6 +8,8 @@ import { authFetch } from "../../auth/authFetch"
 import { useState, useEffect } from "react"
 import { supabase } from "@/auth/supabaseClient"
 import { toast } from "sonner"
+import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -23,6 +25,7 @@ type DisplayCommentsProps = {
     forumPost: ForumPost
     onAddComment: (comment: Comment) => void
     onUpdateUpvotes: (comment: Comment) => void
+    onUpdateDeleteComment: (commentid: number) => void
 }
 
 interface CommentNode extends Comment {
@@ -34,7 +37,7 @@ interface Props {
     depth?: number;
 }
 
-export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes }: DisplayCommentsProps) {
+export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes, onUpdateDeleteComment }: DisplayCommentsProps) {
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
 
@@ -134,6 +137,20 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
         }
     }
 
+    const onDeleteComment = async (comment: Comment) => { 
+        try {
+            const data: number = await authFetch(apiUrl + "/Comment/HardDelete/" + comment.id, {
+                method: "DELETE"
+            });
+            onUpdateDeleteComment(data);
+        }
+        catch (error) {
+            console.log("Failed to delete comment..." + error);
+        }
+    }
+
+    
+
     useEffect(() => {
         const loadUserVotes = async () => {
             try {
@@ -194,6 +211,19 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                             <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
                                 <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Reply</Button>
                             </CreateComment>
+                            {currentUserId === comment.userId ? (<ConfirmDialog
+                                title="Delete comment!"
+                                description={`Are you sure you want to delete this comment, the action cannot be undone`}
+                                confirmText="Delete"
+                                cancelText="Cancel"
+                                cancelButtonClassName="bg-red-300"
+                                confirmButtonClassName="bg-red-500"
+                                onConfirm={() => onDeleteComment(comment)}>
+                                <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Delete</Button>
+                                </ConfirmDialog>)
+                                :
+                                (null)}
+                            
                         </div>
                     </div>
                 </div>
