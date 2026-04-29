@@ -52,12 +52,26 @@ namespace FIM.Server.Controllers
             else return NotFound();
 
         }
-        [HttpGet ("GetLatestPosts")]
+        [HttpGet("GetLatestPosts")]
         public async Task<IActionResult> GetLatestPostsAsync()
         {
             var result = await _forumPostService.GetLatestPostsAsync(5);
             if (result != null) return Ok(result);
-            else return NotFound(); 
+            else return NotFound();
+        }
+        [HttpGet("GetLatestForumPosts")]
+        public async Task<IActionResult> GetLatestForumPostsAsync()
+        {
+            var result = await _forumPostService.GetNewestForumPostsAsync(20);
+            if (result != null) return Ok(result);
+            else return NotFound();
+        }
+        [HttpGet("GetActiveForumPosts")]
+        public async Task<IActionResult> GetActivePostsAsync()
+        {
+            var result = await _forumPostService.GetForumPostBasedOnActivity(20);
+            if (result != null) return Ok(result);
+            else return NotFound();
         }
     }
 }

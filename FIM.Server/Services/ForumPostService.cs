@@ -22,7 +22,7 @@ namespace FIM.Server.Services
         }
         public async Task<ForumPostDto> CreatePostAsync(string userId, CreateForumPostDto createDto)
         {
-            
+
             var newPost = new ForumPost
             {
                 UserId = userId,
@@ -33,7 +33,7 @@ namespace FIM.Server.Services
                 Text = createDto.Text,
                 CreatedAt = DateTime.UtcNow,
                 Username = createDto.Username
-                
+
             };
             _dbContext.ForumPosts.Add(newPost);
             await _dbContext.SaveChangesAsync();
@@ -59,19 +59,19 @@ namespace FIM.Server.Services
 
         public async Task<List<ForumPostDto>> GetLatestPostsAsync(int takePerTagNumber)
         {
-           
-            var forumPostReturnList = new List<ForumPostDto>(); 
+
+            var forumPostReturnList = new List<ForumPostDto>();
 
             var enumTypes = Enum.GetValues<ForumPostTags>();
 
-            foreach(var type in enumTypes)
+            foreach (var type in enumTypes)
             {
                 var newList = await _dbContext.ForumPosts
                     .Where(fp => fp.Tag == type)
                     .OrderByDescending(fp => fp.CreatedAt)
                     .Take(takePerTagNumber).ToListAsync();
 
-                foreach(var obj in newList)
+                foreach (var obj in newList)
                 {
                     forumPostReturnList.Add(obj.ToForumPostDto());
                 }
@@ -79,6 +79,27 @@ namespace FIM.Server.Services
             }
 
             return forumPostReturnList;
+        }
+        public async Task<List<ForumPostDto>> GetNewestForumPostsAsync(int numberOfPosts)
+        {
+            var returnList = await _dbContext.ForumPosts.OrderByDescending(fp => fp.CreatedAt).Take(numberOfPosts).ToListAsync();
+            if (returnList != null)
+            {
+                return returnList.Select(fp => fp.ToForumPostDto()).ToList();
+            }
+            return new List<ForumPostDto>();
+        }
+        public async Task<List<ForumPostDto>> GetForumPostBasedOnActivity(int numberOfPosts)
+        {
+            var joinList = await _dbContext.ForumPosts
+                .Join(_dbContext.Comments, fp => fp.Id, c => c.ForumPostId, (fp, c) => new { ForumPost = fp, ForumComment = c }).ToListAsync();
+            
+            var returnList = joinList.Where(j => !j.ForumPost.IsDeleted)
+                .OrderByDescending(c => c.ForumComment.CreatedAt)
+                .Take(numberOfPosts)
+                .Select(c => c.ForumPost.ToForumPostDto())
+                .ToList();
+            return returnList;
         }
     }
 }

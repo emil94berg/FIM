@@ -10,5 +10,7 @@ namespace FIM.Server.Services.Interfaces
         Task<bool> DeletePostAsync(int id);
         Task<ForumPostDto> GetSpecifikPostAsync(int id);
         Task<List<ForumPostDto>> GetLatestPostsAsync(int takePerTagNumber);
+        Task<List<ForumPostDto>> GetNewestForumPostsAsync(int numberOfPosts);
+        Task<List<ForumPostDto>> GetForumPostBasedOnActivity(int numberOfPosts);
     }
 }
