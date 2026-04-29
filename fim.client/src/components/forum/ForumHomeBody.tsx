@@ -56,7 +56,7 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
 
     return (
         <>
-            <Button className="bg-green-500 mt-2" onClick={onShowCreate}>Create a new post</Button>
+            <Button className="bg-green-500 text-white mt-2" onClick={onShowCreate}>Create a new post</Button>
             <div>
                 {sortPostsByTag(latestPosts).map((p, index) => (
                     <div key={p.id}>
