@@ -4,21 +4,23 @@ type SideBarLayoutProps = {
     component: React.ReactNode;
 }
 
-export default function SideBarLayout(props: SideBarLayoutProps) {    
+export default function SideBarLayout(props: SideBarLayoutProps) {
     return (
         <div style={{
             display: "flex",
             flexDirection: "row",
-            width: "100vw",
+            width: "100%",
+            minHeight: "100vh",
             overflowX: "hidden"
         }}>
             <SideBar></SideBar>
-            <div style={{
+            <main style={{
                 flexGrow: 1,
-                minWidth: "0"
+                minWidth: 0,
+                padding: "1rem"
             }}>
                 {props.component}
-            </div>
+            </main>
         </div>
     );
 }
