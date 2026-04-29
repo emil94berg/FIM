@@ -7,7 +7,6 @@ import DOMPurify from "dompurify";
 import { Button } from "@/components/ui/button"
 import { ChatIcon } from "@/components/icons/mynaui-chat"
 import { Badge } from "@/components/ui/badge";
-import { ChatIcon } from "@/components/icons/mynaui-chat"
 
 
 type ForumPost = components["schemas"]["ForumPostDto"];

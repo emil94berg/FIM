@@ -179,9 +179,6 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     function CommentItem({ comment, depth = 0 }: Props) {
         const avatarClass = depth === 0 ? "h-9 w-9" : "h-8 w-8";
 
-    function CommentItem({ comment, depth = 0 }: Props) {
-        const avatarClass = depth === 0 ? "h-9 w-9" : "h-8 w-8";
-
         return (
             <div className="mt-3 ">
                 <div className="flex items-start gap-3">
@@ -232,19 +229,24 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                 </div>
 
                 <div className="mt-2 ml-4 border-l border-slate-300 pl-2">
-
-                <div className="mt-2 ml-4 border-l border-slate-300 pl-2">
                     {comment.replies.map(reply => (
-                        <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
                         <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
                     ))}
                 </div>
+            </div>
+
+        );
+    }
+
+    if (comments.length === 0) {
+        return (
+            <div className="text-center text-gray-500 my-4">
+                <p>No comments yet. Be the first to comment!</p>
             </div>
         );
     }
 
     return (
-        <div className="px-3">
         <div className="px-3">
             {buildTree(comments).map(comment => (
                 <CommentItem key={comment.id} comment={comment} />
