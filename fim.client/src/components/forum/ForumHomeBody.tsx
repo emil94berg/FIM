@@ -55,9 +55,9 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
     
 
     return (
-        <>
+        <div className="mx-auto max-w-3xl">
             <Button className="bg-green-500 text-white mt-2" onClick={onShowCreate}>Create a new post</Button>
-            <div>
+            <div className="">
                 {sortPostsByTag(latestPosts).map((p, index) => (
                     <div key={p.id}>
                         {(index === 0 || p.tag !== sortPostsByTag(latestPosts)[index - 1].tag) && (
@@ -66,17 +66,15 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                             </div>
                         )}
                         <Link to={`/forum/post/${p.id}`} className="w-full max-w-x1">
-                            <Card key={p.id} className="mt-4">
+
+                        <Card key={p.id} className="mt-4">
                                 <CardHeader>
                                     <CardTitle>{p.title}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <CardDescription>
-                                        <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html:cleanContent(p.text)}}>
-                                           
-                                        </div>
+                                        <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html:cleanContent(p.text)}} />
                                     </CardDescription>
-                                       
                                 </CardContent>
                                 <CardFooter>
                                     <p>Created by: {p.username} - {new Date(p.createdAt).toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" })}</p>
@@ -87,6 +85,6 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                 ))}
             </div>
             
-        </>
+        </div>
     )
 }
