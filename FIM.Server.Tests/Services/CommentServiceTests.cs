@@ -22,7 +22,7 @@ namespace FIM.Server.Tests.Services
         }
 
         [Fact]
-        public async Task GetAllComments_ShouldReturnAllCommentsForASpecifikPost()
+        public async Task GetAllComments_ShouldReturnAllCommentsForASpecificPost()
         {
             //Arrange
             int forumPostId = await CreateTestComments_AndReturnForumPostId();
