@@ -13,17 +13,7 @@ type ForumPost = components["schemas"]["ForumPostDto"];
 export default function ForumPost() {
     const { id } = useParams();
     const url = `https://localhost:7035/ForumPost/`
-    const [post, setPost] = useState<ForumPost>({
-        id: 1,
-        title: "",
-        userId: "",
-        text: "",
-        subject: "",
-        tag: "Help",
-        isDeleted: false,
-        createdAt: "",
-        username: ""
-    });
+    const [post, setPost] = useState<ForumPost |null>(null);
 
     useEffect(() => {
         const loadPost = async () => {
@@ -40,11 +30,20 @@ export default function ForumPost() {
 
 
 
-
-    return (
-        <div>
-            <DisplayPost post={post}></DisplayPost>
-        </div>
-    )
+    if (!post) {
+        return (
+            <div>
+                <p>Loading...</p>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <DisplayPost post={post}></DisplayPost>
+            </div>
+        )
+    }
+    
 
 }

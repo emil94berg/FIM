@@ -64,5 +64,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasIndex(e => new { e.Diameter, e.Id})
                 .HasDatabaseName("IX_PublicFilament_Sort_Diameter");
         });
+
+        modelBuilder.Entity<UserVotes>()
+            .HasIndex(x => new { x.UserId, x.CommentId, x.PostId })
+            .IsUnique();
     }
 }

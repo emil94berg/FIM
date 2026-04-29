@@ -9,6 +9,8 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/auth/supabaseClient"
 import { toast } from "sonner"
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+
 
 type Comment = components["schemas"]["CommentDto"];
 type ForumPost = components["schemas"]["ForumPostDto"];
@@ -29,20 +31,19 @@ interface CommentNode extends Comment {
 
 interface Props {
     comment: CommentNode;
+    depth?: number;
 }
 
 export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes }: DisplayCommentsProps) {
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
 
-    
+
 
     const cleanContent = (content: string) => {
         const cleanHtml = DOMPurify.sanitize(content);
         return cleanHtml;
     }
-
-    const url = "https://localhost:7035/UserVotes";
 
     const buildTree = (commentList: Comment[]): CommentNode[] => {
         const map: Record<number, CommentNode> = {};
@@ -77,7 +78,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                 commentId: comment.id,
                 postId: Number(forumPost.id)
             }
-            const data: UserVote = await authFetch(url + "/" + "CreateVoteForUserOnPost", {
+            const data: UserVote = await authFetch(apiUrl + "/UserVotes/" + "CreateVoteForUserOnPost", {
                 method: "POST",
                 body: JSON.stringify(newVote)
             });
@@ -89,12 +90,35 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                 onUpdateUpvotes(updatedComment);
                 setUserVotes(prev => [...prev, data]);
             }
-            
+
         }
         catch (error) {
             console.log("Could not fetch from UserVotes..." + error);
         }
     };
+    const onRemoveUpvotedComment = async (comment: Comment) => {
+        try {
+            const removeVote: CreateUserVote = {
+                commentId: comment.id,
+                postId: Number(forumPost.id)
+            }
+            const data: number = await authFetch(`${apiUrl}/UserVotes/RemoveUserVoteForComment`, {
+                method: "DELETE",
+                body: JSON.stringify(removeVote)
+            })
+            if (data !== 0) {
+                const updatedComment: Comment = {
+                    ...comment,
+                    upVotes: Number(comment.upVotes) - 1
+                };
+                onUpdateUpvotes(updatedComment);
+                setUserVotes(prev => prev.filter(uv => uv.id !== data));
+            }
+        }
+        catch (error) {
+            console.log("Failed to fetch from UserVotes..." + error);
+        }
+    }
 
     const upVoted = (comment: Comment) => {
         //Kan inte kolla uv.userId utan måste kolla på den inloggade användaren (uv.userId === currentUserId)
@@ -113,7 +137,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     useEffect(() => {
         const loadUserVotes = async () => {
             try {
-                const data: UserVote[] = await authFetch(url + "/" + forumPost.id);
+                const data: UserVote[] = await authFetch(apiUrl + "/UserVotes/" + forumPost.id);
                 setUserVotes(data);
             }
             catch (error) {
@@ -133,41 +157,50 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
             }
         };
         loadUser();
-    },[])
-    
-    function CommentItem({ comment }: Props) {
+    }, [])
+
+    function CommentItem({ comment, depth = 0 }: Props) {
+        const avatarClass = depth === 0 ? "h-9 w-9" : "h-8 w-8";
+
         return (
-            <div key={comment.id} className="mx-auto bg-blue-200 border rounded-xl mt-4" style={{ maxWidth: "90%" }}>
-                <div className="bg-gray-200 m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }}>
-                    <div className="flex-shrink-0 text-center">
-                        <img className="h-12 w-12 rounded-full object-cover ring-2 ring-border m-4" src={`https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/${comment.userId}/profilepictures/avatar`}></img>
-                        <p>{comment.username}</p>
-                        <p>{new Date(comment.createdAt).toLocaleString("sv-SE", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit"
-                        })}</p>
+            <div className="mt-3 ">
+                <div className="flex items-start gap-3">
+                    <img className={`${avatarClass} flex-shrink-0 rounded-full object-cover ring-1 ring-border`} src={`https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/${comment.userId}/profilepictures/avatar`}></img>
+
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2 text-xs">
+                            <p className="font-semibold text-slate-800">{comment.username}</p>
+                            <span className="text-slate-400">•</span>
+                            <p className="text-slate-500">{new Date(comment.createdAt).toLocaleString("sv-SE", {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            })}</p>
+                        </div>
+
+                        <div className="forum-rich-text mt-1 break-words text-sm leading-6 text-slate-800" dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }}></div>
+
+                        <div className="mt-2 flex items-center gap-3 text-sm text-slate-500">
+                            {upVoted(comment) ? (
+                                <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onRemoveUpvotedComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
+                            ) : (
+                                <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
+                            )}
+
+                            <span className="font-medium text-slate-700">{comment.upVotes}</span>
+
+                            <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
+                                <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Reply</Button>
+                            </CreateComment>
+                        </div>
                     </div>
-                    <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }}>
-                        
-                    </div>
-                    <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
-                        <Button className="bg-transparent block ml-auto">Reply</Button>
-                    </CreateComment>
-                    {upVoted(comment) ? (
-                        <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
-                    ) : (
-                        <Button className="bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
-                    )}
-                    
-                    <p>{comment.upVotes}</p>
-                    
                 </div>
-                <div>
+
+                <div className="mt-2 ml-4 border-l border-slate-300 pl-2">
                     {comment.replies.map(reply => (
-                        <CommentItem key={reply.id} comment={reply} />
+                        <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
                     ))}
                 </div>
             </div>
@@ -175,7 +208,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     }
 
     return (
-        <div>
+        <div className="px-3">
             {buildTree(comments).map(comment => (
                 <CommentItem key={comment.id} comment={comment} />
             ))}
