@@ -52,7 +52,7 @@ namespace FIM.Server.Controllers
         public async Task<IActionResult> HardDeleteComment(int commentId)
         {
             var result = await _commentService.HardDeleteCommentsAsync(commentId, UserId);
-            if (result != null) return Ok(result);
+            if (result != 0) return Ok(result);
             return BadRequest();
         }
     }

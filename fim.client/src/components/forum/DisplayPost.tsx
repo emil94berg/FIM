@@ -51,6 +51,10 @@ export function DisplayPost({ post }: DisplayPostProps) {
         );
     };
 
+    const onDeleteComment = (commentId: number) => {
+        setComments(prev => prev.filter(c => c.id !== commentId));
+    }
+
     return (
         <div className="mx-auto max-w-3xl bg-slate-100 border rounded-xl mt-4">
             <div className="mx-4 my-2 mt-4"> 
@@ -81,7 +85,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
             </div>
             <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400" />
             <div className="mx-4 my-2">
-                <DisplayComments onAddComment={handleUpdateList} comments={comments} forumPost={post} onUpdateUpvotes={updateCommentsUpvotes}></DisplayComments>
+                <DisplayComments onAddComment={handleUpdateList} comments={comments} forumPost={post} onUpdateUpvotes={updateCommentsUpvotes} onUpdateDeleteComment={onDeleteComment}></DisplayComments>
             </div>
         </div>
 

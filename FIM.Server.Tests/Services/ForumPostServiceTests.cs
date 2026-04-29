@@ -100,7 +100,7 @@ namespace FIM.Server.Tests.Services
             //Assert
             Assert.NotNull(latestPosts);
             Assert.Equal(3, amaPosts.Count);
-            Assert.Equal(1, discussionPosts.Count);
+            Assert.Single(discussionPosts);
         }
 
         public async Task<List<CreateForumPostDto>> CreatePosts()
