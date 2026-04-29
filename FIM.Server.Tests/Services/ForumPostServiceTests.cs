@@ -1,6 +1,7 @@
 ﻿using FIM.Server.DTOs.Forum;
 using FIM.Server.Services;
 using FIM.Server.Tests.TestInfrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
@@ -10,90 +11,125 @@ namespace FIM.Server.Tests.Services
 {
     public class ForumPostServiceTests : IClassFixture<SqliteInMemoryDbContextFactory>
     {
-        private readonly ForumPostService _forumPostService;
-        public ForumPostServiceTests(SqliteInMemoryDbContextFactory dbContextFactory)
-        {
-             var _dbContext = dbContextFactory.CreateDbContext();
-            _forumPostService = new ForumPostService(_dbContext);
-        }
-
         [Fact]
         public async Task GetAllPostsAsync_ReturnsAllNonDeletedPosts()
         {
-            // Arrange
-            await CreatePosts();
 
+            // Arrange
+            using var factory = new SqliteInMemoryDbContextFactory();
+            await using var context = factory.CreateDbContext();
+            var forumPostService = new ForumPostService(context);
+
+            var postList = await ListOfMemoryPosts();
+            
+            context.ForumPosts.AddRange(postList.Select(dto => new Models.ForumPost
+            {
+                Title = dto.Title,
+                Text = dto.Text,
+                Subject = dto.Subject,
+                Tag = dto.Tag,
+                UserId = "test-user-1",
+                IsDeleted = false,
+                Username="testUserName"
+            }));
+            await context.SaveChangesAsync();
             // Act
-            var allPosts = await _forumPostService.GetAllPostsAsync();
+            var allPosts = await forumPostService.GetAllPostsAsync();
             int zeroPosts = 0;
             // Assert
             Assert.NotNull(allPosts);
             Assert.NotEqual(zeroPosts, allPosts.Count);
+            Assert.False(allPosts[0].IsDeleted);
+
         }
 
         [Fact]
         public async Task CreatePosts_ShouldCreatePostsSuccessfully()
         {
             //Arrange
+            using var factory = new SqliteInMemoryDbContextFactory();
+            await using var context = factory.CreateDbContext();
+            var forumPostService = new ForumPostService(context);
+
             var userId = "testuser-1";
 
-            var postList = await CreatePosts();
-
-            var createDto = postList[0];
-            var createDto2 = postList[1];
-            var createDto3 = postList[2];
-            var createDto4 = postList[3];
+            var postList = await ListOfMemoryPosts();
 
             //Act
-            var createdPost = await _forumPostService.CreatePostAsync(userId, createDto);
-            var createdPost2 = await _forumPostService.CreatePostAsync(userId, createDto2);
-            var createdPost3 = await _forumPostService.CreatePostAsync(userId, createDto3);
-            var createdPost4 = await _forumPostService.CreatePostAsync("testuser-2", createDto4);
+            var testList = new List<ForumPostDto>();
+            foreach (var post in postList)
+            {
+                testList.Add(await forumPostService.CreatePostAsync(userId, post));
+            }
 
             //Assert
-            Assert.NotNull(createdPost);
-            Assert.NotNull(createdPost2);
-            Assert.NotNull(createdPost3);
-            Assert.NotNull(createdPost4);
-            Assert.NotEqual(createdPost.Id, createdPost2.Id);
-            Assert.NotEqual(createdPost.Id, createdPost3.Id);
-            Assert.NotEqual(createdPost.Id, createdPost4.Id);
-            Assert.NotEqual(createdPost.UserId, createdPost4.UserId);
-            Assert.False(createdPost.IsDeleted);
-            Assert.False(createdPost2.IsDeleted);
-            Assert.False(createdPost3.IsDeleted);
-            Assert.False(createdPost4.IsDeleted);
+            Assert.NotNull(testList);
+            Assert.NotNull(testList[1]);
+            Assert.NotNull(testList[2]);
+            Assert.NotNull(testList[3]);
+            Assert.NotEqual(testList[0].Id, testList[1].Id);
+            Assert.NotEqual(testList[0].Id, testList[2].Id);
+            Assert.NotEqual(testList[0].Id, testList[3].Id);
+            Assert.False(testList[0].IsDeleted);
+            Assert.False(testList[1].IsDeleted);
+            Assert.False(testList[2].IsDeleted);
+            Assert.False(testList[3].IsDeleted);
         }
+
         [Fact]
         public async Task DeletePostAsync_ShouldDeletePostSuccessfully_SpecifikPostShouldReturnNull()
         {
             //Arrange
+            using var factory = new SqliteInMemoryDbContextFactory();
+            await using var context = factory.CreateDbContext();
+            var forumPostService = new ForumPostService(context);
+
             var userId = "testuser-1";
-            var postList = await CreatePosts();
-            var createDto = postList[0];
-            var createdPost = await _forumPostService.CreatePostAsync(userId, createDto);
+            var postList = await ListOfMemoryPosts();
+            context.ForumPosts.AddRange(postList.Select(dto => new Models.ForumPost
+            {
+                Title = dto.Title,
+                Text = dto.Text,
+                Subject = dto.Subject,
+                Tag = dto.Tag,
+                UserId = "test-user-1",
+                IsDeleted = false,
+                Username = "testUserName"
+            }));
+            await context.SaveChangesAsync();
             //Act
-            var deleteResult = await _forumPostService.DeletePostAsync(createdPost.Id);
-            var deletedPost = await _forumPostService.GetSpecifikPostAsync(createdPost.Id);
+            int allPostsCount = context.ForumPosts.Count();
+            var deleteResult = await forumPostService.DeletePostAsync(context.ForumPosts.First().Id);
             //Assert
             Assert.True(deleteResult);
-            Assert.Null(deletedPost);
+            Assert.NotEqual(allPostsCount, context.ForumPosts.Count());
         }
 
         [Fact]
         public async Task GetLatestPost_ShouldReturnNewestPostForEachEnumTag()
         {
             //Arrange
-            var userId = "testuser-1";
-            var postList = await CreatePosts();
+            using var factory = new SqliteInMemoryDbContextFactory();
+            await using var context = factory.CreateDbContext();
+            var forumPostService = new ForumPostService(context);
 
-            foreach (var post in postList)
+            var userId = "testuser-1";
+
+            var postList = await ListOfMemoryPosts();
+            context.ForumPosts.AddRange(postList.Select(dto => new Models.ForumPost
             {
-                await _forumPostService.CreatePostAsync(userId, post);
-            }
+                Title = dto.Title,
+                Text = dto.Text,
+                Subject = dto.Subject,
+                Tag = dto.Tag,
+                UserId = "test-user-1",
+                IsDeleted = false,
+                Username = "testUserName"
+            }));
+            await context.SaveChangesAsync();
 
             //Act
-            var latestPosts = await _forumPostService.GetLatestPostsAsync(3);
+            var latestPosts = await forumPostService.GetLatestPostsAsync(3);
             var amaPosts = latestPosts.Where(p => p.Tag == Models.ForumPostTags.AMA).ToList();
             var discussionPosts = latestPosts.Where(p => p.Tag == Models.ForumPostTags.Discussion).ToList();
 
@@ -103,7 +139,7 @@ namespace FIM.Server.Tests.Services
             Assert.Single(discussionPosts);
         }
 
-        public async Task<List<CreateForumPostDto>> CreatePosts()
+        public async Task<List<CreateForumPostDto>> ListOfMemoryPosts()
         {
             var returnList = new List<CreateForumPostDto>();
             var createDto = new CreateForumPostDto

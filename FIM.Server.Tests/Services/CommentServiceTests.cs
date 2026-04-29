@@ -3,6 +3,8 @@ using FIM.Server.DTOs.Forum;
 using FIM.Server.Models;
 using FIM.Server.Services;
 using FIM.Server.Tests.TestInfrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,52 +13,92 @@ namespace FIM.Server.Tests.Services
 {
     public class CommentServiceTests : IClassFixture<SqliteInMemoryDbContextFactory>
     {
-        private readonly CommentService _commentService;
-        private readonly ForumPostService _forumPostService;
-
-        public CommentServiceTests(SqliteInMemoryDbContextFactory dbContextFactory)
-        {
-            var _dbContext = dbContextFactory.CreateDbContext();
-            _commentService = new CommentService(_dbContext);
-            _forumPostService = new ForumPostService(_dbContext);
-        }
 
         [Fact]
         public async Task GetAllComments_ShouldReturnAllCommentsForASpecificPost()
         {
             //Arrange
-            int forumPostId = await CreateTestComments_AndReturnForumPostId();
+            using var factory = new SqliteInMemoryDbContextFactory();
+            await using var context = factory.CreateDbContext();
+            var forumPostService = new ForumPostService(context);
+            var commentService = new CommentService(context);
+            
+            var forumPost = new CreateForumPostDto("Title", "Content", "subject1", ForumPostTags.Help, "userName1");
+            context.ForumPosts.Add(new ForumPost { 
+                CreatedAt = DateTime.UtcNow,
+                IsDeleted = false,
+                Subject = forumPost.Subject,
+                Tag = forumPost.Tag,
+                UserId = "user1",
+                Title = forumPost.Title,
+                Text = forumPost.Text,
+                Username = forumPost.Username
+            });
+            await context.SaveChangesAsync();
+
+            int forumPostId = context.ForumPosts.First().Id;
+
+            var commentList = new List<Comment>()
+            {
+                 new Comment { ForumPostId = forumPostId, ParentId = null, Content = "Content", Username = "userName1", UserId = "user1" },
+                 new Comment { ForumPostId = forumPostId, ParentId = forumPostId, Content = "Content2", Username = "userName1", UserId = "user1" },
+                 new Comment { ForumPostId = forumPostId, ParentId = forumPostId, Content = "Content3", Username = "userName1", UserId = "user1" },
+                 new Comment { ForumPostId = forumPostId, ParentId = forumPostId, Content = "Content4", Username = "userName1", UserId = "user1" }   
+            };
+            context.Comments.AddRange(commentList);
+            await context.SaveChangesAsync();
 
             //Act
-            var commentsList = await _commentService.GetCommentsForPostAsync(forumPostId);
+            var testList = await commentService.GetCommentsForPostAsync(forumPostId);
 
             //Assert
-            Assert.NotNull(commentsList);
-            Assert.Equal(4, commentsList.Count);
-            Assert.Equal("Content", commentsList[0].Content);
-            Assert.False(commentsList[0].IsDeleted);
+            Assert.NotNull(testList);
+            Assert.Equal(4, testList.Count);
+            Assert.Equal("Content", testList[0].Content);
+            Assert.False(testList[0].IsDeleted);
         }
 
         [Fact]
         public async Task CreateComments()
         {
             //Arrange
-            int forumPostId = await CreateTestComments_AndReturnForumPostId();
+            using var factory = new SqliteInMemoryDbContextFactory();
+            await using var context = factory.CreateDbContext();
+            var forumPostService = new ForumPostService(context);
+            var commentService = new CommentService(context);
+
+            var forumPost = new CreateForumPostDto("Title", "Content", "subject1", ForumPostTags.Help, "userName1");
+            context.ForumPosts.Add(new ForumPost
+            {
+                CreatedAt = DateTime.UtcNow,
+                IsDeleted = false,
+                Subject = forumPost.Subject,
+                Tag = forumPost.Tag,
+                UserId = "user1",
+                Title = forumPost.Title,
+                Text = forumPost.Text,
+                Username = forumPost.Username
+            });
+            await context.SaveChangesAsync();
+
+            int forumPostId = context.ForumPosts.First().Id;
             //Act
-            var commentsList = await _commentService.GetCommentsForPostAsync(forumPostId);
+            var saveComment = new CreateCommentDto(forumPostId, null, "Content", "userName1");
+            var commentFromDb = await commentService.CreateCommentAsync(saveComment, "user1");
+
             //Assert
-            Assert.NotNull(commentsList);
-            Assert.Equal("Content", commentsList[0].Content);
-            Assert.False(commentsList[0].IsDeleted);
+            Assert.NotNull(commentFromDb);
+            Assert.Equal("Content", commentFromDb.Content);
+            Assert.False(commentFromDb.IsDeleted);
         }
 
-        public async Task<int> CreateTestComments_AndReturnForumPostId()
+        public async Task<int> CreateTestComments_AndReturnForumPostId(CommentService commentService, ForumPostService forumPostService)
         {
             string userId = "user1";
 
             var forumPost = new CreateForumPostDto("Title", "Content", "subject1", ForumPostTags.Help, "userName1");
-            await _forumPostService.CreatePostAsync(userId, forumPost);
-            var forumPosts = await _forumPostService.GetAllPostsAsync();
+            await forumPostService.CreatePostAsync(userId, forumPost);
+            var forumPosts = await forumPostService.GetAllPostsAsync();
             int forumPostId = forumPosts.First().Id;
 
             var commentList = new List<CreateCommentDto>()
@@ -69,7 +111,7 @@ namespace FIM.Server.Tests.Services
             };
             foreach (var comment in commentList)
             {
-                await _commentService.CreateCommentAsync(comment,userId);
+                await commentService.CreateCommentAsync(comment,userId);
             }
             return forumPostId;
         }
