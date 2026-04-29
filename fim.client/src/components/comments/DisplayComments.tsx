@@ -8,6 +8,8 @@ import { authFetch } from "../../auth/authFetch"
 import { useState, useEffect } from "react"
 import { supabase } from "@/auth/supabaseClient"
 import { toast } from "sonner"
+import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
+
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -23,6 +25,7 @@ type DisplayCommentsProps = {
     forumPost: ForumPost
     onAddComment: (comment: Comment) => void
     onUpdateUpvotes: (comment: Comment) => void
+    onUpdateDeleteComment: (commentid: number) => void
 }
 
 interface CommentNode extends Comment {
@@ -34,7 +37,7 @@ interface Props {
     depth?: number;
 }
 
-export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes }: DisplayCommentsProps) {
+export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes, onUpdateDeleteComment }: DisplayCommentsProps) {
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
 
@@ -134,6 +137,20 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
         }
     }
 
+    const onDeleteComment = async (comment: Comment) => { 
+        try {
+            const data: number = await authFetch(apiUrl + "/Comment/HardDelete/" + comment.id, {
+                method: "DELETE"
+            });
+            onUpdateDeleteComment(data);
+        }
+        catch (error) {
+            console.log("Failed to delete comment..." + error);
+        }
+    }
+
+    
+
     useEffect(() => {
         const loadUserVotes = async () => {
             try {
@@ -158,6 +175,9 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
         };
         loadUser();
     }, [])
+
+    function CommentItem({ comment, depth = 0 }: Props) {
+        const avatarClass = depth === 0 ? "h-9 w-9" : "h-8 w-8";
 
     function CommentItem({ comment, depth = 0 }: Props) {
         const avatarClass = depth === 0 ? "h-9 w-9" : "h-8 w-8";
@@ -194,12 +214,28 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                             <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
                                 <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Reply</Button>
                             </CreateComment>
+                            {currentUserId === comment.userId ? (<ConfirmDialog
+                                title="Delete comment!"
+                                description={`Are you sure you want to delete this comment, the action cannot be undone`}
+                                confirmText="Delete"
+                                cancelText="Cancel"
+                                cancelButtonClassName="bg-red-300"
+                                confirmButtonClassName="bg-red-500"
+                                onConfirm={() => onDeleteComment(comment)}>
+                                <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Delete</Button>
+                                </ConfirmDialog>)
+                                :
+                                (null)}
+                            
                         </div>
                     </div>
                 </div>
 
                 <div className="mt-2 ml-4 border-l border-slate-300 pl-2">
+
+                <div className="mt-2 ml-4 border-l border-slate-300 pl-2">
                     {comment.replies.map(reply => (
+                        <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
                         <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
                     ))}
                 </div>
@@ -208,6 +244,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     }
 
     return (
+        <div className="px-3">
         <div className="px-3">
             {buildTree(comments).map(comment => (
                 <CommentItem key={comment.id} comment={comment} />

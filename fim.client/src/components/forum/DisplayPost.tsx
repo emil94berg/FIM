@@ -7,6 +7,7 @@ import DOMPurify from "dompurify";
 import { Button } from "@/components/ui/button"
 import { ChatIcon } from "@/components/icons/mynaui-chat"
 import { Badge } from "@/components/ui/badge";
+import { ChatIcon } from "@/components/icons/mynaui-chat"
 
 
 type ForumPost = components["schemas"]["ForumPostDto"];
@@ -51,6 +52,10 @@ export function DisplayPost({ post }: DisplayPostProps) {
             )
         );
     };
+
+    const onDeleteComment = (commentId: number) => {
+        setComments(prev => prev.filter(c => c.id !== commentId));
+    }
 
     return (
         <div className="mx-auto max-w-3xl">
