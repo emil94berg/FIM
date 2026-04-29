@@ -1,12 +1,4 @@
 import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import type { components } from "@/types/schema"
 import { Link } from "react-router-dom"
 import DOMPurify from "dompurify";
@@ -78,20 +70,6 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                             
                             <Badge className="text-sm rounded-2xl text-gray-500">{p.tag}</Badge>
                         </div>
-{/* 
-                        <Card key={p.id} className="mt-4">
-                                <CardHeader>
-                                    <CardTitle>{p.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <CardDescription>
-                                        <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html:cleanContent(p.text)}} />
-                                    </CardDescription>
-                                </CardContent>
-                                <CardFooter>
-                                    <p>Created by: {p.username} - {new Date(p.createdAt).toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" })}</p>
-                                </CardFooter>
-                            </Card> */}
                         </Link>
                     </div>
                 ))}
