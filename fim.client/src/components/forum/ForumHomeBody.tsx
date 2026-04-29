@@ -10,6 +10,7 @@ import {
 import type { components } from "@/types/schema"
 import { Link } from "react-router-dom"
 import DOMPurify from "dompurify";
+import { Badge } from "@/components/ui/badge"
 
 type ForumPost = components["schemas"]["ForumPostDto"]
 
@@ -55,7 +56,7 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
     
 
     return (
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-4xl">
             <Button className="bg-green-500 text-white mt-2" onClick={onShowCreate}>Create a new post</Button>
             <div className="">
                 {sortPostsByTag(latestPosts).map((p, index) => (
@@ -66,7 +67,18 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                             </div>
                         )}
                         <Link to={`/forum/post/${p.id}`} className="w-full max-w-x1">
+                        
+                        <div key={p.id} className="mt-4 border rounded-xl p-4 bg-white">
+                            <div className="items-center justify-between flex flex-row">
+                                <h2 className="text-xl font-bold">{p.title}</h2>
+                                <p className="text-sm text-gray-500">Created by: {p.username} • {new Date(p.createdAt).toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" })}</p>
+                            </div>
 
+                             <p className="forum-rich-text-preview" dangerouslySetInnerHTML={{ __html:cleanContent(p.text)}}></p>
+                            
+                            <Badge className="text-sm rounded-2xl text-gray-500">{p.tag}</Badge>
+                        </div>
+{/* 
                         <Card key={p.id} className="mt-4">
                                 <CardHeader>
                                     <CardTitle>{p.title}</CardTitle>
@@ -79,7 +91,7 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
                                 <CardFooter>
                                     <p>Created by: {p.username} - {new Date(p.createdAt).toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" })}</p>
                                 </CardFooter>
-                            </Card>
+                            </Card> */}
                         </Link>
                     </div>
                 ))}
