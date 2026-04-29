@@ -50,12 +50,6 @@ namespace FIM.Server.Tests.Services
             Assert.False(commentsList[0].IsDeleted);
         }
 
-
-
-
-
-
-        
         public async Task<int> CreateTestComments_AndReturnForumPostId()
         {
             string userId = "user1";

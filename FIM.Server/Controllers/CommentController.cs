@@ -24,7 +24,7 @@ namespace FIM.Server.Controllers
         public async Task<IActionResult> GetCommentsForPostAsync(int postId)
         {
             var result = await _commentService.GetCommentsForPostAsync(postId);
-            if(result != null) return Ok(result);
+            if (result != null) return Ok(result);
             return BadRequest();
         }
         [HttpPost("CreateComment")]
@@ -41,7 +41,19 @@ namespace FIM.Server.Controllers
             return new CommentDto(1, 1, 1, "testUserId", "Content", new DateTime(), false, 0, "Emil");
         }
 
-       
-
+        [HttpPut("SoftDelete/{commentId}")]
+        public async Task<IActionResult> SoftDeleteComment(int commentId)
+        {
+            var result = await _commentService.SoftDeleteCommentsAsync(commentId, UserId);
+            if (result != null) return Ok(result);
+            return BadRequest();
+        }
+        [HttpDelete("HardDelete/{commentId}")]
+        public async Task<IActionResult> HardDeleteComment(int commentId)
+        {
+            var result = await _commentService.HardDeleteCommentsAsync(commentId, UserId);
+            if (result != null) return Ok(result);
+            return BadRequest();
+        }
     }
 }
