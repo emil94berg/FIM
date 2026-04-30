@@ -142,6 +142,13 @@ button {
 .forum-rich-text em {
     font-style: italic;
 }
+.forum-rich-text-preview {
+    white-space: pre-line;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Antal rader att visa */
+    -webkit-box-orient: vertical;
+}
 
 .ProseMirror {
     white-space: pre-wrap;

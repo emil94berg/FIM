@@ -234,6 +234,15 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                     ))}
                 </div>
             </div>
+
+        );
+    }
+
+    if (comments.length === 0) {
+        return (
+            <div className="text-center text-gray-500 my-4">
+                <p>No comments yet. Be the first to comment!</p>
+            </div>
         );
     }
 
