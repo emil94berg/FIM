@@ -91,7 +91,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
 
             <hr className="my-5 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-25 dark:via-blue-400" />
             <div className="mx-4 my-2 bg-slate-100 border rounded-xl mt-4">
-                <DisplayComments onAddComment={handleUpdateList} comments={comments} forumPost={post} onUpdateUpvotes={updateCommentsUpvotes}></DisplayComments>
+                <DisplayComments onAddComment={handleUpdateList} comments={comments} forumPost={post} onUpdateUpvotes={updateCommentsUpvotes} onUpdateDeleteComment={onDeleteComment}></DisplayComments>
             </div>
         </div>
 
