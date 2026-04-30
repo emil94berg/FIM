@@ -1,3 +1,4 @@
+import { useState } from "react";
 import SideBar from "../components/SidebarMenu";
 
 type SideBarLayoutProps = {
@@ -5,19 +6,18 @@ type SideBarLayoutProps = {
 }
 
 export default function SideBarLayout(props: SideBarLayoutProps) {
+    const [open, setOpen] = useState(false);
     return (
         <div style={{
-            display: "flex",
-            flexDirection: "row",
             width: "100%",
             minHeight: "100vh",
             overflowX: "hidden"
         }}>
-            <SideBar></SideBar>
+            <SideBar open={open} setOpen={setOpen}></SideBar>
             <main style={{
-                flexGrow: 1,
-                minWidth: 0,
-                padding: "1rem"
+                marginLeft: open ? "12rem" : "3rem",
+                padding: "1rem",
+                transition: "margin 0.3s"
             }}>
                 {props.component}
             </main>
