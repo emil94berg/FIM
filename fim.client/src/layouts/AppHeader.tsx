@@ -16,21 +16,17 @@ export default function AppHeader() {
         navigate("/login");
     }
 
-
-
     return (
-        <div className="flex items-center justify-between border bg-gray-100 px-4 py-2 ">
-            <nav>
-                <Link to="/">
-                    <img className="h-20 w-20" src="\src\assets\Pictures\FimLogga.png"></img>
-                </Link>
-            </nav>
-
-            <Button className="bg-red-500 absoulte bottom-0 right-0" onClick={handleSignOut}>Sign out</Button>
-
-
-
-
+        <div style={{ display: "flex", width: "100%", position: "fixed" }}>
+            <div className="w-full flex items-center justify-between border bg-gray-100 px-2 fixed top-0 left-0 z-50 h-16">
+                <nav>
+                    <Link to="/">
+                        <img className="h-20 w-20" src="\src\assets\Pictures\FimLogga.png"></img>
+                    </Link>
+                </nav>
+                <Button className="bg-red-500 text-white" onClick={handleSignOut}>Sign out</Button>
+            </div>
         </div>
+        
     )
 }

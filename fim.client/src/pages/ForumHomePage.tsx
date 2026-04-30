@@ -77,7 +77,7 @@ export default function ForumHomePage() {
                     </section>
 
                     <aside className="lg:col-span-4">
-                        <div className="space-y-5 lg:sticky lg:top-4">
+                        <div className="space-y-5 lg:top-4">
                             <div className="rounded-xl border bg-white p-4">
                                 <h2 className="text-sm font-semibold text-slate-800">Activity</h2>
                                 <p className="mt-1 text-xs text-slate-500">
