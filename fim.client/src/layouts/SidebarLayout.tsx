@@ -1,4 +1,5 @@
 import SideBar from "../components/SidebarMenu";
+import AppHeader from "@/layouts/AppHeader"
 
 type SideBarLayoutProps = {
     component: React.ReactNode;
@@ -14,13 +15,17 @@ export default function SideBarLayout(props: SideBarLayoutProps) {
             overflowX: "hidden"
         }}>
             <SideBar></SideBar>
-            <main style={{
-                flexGrow: 1,
-                minWidth: 0,
-                padding: "1rem"
-            }}>
-                {props.component}
-            </main>
+            <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                <AppHeader></AppHeader>
+                <main style={{
+                    flexGrow: 1,
+                    minWidth: 0,
+                    padding: "1rem"
+                }}>
+                    {props.component}
+                </main>
+            </div>
+            
         </div>
     );
 }
