@@ -26,7 +26,6 @@ export default function AppHeader() {
                 </nav>
                 <Button className="bg-red-500 text-white" onClick={handleSignOut}>Sign out</Button>
             </div>
-        </div>
-        
+        </div>   
     )
 }
