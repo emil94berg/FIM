@@ -18,6 +18,7 @@ type DisplayPostProps = {
 
 export function DisplayPost({ post }: DisplayPostProps) {
     const [comments, setComments] = useState<Comments[]>([]);
+    const [showCreateComment, setShowCreateComment] = useState<boolean>(false);
 
     const url = "https://localhost:7035/Comment"
 
@@ -57,7 +58,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
     }
 
     return (
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
             <div className="mx-4 my-2 mt-4 bg-blue-200 p-2 rounded-xl">
                 <div className="flex flex-row">
                     <h1 className="m-4">{post.title}</h1>
@@ -79,14 +80,22 @@ export function DisplayPost({ post }: DisplayPostProps) {
                 </div>
 
                 <div className="flex flex-row items-center justify-items-start mx-4">
-                    <CreateComment forumPost={post} handleUpdateList={handleUpdateList}>
-                        <Button className="bg-green-500 text-white">Add Comment</Button>
-                    </CreateComment>
                     <div className="flex flex-row items-center">
-                        
                         <Badge className="border rounded-xl"><ChatIcon className="h-5 w-5" /> {comments.length} {comments.length === 1 ? "Comment" : "Comments"}</Badge>
                     </div>
                 </div>
+            </div>
+
+            <div className="mx-4 mt-3">
+                <CreateComment
+                    forumPost={post}
+                    handleUpdateList={handleUpdateList}
+                    isOpen={showCreateComment}
+                    onToggleOpen={() => setShowCreateComment(prev => !prev)}
+                    onCancel={() => setShowCreateComment(false)}
+                >
+                    <Button className="bg-green-500 text-white">Add Comment</Button>
+                </CreateComment>
             </div>
 
             <hr className="my-5 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-25 dark:via-blue-400" />

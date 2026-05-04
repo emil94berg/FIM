@@ -40,6 +40,7 @@ interface Props {
 export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes, onUpdateDeleteComment }: DisplayCommentsProps) {
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
+    const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
 
 
 
@@ -208,9 +209,12 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
 
                             <span className="font-medium text-slate-700">{comment.upVotes}</span>
 
-                            <CreateComment forumPost={forumPost} commentId={Number(comment.id)} handleUpdateList={onAddComment}>
-                                <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Reply</Button>
-                            </CreateComment>
+                            <Button
+                                className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900"
+                                onClick={() => setActiveReplyId(prev => prev === Number(comment.id) ? null : Number(comment.id))}
+                            >
+                                Reply
+                            </Button>
                             {currentUserId === comment.userId ? (<ConfirmDialog
                                 title="Delete comment!"
                                 description={`Are you sure you want to delete this comment, the action cannot be undone`}
@@ -224,6 +228,16 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                                 :
                                 (null)}
                             
+                        </div>
+
+                        <div className="mt-2">
+                            <CreateComment
+                                forumPost={forumPost}
+                                commentId={Number(comment.id)}
+                                handleUpdateList={onAddComment}
+                                isOpen={activeReplyId === Number(comment.id)}
+                                onCancel={() => setActiveReplyId(null)}
+                            />
                         </div>
                     </div>
                 </div>
