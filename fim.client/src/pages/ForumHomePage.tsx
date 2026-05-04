@@ -27,6 +27,9 @@ export default function ForumHomePage() {
         pageSize: 10
     });
 
+    const startEntry = (Number(pagedForumPost.pageNumber) - 1) * Number(pagedForumPost.pageSize) + 1;
+    const endEntry = Math.min(Number(pagedForumPost.pageNumber) * Number(pagedForumPost.pageSize), Number(pagedForumPost.totalCount));
+
     useEffect(() => {
         const loadTagsName = async () => {
             try {
@@ -128,13 +131,14 @@ export default function ForumHomePage() {
 
                         {currentTag !== null && <div className="flex justify-between items-center mt-4">
                             <div className="text-sm text-muted-foreground">
-                                Showing <strong>start entry</strong> to <strong>end entry</strong> of <strong>{pagedForumPost.totalCount}</strong> entries
+                                Showing <strong>{startEntry}</strong> to <strong>{endEntry}</strong> of <strong>{pagedForumPost.totalCount}</strong> entries
                             </div>
 
                             <div className="flex items-center space-x-2">
                                 <Button
                                     className="bg-blue-500 text-white"
                                     variant="outline"
+                                    disabled={Number(pagedForumPost.pageNumber) === 1}
                                     onClick={() => 
                                         loadPage(Number(pagedForumPost.pageNumber) - 1)
                                     }
@@ -149,6 +153,7 @@ export default function ForumHomePage() {
                                 <Button
                                     className="bg-blue-500 text-white"
                                     variant="outline"
+                                    disabled={endEntry >= Number(pagedForumPost.totalCount)}
                                     onClick={() =>
                                         loadPage(Number(pagedForumPost.pageNumber) + 1)
                                         }>

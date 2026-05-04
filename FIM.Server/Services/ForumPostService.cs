@@ -93,14 +93,8 @@ namespace FIM.Server.Services
         {
             var skip = (pageNumber -1) * pageSize;
 
-            //var pageList = await _dbContext.ForumPosts
-            //    .Where(fp => fp.Tag == tag)
-            //    .OrderByDescending(fp => fp.CreatedAt)
-            //    .Skip(skip)
-            //    .Take(pageSize)
-            //    .ToListAsync();
-
             var countList = await _dbContext.ForumPosts
+                .AsNoTracking()
                 .Where(fp => fp.Tag == tag)
                 .OrderByDescending(fp => fp.CreatedAt)
                 .ToListAsync();
@@ -110,7 +104,6 @@ namespace FIM.Server.Services
             var pageList = countList.Skip(skip)
                 .Take(pageSize)
                 .ToList();
-
 
             var result = new PagedForumPostResult
             {
