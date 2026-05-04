@@ -13,6 +13,7 @@ import ProfilePage from './pages/ProfilePage';
 import { Toaster } from "@/components/ui/sonner"
 import ForumHomePage from './pages/ForumHomePage'
 import ForumPost from '@/pages/ForumPost'
+import CreateForumPostPage from '@/pages/CreateForumPostPage'
 
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
                     <Route path="/activePrints" element={<SideBarLayout component={<ActivePrints />} />} />
                     <Route path="/profile" element={<SideBarLayout component={<ProfilePage />} />} />
                     <Route path="/forum" element={<SideBarLayout component={<ForumHomePage />} />} />
+                    <Route path="/forum/create" element={<SideBarLayout component={<CreateForumPostPage />} />} />
                     <Route path="/forum/post/:id" element={<SideBarLayout component={< ForumPost />} />} />
                 </Route>
             </Routes>

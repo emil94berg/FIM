@@ -8,13 +8,11 @@ type ForumPost = components["schemas"]["ForumPostDto"]
 
 
 type ForumHomeBodyProps = {
-    allPosts: ForumPost[]
-    onShowCreate: () => void
     latestPosts: ForumPost[]
 }
 
 
-export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHomeBodyProps) {
+export function ForumHomeBody({ latestPosts }: ForumHomeBodyProps) {
 
     const colorArray = ["bg-green-200", "bg-orange-200", "bg-blue-200", "bg-yellow-200", "bg-purple-200", "bg-pink-200", "bg-red-200"];
 
@@ -49,7 +47,9 @@ export function ForumHomeBody({ allPosts, onShowCreate, latestPosts }: ForumHome
 
     return (
         <div className="mx-auto max-w-4xl">
-            <Button className="bg-green-500 text-white mt-2" onClick={onShowCreate}>Create a new post</Button>
+            <Button asChild className="mt-2 bg-green-500 text-white">
+                <Link to="/forum/create">Create a new post</Link>
+            </Button>
             <div className="">
                 {sortPostsByTag(latestPosts).map((p, index) => (
                     <div key={p.id}>

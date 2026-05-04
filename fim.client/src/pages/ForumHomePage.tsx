@@ -3,7 +3,6 @@ import { authFetch } from "@/auth/authFetch"
 import { useState, useEffect } from "react"
 import { ForumHeader } from "@/components/forum/ForumHeader"
 import { ForumHomeBody } from "@/components/forum/ForumHomeBody"
-import { CreateForumPost } from "@/components/forum/CreateForumPost"
 
 
 type ForumPost = components["schemas"]["ForumPostDto"]
@@ -14,7 +13,6 @@ export default function ForumHomePage() {
 
     const [allPosts, setAllPosts] = useState<ForumPost[]>([]);
     const [allTags, setAllTags] = useState<ForumTag[]>([]);
-    const [showCreate, setShowCreate] = useState<boolean>(false);
     const [latestPosts, setLatestPosts] = useState<ForumPost[]>([]);
 
     useEffect(() => {
@@ -57,23 +55,13 @@ export default function ForumHomePage() {
         loadLatestPosts();
     }, [])
 
-    const showCreateForumPost = () => {
-        setShowCreate(prev => !prev);
-    }
-
-    const updateAllPosts = (forumPost: ForumPost) => {
-        setAllPosts(prev => [...prev, forumPost]);
-    }
-
-
-
     return (
         <div className="flex flex-col items-center">
             <ForumHeader tags={allTags}></ForumHeader>
             <div className="mx-auto my-6 w-full max-w-7xl rounded-xl border bg-slate-100 p-4 shadow-sm md:p-6">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <section className="lg:col-span-8">
-                        <ForumHomeBody latestPosts={latestPosts} allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
+                        <ForumHomeBody latestPosts={latestPosts}></ForumHomeBody>
                     </section>
 
                     <aside className="lg:col-span-4">
@@ -120,7 +108,6 @@ export default function ForumHomePage() {
                         </div>
                     </aside>
                 </div>
-                    {showCreate ? (<CreateForumPost updateForumPostList={updateAllPosts} tags={allTags} onCancel={showCreateForumPost}></CreateForumPost>) : (null)}
             </div>
         </div>
     )
