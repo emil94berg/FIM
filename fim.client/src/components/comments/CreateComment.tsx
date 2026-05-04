@@ -22,12 +22,13 @@ type CreateCommentProps = {
     isOpen?: boolean;
     onToggleOpen?: () => void;
     onCancel?: () => void;
+    initialContent?: string;
 }
 
 
 
-export function CreateComment({ forumPost, commentId, children, handleUpdateList, isOpen, onToggleOpen, onCancel }: CreateCommentProps){
-    const [content, setContent] = useState<string>("");
+export function CreateComment({ forumPost, commentId, children, handleUpdateList, isOpen, onToggleOpen, onCancel, initialContent }: CreateCommentProps){
+    const [content, setContent] = useState<string>(initialContent ?? "");
     const [username, setUsername] = useState<string>("");
     const [localOpen, setLocalOpen] = useState<boolean>(false);
 
@@ -101,8 +102,6 @@ export function CreateComment({ forumPost, commentId, children, handleUpdateList
         loadUserName();
     }, []);
 
-
-
     return (
         <div className="w-full">
             {children ? (
@@ -120,6 +119,7 @@ export function CreateComment({ forumPost, commentId, children, handleUpdateList
                         <div>
                             <Label className="mb-2 block">Content:</Label>
                             <RichTextEditor
+                                initialContent={initialContent}
                                 onChange={(value) => setContent(value)}
                             ></RichTextEditor>
                         </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react" 
+import { useEffect, useState, useRef } from "react" 
 import { CreateComment } from "@/components/comments/CreateComment";
 import type { components } from "@/types/schema"
 import { DisplayComments } from "../comments/DisplayComments";
@@ -19,6 +19,8 @@ type DisplayPostProps = {
 export function DisplayPost({ post }: DisplayPostProps) {
     const [comments, setComments] = useState<Comments[]>([]);
     const [showCreateComment, setShowCreateComment] = useState<boolean>(false);
+    const [commentQuote, setCommentQuote] = useState<string>("");
+    const postBodyRef = useRef<HTMLDivElement>(null);
 
     const url = "https://localhost:7035/Comment"
 
@@ -75,7 +77,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
                 </div>
                 <Badge className="m-2 border rounded-xl">{post.tag}</Badge>
                 
-                <div className="bg-white m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }}>
+                <div className="bg-white m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }} ref={postBodyRef}>
                     <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html: cleanHtml }}></div>
                 </div>
 
@@ -91,8 +93,26 @@ export function DisplayPost({ post }: DisplayPostProps) {
                     forumPost={post}
                     handleUpdateList={handleUpdateList}
                     isOpen={showCreateComment}
-                    onToggleOpen={() => setShowCreateComment(prev => !prev)}
+                    onToggleOpen={() => {
+                        if (showCreateComment) {
+                            setShowCreateComment(false);
+                            setCommentQuote("");
+                            return;
+                        }
+                        const selection = window.getSelection();
+                        const selectedText = selection?.toString().trim() ?? "";
+                        let quoteHtml = "";
+                        if (selectedText && postBodyRef.current && selection) {
+                            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+                            if (range && postBodyRef.current.contains(range.commonAncestorContainer)) {
+                                quoteHtml = `<blockquote><p>${DOMPurify.sanitize(selectedText)}</p></blockquote><p></p>`;
+                            }
+                        }
+                        setCommentQuote(quoteHtml);
+                        setShowCreateComment(true);
+                    }}
                     onCancel={() => setShowCreateComment(false)}
+                    initialContent={commentQuote}
                 >
                     <Button className="bg-green-500 text-white">Add Comment</Button>
                 </CreateComment>

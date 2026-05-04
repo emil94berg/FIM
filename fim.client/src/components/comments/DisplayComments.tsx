@@ -5,7 +5,7 @@ import { CreateComment } from "./CreateComment"
 import { FatArrowUpIcon } from "@/components/icons/mynaui-fat-arrow-up"
 import { FatArrowUpSolidIcon } from "@/components/icons/mynaui-fat-arrow-up-solid"
 import { authFetch } from "../../auth/authFetch"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { supabase } from "@/auth/supabaseClient"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
@@ -41,8 +41,16 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
     const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
+    const [activeReplyQuote, setActiveReplyQuote] = useState<string>("");
 
-
+    // const handleReplyClick = (commentId: number) => {
+    //     if (activeReplyId === commentId) {
+    //         setActiveReplyId(null);
+    //         setActiveReplyQuote("");
+    //         return;
+    //     }
+    //     setActiveReplyId(commentId);
+    // }
 
     const cleanContent = (content: string) => {
         const cleanHtml = DOMPurify.sanitize(content);
@@ -175,10 +183,27 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
             }
         };
         loadUser();
-    }, [])
+    }, []);
 
     function CommentItem({ comment, depth = 0 }: Props) {
         const avatarClass = depth === 0 ? "h-9 w-9" : "h-8 w-8";
+        const contentRef = useRef<HTMLDivElement>(null);
+
+        const handleReply = () => {
+            const selection = window.getSelection();
+            const selectedText = selection?.toString().trim() ?? "";
+
+            let quoteHtml = "";
+            if (selectedText && contentRef.current && selection) {
+                const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+                if (range && contentRef.current.contains(range.commonAncestorContainer)) {
+                    quoteHtml = `<blockquote>${selectedText}</blockquote><br/>`;
+                }
+            }
+
+            setActiveReplyQuote(quoteHtml);
+            setActiveReplyId(Number(comment.id));
+        }
 
         return (
             <div className="mt-3 ">
@@ -198,7 +223,9 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                             })}</p>
                         </div>
 
-                        <div className="forum-rich-text mt-1 break-words text-sm leading-6 text-slate-800" dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }}></div>
+                        <div ref={contentRef} 
+                        className="forum-rich-text mt-1 break-words text-sm leading-6 text-slate-800" 
+                        dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }} />
 
                         <div className="mt-2 flex items-center gap-3 text-sm text-slate-500">
                             {upVoted(comment) ? (
@@ -211,7 +238,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
 
                             <Button
                                 className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900"
-                                onClick={() => setActiveReplyId(prev => prev === Number(comment.id) ? null : Number(comment.id))}
+                                onClick={handleReply}
                             >
                                 Reply
                             </Button>
@@ -237,6 +264,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                                 handleUpdateList={onAddComment}
                                 isOpen={activeReplyId === Number(comment.id)}
                                 onCancel={() => setActiveReplyId(null)}
+                                initialContent={activeReplyId === Number(comment.id) ? activeReplyQuote : ""}
                             />
                         </div>
                     </div>

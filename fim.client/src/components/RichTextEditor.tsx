@@ -1,18 +1,19 @@
 import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 type Props = {
     onChange: (html: string) => void
     placeholder?: string
+    initialContent?: string
 }
 
-export function RichTextEditor({ onChange, placeholder }: Props) {
+export function RichTextEditor({ onChange, placeholder, initialContent }: Props) {
     const [, setUpdateCount] = useState(0);
 
     const editor = useEditor({
         extensions: [StarterKit],
-        content: "",
+        content: initialContent ?? "",
         editorProps: {
             attributes: {
                 class: "forum-rich-text min-h-[120px] p-3 focus:outline-none",
@@ -21,6 +22,14 @@ export function RichTextEditor({ onChange, placeholder }: Props) {
         onUpdate: ({ editor }) => onChange(editor.getHTML()),
         onTransaction: () => setUpdateCount(prev => prev + 1),
     })
+
+    useEffect(() => {
+        if (!editor) return;
+        const next = initialContent ?? "";
+        if (editor.getHTML() !== next) {
+            editor.commands.setContent(next);
+        }
+    }, [editor, initialContent]);
 
     return (
         <div className="rounded border bg-white">
