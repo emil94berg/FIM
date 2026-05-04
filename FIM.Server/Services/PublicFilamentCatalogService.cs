@@ -81,7 +81,7 @@ namespace FIM.Server.Services
                     Items = new List<FilamentRecordDto>()
                 };
             }
-
+            
             // Fetch the full records for those Ids
             var finalResult = await _dbContext.PublicFilamentCatalogs
                 .AsNoTracking()

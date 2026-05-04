@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
-import { useState } from "react";
 import { HomeIcon } from "@/components/icons/mynaui-home"
 import { AddQueueIcon } from "@/components/icons/mynaui-add-queue"
 import { ActivitySquareIcon } from "@/components/icons/mynaui-activity-square"
@@ -47,11 +46,10 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
 ]
 
 
-export default function SideBar() {
-    const [open, setOpen] = useState(true);
+export default function SideBar({open, setOpen} : {open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>}) {
     return (
         <div className="flex">
-            <div className={`flex flex-col bg-gray-100 h-screen transition-all duration-300 ${open ? "w-48" : "w-12"}`}>
+            <div className={`fixed top-16 left-0 flex flex-col bg-gray-100 h-[calc(100vh-4rem)] transition-all duration-300 z-40 ${open ? "w-48" : "w-12"}`}>
                 <Button className="m-2 p-2 bg-blue-500 text-white" onClick={() => setOpen(!open)}>☰</Button>
                 <nav className="flex flex-col mt-4 gap-2">
                     {components.map(c => (
