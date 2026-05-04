@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react" 
+import { useEffect, useState, useRef } from "react" 
 import { CreateComment } from "@/components/comments/CreateComment";
 import type { components } from "@/types/schema"
 import { DisplayComments } from "../comments/DisplayComments";
@@ -18,6 +18,9 @@ type DisplayPostProps = {
 
 export function DisplayPost({ post }: DisplayPostProps) {
     const [comments, setComments] = useState<Comments[]>([]);
+    const [showCreateComment, setShowCreateComment] = useState<boolean>(false);
+    const [commentQuote, setCommentQuote] = useState<string>("");
+    const postBodyRef = useRef<HTMLDivElement>(null);
 
     const url = "https://localhost:7035/Comment"
 
@@ -57,7 +60,7 @@ export function DisplayPost({ post }: DisplayPostProps) {
     }
 
     return (
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
             <div className="mx-4 my-2 mt-4 bg-blue-200 p-2 rounded-xl">
                 <div className="flex flex-row">
                     <h1 className="m-4">{post.title}</h1>
@@ -74,19 +77,45 @@ export function DisplayPost({ post }: DisplayPostProps) {
                 </div>
                 <Badge className="m-2 border rounded-xl">{post.tag}</Badge>
                 
-                <div className="bg-white m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }}>
+                <div className="bg-white m-2 p-2 border rounded-xl" style={{ display: "flex", flexDirection: "row" }} ref={postBodyRef}>
                     <div className="forum-rich-text" dangerouslySetInnerHTML={{ __html: cleanHtml }}></div>
                 </div>
 
                 <div className="flex flex-row items-center justify-items-start mx-4">
-                    <CreateComment forumPost={post} handleUpdateList={handleUpdateList}>
-                        <Button className="bg-green-500 text-white">Add Comment</Button>
-                    </CreateComment>
                     <div className="flex flex-row items-center">
-                        
                         <Badge className="border rounded-xl"><ChatIcon className="h-5 w-5" /> {comments.length} {comments.length === 1 ? "Comment" : "Comments"}</Badge>
                     </div>
                 </div>
+            </div>
+
+            <div className="mx-4 mt-3">
+                <CreateComment
+                    forumPost={post}
+                    handleUpdateList={handleUpdateList}
+                    isOpen={showCreateComment}
+                    onToggleOpen={() => {
+                        if (showCreateComment) {
+                            setShowCreateComment(false);
+                            setCommentQuote("");
+                            return;
+                        }
+                        const selection = window.getSelection();
+                        const selectedText = selection?.toString().trim() ?? "";
+                        let quoteHtml = "";
+                        if (selectedText && postBodyRef.current && selection) {
+                            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+                            if (range && postBodyRef.current.contains(range.commonAncestorContainer)) {
+                                quoteHtml = `<blockquote><p>${DOMPurify.sanitize(selectedText)}</p></blockquote><p></p>`;
+                            }
+                        }
+                        setCommentQuote(quoteHtml);
+                        setShowCreateComment(true);
+                    }}
+                    onCancel={() => setShowCreateComment(false)}
+                    initialContent={commentQuote}
+                >
+                    <Button className="bg-green-500 text-white">Add Comment</Button>
+                </CreateComment>
             </div>
 
             <hr className="my-5 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-25 dark:via-blue-400" />

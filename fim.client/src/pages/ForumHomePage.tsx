@@ -18,7 +18,6 @@ export default function ForumHomePage() {
     const [currentTag, setCurrentTag] = useState<ForumTag | null>(null);
     const [allPosts, setAllPosts] = useState<ForumPost[]>([]);
     const [allTags, setAllTags] = useState<ForumTag[]>([]);
-    const [showCreate, setShowCreate] = useState<boolean>(false);
     const [latestPosts, setLatestPosts] = useState<ForumPost[]>([]);
     const [pagedForumPost, setPagedForumPost] = useState<PagedForumPost>({
         items: [],
@@ -208,7 +207,6 @@ export default function ForumHomePage() {
                         </div>
                     </aside>
                 </div>
-                    {showCreate ? (<CreateForumPost updateForumPostList={updateAllPosts} tags={allTags} onCancel={showCreateForumPost}></CreateForumPost>) : (null)}
             </div>
         </div>
     )

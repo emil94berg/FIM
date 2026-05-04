@@ -3,14 +3,6 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from "@/components/ui/dialog"
 import { authFetch } from "@/auth/authFetch"
 import { supabase } from "@/auth/supabaseClient"
 import type { components } from "../../types/schema"
@@ -25,11 +17,11 @@ type ForumPost = components["schemas"]["ForumPostDto"];
 type createForumPostProps = {
     tags: ForumTag[];
     onCancel: () => void;
-    updateForumPostList: (forumPost: ForumPost) => void;
+    onSubmitSuccess?: (forumPost: ForumPost) => void;
 }
 
 
-export function CreateForumPost({ tags, onCancel, updateForumPostList }: createForumPostProps) {
+export function CreateForumPost({ tags, onCancel, onSubmitSuccess }: createForumPostProps) {
     
     const [formData, setFormData] = useState<CreateForumPost>({
         title: "",
@@ -48,8 +40,7 @@ export function CreateForumPost({ tags, onCancel, updateForumPostList }: createF
                 method: "POST",
                 body: JSON.stringify(forumPost)
             });
-            updateForumPostList(data);
-            onCancel();
+            onSubmitSuccess?.(data);
         }
         catch (error) {
             console.log("Failed to fetch from forum post..." + error);
@@ -85,46 +76,50 @@ export function CreateForumPost({ tags, onCancel, updateForumPostList }: createF
     }, []);
 
     return (
-        <div>
-            <Dialog open onOpenChange={(open: boolean) => {
-                if (!open) onCancel();
-            }}>
-                <DialogContent className="bg-white">
-                    <DialogHeader>
-                        <DialogTitle>Forum post</DialogTitle>
-                        <DialogDescription>Create a new forum post with the form below</DialogDescription>
-                    </DialogHeader>
+        <div className="rounded-xl border bg-white p-6 shadow-sm">
+            <div className="mb-6">
+                <h1 className="text-2xl font-semibold text-slate-900">Create forum post</h1>
+                <p className="mt-1 text-sm text-slate-500">Write a new post and publish it to the forum.</p>
+            </div>
 
-                    <form onSubmit={handleSubmit}>
-                        <Label>Title:</Label>
-                        <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} required={true}></Input>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+                <div className="space-y-2">
+                    <Label>Title</Label>
+                    <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} required={true}></Input>
+                </div>
 
-                        <Label>Content:</Label>
-                        <RichTextEditor onChange={(value) => setFormData(prev => ({ ...prev, text: value }))} ></RichTextEditor>
+                <div className="space-y-2">
+                    <Label>Content</Label>
+                    <RichTextEditor onChange={(value) => setFormData(prev => ({ ...prev, text: value }))} ></RichTextEditor>
+                </div>
 
-                        <Label>Subject:</Label>
-                        <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))} required={true}></Input>
-                        <Label>Tag:</Label>
-                        <Select value={formData.tag} onValueChange={(value) => setFormData(prev => ({ ...prev, tag: value as ForumTag }))}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select a tag" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup className="bg-white">
-                                    <SelectLabel>Tags</SelectLabel>
-                                    {tags.map(p => (
-                                        <SelectItem key={p} value={p}>{p}</SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                        <DialogFooter>
-                            <Button className="bg-blue-500" type="submit">Save</Button>
-                            <Button className="bg-red-500" type="button" onClick={onCancel}>Cancel</Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+                <div className="space-y-2">
+                    <Label>Subject</Label>
+                    <Input type="text" onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))} required={true}></Input>
+                </div>
+
+                <div className="space-y-2">
+                    <Label>Tag</Label>
+                    <Select value={formData.tag} onValueChange={(value) => setFormData(prev => ({ ...prev, tag: value as ForumTag }))}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a tag" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup className="bg-white">
+                                <SelectLabel>Tags</SelectLabel>
+                                {tags.map(p => (
+                                    <SelectItem key={p} value={p}>{p}</SelectItem>
+                                ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                    <Button className="bg-blue-500" type="submit">Save</Button>
+                    <Button className="bg-red-500" type="button" onClick={onCancel}>Cancel</Button>
+                </div>
+            </form>
         </div>
     )
 }
