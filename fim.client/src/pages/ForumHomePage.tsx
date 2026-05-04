@@ -28,6 +28,7 @@ export default function ForumHomePage() {
     const startEntry = (Number(pagedForumPost.pageNumber) - 1) * Number(pagedForumPost.pageSize) + 1;
     const endEntry = Math.min(Number(pagedForumPost.pageNumber) * Number(pagedForumPost.pageSize), Number(pagedForumPost.totalCount));
 
+
     useEffect(() => {
         const loadTagsName = async () => {
             try {
