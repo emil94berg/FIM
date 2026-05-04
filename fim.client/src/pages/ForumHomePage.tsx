@@ -3,7 +3,6 @@ import { authFetch } from "@/auth/authFetch"
 import { useState, useEffect } from "react"
 import { ForumHeader } from "@/components/forum/ForumHeader"
 import { ForumHomeBody } from "@/components/forum/ForumHomeBody"
-import { CreateForumPost } from "@/components/forum/CreateForumPost"
 import { Button } from "@/components/ui/button"
 
 
@@ -28,6 +27,7 @@ export default function ForumHomePage() {
 
     const startEntry = (Number(pagedForumPost.pageNumber) - 1) * Number(pagedForumPost.pageSize) + 1;
     const endEntry = Math.min(Number(pagedForumPost.pageNumber) * Number(pagedForumPost.pageSize), Number(pagedForumPost.totalCount));
+
 
     useEffect(() => {
         const loadTagsName = async () => {
@@ -69,13 +69,9 @@ export default function ForumHomePage() {
         loadLatestPosts();
     }, [])
 
-    const showCreateForumPost = () => {
-        setShowCreate(prev => !prev);
-    }
+    
 
-    const updateAllPosts = (forumPost: ForumPost) => {
-        setAllPosts(prev => [...prev, forumPost]);
-    }
+    
 
     //const displayPostsOnTag = async (tag: ForumTag) => {
     //    try {
@@ -126,7 +122,7 @@ export default function ForumHomePage() {
             <div className="mx-auto my-6 w-full max-w-7xl rounded-xl border bg-slate-100 p-4 shadow-sm md:p-6">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <section className="lg:col-span-8">
-                        <ForumHomeBody latestPosts={latestPosts} allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
+                        <ForumHomeBody latestPosts={latestPosts}></ForumHomeBody>
 
                         {currentTag !== null && <div className="flex justify-between items-center mt-4">
                             <div className="text-sm text-muted-foreground">
