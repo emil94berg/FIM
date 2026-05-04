@@ -80,5 +80,14 @@ namespace FIM.Server.Services
 
             return forumPostReturnList;
         }
+        public async Task<List<ForumPostDto>> GetPostsOnTagsAsync(ForumPostTags tag)
+        {
+            var forumPosts = await _dbContext.ForumPosts.Where(fp => fp.Tag == tag).ToListAsync();
+            if(forumPosts != null && forumPosts.Count != 0)
+            {
+                return forumPosts.ToListForumPostDto();
+            }
+            return new List<ForumPostDto>();
+        }
     }
 }

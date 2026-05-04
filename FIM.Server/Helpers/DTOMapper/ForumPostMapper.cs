@@ -10,5 +10,15 @@ namespace FIM.Server.Helpers.DTOMapper
         {
             return new ForumPostDto(post.Id, post.Title, post.UserId, post.Text, post.Subject, post.Tag, post.IsDeleted, post.CreatedAt, post.Username);
         }
+        public static List<ForumPostDto> ToListForumPostDto(this List<ForumPost> posts)
+        {
+            List<ForumPostDto> dtoList = new();
+            foreach(var p in posts)
+            {
+                dtoList.Add(new ForumPostDto(p.Id, p.Title, p.UserId, p.Text, p.Subject, p.Tag, p.IsDeleted, p.CreatedAt, p.Username));
+            }
+            return dtoList;
+        }
+
     }
 }

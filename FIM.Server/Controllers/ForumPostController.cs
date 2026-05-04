@@ -59,6 +59,13 @@ namespace FIM.Server.Controllers
             if (result != null) return Ok(result);
             else return NotFound(); 
         }
+        [HttpGet("GetPostsOnTag/{tag}")]
+        public async Task<IActionResult> GetPostsOnTagsAsync(ForumPostTags tag)
+        {
+            var result = await _forumPostService.GetPostsOnTagsAsync(tag);
+            if (result != null) return Ok(result);
+            else return NotFound();
+        }
     }
 }
 

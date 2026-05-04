@@ -10,6 +10,7 @@ type ForumPost = components["schemas"]["ForumPostDto"]
 type ForumTag = components["schemas"]["ForumPostTags"]
 
 export default function ForumHomePage() {
+    const apiUrl = import.meta.env.VITE_API_BASE_URL;
     const url = "https://localhost:7035/ForumPost";
 
     const [allPosts, setAllPosts] = useState<ForumPost[]>([]);
@@ -65,11 +66,21 @@ export default function ForumHomePage() {
         setAllPosts(prev => [...prev, forumPost]);
     }
 
+    const displayPostsOnTag = async (tag: ForumTag) => {
+        try {
+            const data: ForumPost[] = await authFetch(`${apiUrl}/ForumPost/GetPostsOnTag/${tag}`);
+            setLatestPosts(data);
+        }
+        catch (error) {
+            console.log("Failed to fetch from forumpost..." + error);
+        }
+    }
+
 
 
     return (
         <div className="flex flex-col items-center">
-            <ForumHeader tags={allTags}></ForumHeader>
+            <ForumHeader onDisplayPostOnForumTag={displayPostsOnTag} tags={allTags}></ForumHeader>
             <div className="mx-auto my-6 w-full max-w-7xl rounded-xl border bg-slate-100 p-4 shadow-sm md:p-6">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <section className="lg:col-span-8">

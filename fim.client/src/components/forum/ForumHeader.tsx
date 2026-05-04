@@ -1,13 +1,16 @@
+import { Button } from "@/components/ui/button"
+import type { components } from "@/types/schema" 
 
-
+type forumTag = components["schemas"]["ForumPostTags"];
 
 type ForumHeaderProps = {
-    tags: string[];
+    tags: forumTag[],
+    onDisplayPostOnForumTag: (tag: forumTag) => void
 }
 
 
 
-export function ForumHeader({ tags } : ForumHeaderProps) {
+export function ForumHeader({ tags, onDisplayPostOnForumTag } : ForumHeaderProps) {
     
     
 
@@ -17,7 +20,7 @@ export function ForumHeader({ tags } : ForumHeaderProps) {
                 <h1>Welcome to the Forum page</h1>
                 <ul style={{ display: "flex", justifyContent: "center", gap: "16px", listStyle: "none", padding: 0 }}>
                     {tags.map(tag =>
-                        <li key={tag}>{tag}</li>
+                        <li key={tag}><Button onClick={() => onDisplayPostOnForumTag(tag)} className="bg-transparent">{tag}</Button></li>
                     )}
                 </ul>
             </div>
