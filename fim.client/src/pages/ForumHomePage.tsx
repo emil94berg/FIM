@@ -4,19 +4,28 @@ import { useState, useEffect } from "react"
 import { ForumHeader } from "@/components/forum/ForumHeader"
 import { ForumHomeBody } from "@/components/forum/ForumHomeBody"
 import { CreateForumPost } from "@/components/forum/CreateForumPost"
+import { Button } from "@/components/ui/button"
 
 
 type ForumPost = components["schemas"]["ForumPostDto"]
 type ForumTag = components["schemas"]["ForumPostTags"]
+type PagedForumPost = components["schemas"]["PagedForumPostResult"]
 
 export default function ForumHomePage() {
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
     const url = "https://localhost:7035/ForumPost";
 
+    const [currentTag, setCurrentTag] = useState<ForumTag | null>(null);
     const [allPosts, setAllPosts] = useState<ForumPost[]>([]);
     const [allTags, setAllTags] = useState<ForumTag[]>([]);
     const [showCreate, setShowCreate] = useState<boolean>(false);
     const [latestPosts, setLatestPosts] = useState<ForumPost[]>([]);
+    const [pagedForumPost, setPagedForumPost] = useState<PagedForumPost>({
+        items: [],
+        totalCount: 0,
+        pageNumber: 1,
+        pageSize: 10
+    });
 
     useEffect(() => {
         const loadTagsName = async () => {
@@ -66,25 +75,88 @@ export default function ForumHomePage() {
         setAllPosts(prev => [...prev, forumPost]);
     }
 
-    const displayPostsOnTag = async (tag: ForumTag) => {
+    //const displayPostsOnTag = async (tag: ForumTag) => {
+    //    try {
+    //        const data: ForumPost[] = await authFetch(`${apiUrl}/ForumPost/GetPostsOnTag?pageNumber=${pagedForumPost.pageNumber}
+    //        &pageSize=${pagedForumPost.pageSize}&tag=${tag}`);
+    //        setLatestPosts(data);
+    //    }
+    //    catch (error) {
+    //        console.log("Failed to fetch from forumpost..." + error);
+    //    }
+    //}
+
+    const displayPagedPostsOnTag = async (tag: ForumTag) => {     
+        setCurrentTag(tag);
         try {
-            const data: ForumPost[] = await authFetch(`${apiUrl}/ForumPost/GetPostsOnTag/${tag}`);
-            setLatestPosts(data);
+            const data: PagedForumPost = await authFetch(`${apiUrl}/ForumPost/GetPagedPostOnTag?pageNumber=${pagedForumPost.pageNumber}&pageSize=${pagedForumPost.pageSize}&tag=${tag}`);
+            setPagedForumPost(data);
+            if (data.items !== undefined) {
+                updatePagedPosts(data.items);
+            }
         }
         catch (error) {
             console.log("Failed to fetch from forumpost..." + error);
         }
     }
 
+    const updatePagedPosts = (forumPosts: ForumPost[]) => {
+        setLatestPosts(forumPosts);
+    }
+
+    const loadPage = async (page: number) => {
+        if (!currentTag) return;
+
+        const data: PagedForumPost = await authFetch(`${apiUrl}/ForumPost/GetPagedPostOnTag?pageNumber=${page}&pageSize=${pagedForumPost.pageSize}&tag=${currentTag}`);
+        setPagedForumPost(data);
+        if (data.items !== undefined) {
+            updatePagedPosts(data.items);
+        }
+    }
+
+
+
 
 
     return (
         <div className="flex flex-col items-center">
-            <ForumHeader onDisplayPostOnForumTag={displayPostsOnTag} tags={allTags}></ForumHeader>
+            <ForumHeader onDisplayPostOnForumTag={displayPagedPostsOnTag} tags={allTags}></ForumHeader>
             <div className="mx-auto my-6 w-full max-w-7xl rounded-xl border bg-slate-100 p-4 shadow-sm md:p-6">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <section className="lg:col-span-8">
                         <ForumHomeBody latestPosts={latestPosts} allPosts={allPosts} onShowCreate={showCreateForumPost}></ForumHomeBody>
+
+                        {currentTag !== null && <div className="flex justify-between items-center mt-4">
+                            <div className="text-sm text-muted-foreground">
+                                Showing <strong>start entry</strong> to <strong>end entry</strong> of <strong>{pagedForumPost.totalCount}</strong> entries
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                                <Button
+                                    className="bg-blue-500 text-white"
+                                    variant="outline"
+                                    onClick={() => 
+                                        loadPage(Number(pagedForumPost.pageNumber) - 1)
+                                    }
+                                    >
+                                    Previous
+                                </Button>
+
+                                <div className="text-sm">
+                                    Page {pagedForumPost.pageNumber} of {Math.ceil(Number(pagedForumPost.totalCount) / Number(pagedForumPost.pageSize)) || 1}
+                                </div>
+
+                                <Button
+                                    className="bg-blue-500 text-white"
+                                    variant="outline"
+                                    onClick={() =>
+                                        loadPage(Number(pagedForumPost.pageNumber) + 1)
+                                        }>
+                                    Next
+                                </Button>
+                            </div>
+                        </div>}
+
                     </section>
 
                     <aside className="lg:col-span-4">

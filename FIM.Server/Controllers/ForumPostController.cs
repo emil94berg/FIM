@@ -66,6 +66,14 @@ namespace FIM.Server.Controllers
             if (result != null) return Ok(result);
             else return NotFound();
         }
+        [HttpGet("GetPagedPostOnTag")]
+        public async Task<ActionResult<PagedForumPostResult>> GetPagedPostsOnTagAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] ForumPostTags tag)
+        {
+            var result = await _forumPostService.GetPagedForumPostAsync(pageNumber, pageSize, true, tag);
+            if (result != null) return Ok(result);
+            else return NotFound();
+        }
+           
     }
 }
 

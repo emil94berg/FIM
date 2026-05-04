@@ -68,5 +68,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<UserVotes>()
             .HasIndex(x => new { x.UserId, x.CommentId, x.PostId })
             .IsUnique();
+
+        modelBuilder.Entity<ForumPost>(entity =>
+        {
+            //Index för snabbare filtrering
+            entity.HasIndex(e => e.CreatedAt)
+            .HasDatabaseName("IX_ForumPosts_CreatedAt");
+
+            //Komposit-index för effektiv sortering och pagination (ORDER BY CreatedAt, Id)
+            entity.HasIndex(e => new { e.CreatedAt, e.Id })
+            .HasDatabaseName("IX_ForumPosts_Sort_CreatedAt");
+        });
     }
 }

@@ -89,5 +89,38 @@ namespace FIM.Server.Services
             }
             return new List<ForumPostDto>();
         }
+        public async Task<PagedForumPostResult> GetPagedForumPostAsync(int pageNumber, int pageSize, bool isDescending, ForumPostTags tag)
+        {
+            var skip = (pageNumber -1) * pageSize;
+
+            //var pageList = await _dbContext.ForumPosts
+            //    .Where(fp => fp.Tag == tag)
+            //    .OrderByDescending(fp => fp.CreatedAt)
+            //    .Skip(skip)
+            //    .Take(pageSize)
+            //    .ToListAsync();
+
+            var countList = await _dbContext.ForumPosts
+                .Where(fp => fp.Tag == tag)
+                .OrderByDescending(fp => fp.CreatedAt)
+                .ToListAsync();
+
+            var totalCount = countList.Count;
+
+            var pageList = countList.Skip(skip)
+                .Take(pageSize)
+                .ToList();
+
+
+            var result = new PagedForumPostResult
+            {
+                Items = pageList.ToListForumPostDto(),
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            return result;
+        }
     }
 }
