@@ -29,11 +29,11 @@ export default function Login() {
             <form onSubmit={handleSignIn}>
                 <div>
                     <Label >Email:</Label>
-                    <Input style={{  marginTop:"4px" }} className="bg-grey-100" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                    <Input style={{  marginTop:"4px" }} type="email" value={email} onChange={e => setEmail(e.target.value)} required />
                 </div>
                 <div>
                     <Label>Password:</Label>
-                    <Input style={{ marginTop: "4px" }} className="bg-grey-100" type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                    <Input style={{ marginTop: "4px" }} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
                 </div>
                 <Button className="bg-blue-300 border mb-4" type="submit">Sign In</Button>
             </form>

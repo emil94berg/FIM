@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signUp } from "../auth/authService";
+import { useNavigate } from "react-router-dom"
+import { signUp } from "../auth/authService"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 export default function Signup() {
     const [email, setEmail] = useState("");
@@ -20,8 +23,8 @@ export default function Signup() {
     };
 
     return (
-        <div>
-            <h1>SignUp</h1>
+        <div className="bg-blue-100 flex flex-col content-center items-center">
+            <h1 className="m-10">SignUp</h1>
             {error && <p>{error}</p>}
             {success && (
                 <div>
@@ -32,14 +35,14 @@ export default function Signup() {
             {!success && (
                 <form onSubmit={handleSignUp}>
                     <div>
-                        <label>Email:</label>
-                        <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                        <Label>Email:</Label>
+                        <Input style={{ marginTop: "4px" }} type="email" value={email} onChange={e => setEmail(e.target.value)} required />
                     </div>
                     <div>
-                        <label>Password:</label>
-                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                        <Label>Password:</Label>
+                        <Input style={{ marginTop: "4px" }} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
                     </div>
-                    <button type="submit">Sign Up</button>
+                    <Button className="bg-blue-300 border mb-4" type="submit">Sign Up</Button>
                 </form>
             )}
         </div>

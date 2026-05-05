@@ -1,6 +1,7 @@
 import { FadeInSection } from "@/components/popUp/FadeInSection"
 import { Button } from "@/components/ui/button"
-import { useAuth } from '@/auth/useAuth';
+import { useAuth } from '@/auth/useAuth'
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -9,6 +10,14 @@ import { useAuth } from '@/auth/useAuth';
 
 export default function InfoPage() {
     const { user } = useAuth();
+    const navigate = useNavigate();
+
+    const handleCreateAccount = () => {
+        navigate("/signup");
+    }
+    const handleSignIn = () => {
+        navigate("/login");
+    }
 
     return (
         <div className="bg-blue-100 flex flex-col content-center items-center">
@@ -29,8 +38,8 @@ export default function InfoPage() {
             <FadeInSection>
                 {!user && 
                     <div className="flex flex-rpw">
-                        <Button className="bg-blue-400 w-100 text-white">Create account</Button>
-                        <Button className="bg-green-400 ml-2 text-white" >Sign in</Button>
+                        <Button className="bg-blue-400 w-100 text-white" onClick={handleCreateAccount}>Create account</Button>
+                        <Button className="bg-green-400 ml-2 text-white" onClick={handleSignIn}>Sign in</Button>
                     </div>
                 }
             </FadeInSection>
