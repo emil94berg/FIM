@@ -1,11 +1,14 @@
 import { FadeInSection } from "@/components/popUp/FadeInSection"
+import { Button } from "@/components/ui/button"
+import { useAuth } from '@/auth/useAuth';
+
 
 
 
 
 
 export default function InfoPage() {
-    
+    const { user } = useAuth();
 
     return (
         <div className="bg-blue-100 flex flex-col content-center items-center">
@@ -18,11 +21,19 @@ export default function InfoPage() {
 
 
                 <div style={{borderLeft: "1px solid black" } }>
-                    <p className="ml-4 mt-20">Filament was created as a project for an internship and is free for everyone to use.
+                    <p className="ml-4 mt-20">FIM was created as a project for an internship and is free for everyone to use.
                     It was made for tracking you inventory of filaments and make it easier to know what you have in stock.</p>
                 </div>
             </div>
 
+            <FadeInSection>
+                {!user && 
+                    <div className="flex flex-rpw">
+                        <Button className="bg-blue-400 w-100 text-white">Create account</Button>
+                        <Button className="bg-green-400 ml-2 text-white" >Sign in</Button>
+                    </div>
+                }
+            </FadeInSection>
 
             <FadeInSection>
                 <div className="mt-10 max-w-4xl mb-10">
@@ -39,7 +50,6 @@ export default function InfoPage() {
                     <img style={{ border: "4px solid grey", width: "100%", marginTop: "10px" }} src="/src/assets/Pictures/activeprintsexample2.png"></img>
                 </div>
             </FadeInSection>
-
         </div>
         
     )

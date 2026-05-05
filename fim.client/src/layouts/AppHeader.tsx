@@ -2,6 +2,8 @@ import { Link } from "react-router-dom"
 import { signOut } from "../auth/authService";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button"
+import { useAuth } from '@/auth/useAuth';
+
 
 
 
@@ -10,9 +12,12 @@ import { Button } from "@/components/ui/button"
 
 export default function AppHeader() {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const handleSignOut = async () => {
-        await signOut();
+        if (user) {
+            await signOut();
+        }
         navigate("/login");
     }
 
@@ -24,7 +29,13 @@ export default function AppHeader() {
                         <img className="h-20 w-20" src="\src\assets\Pictures\FimLogga.png"></img>
                     </Link>
                 </nav>
-                <Button className="bg-red-500 text-white" onClick={handleSignOut}>Sign out</Button>
+                {user &&
+                    <Button className="bg-red-500 text-white" onClick={handleSignOut}>Sign out</Button>
+            }
+            {
+                !user &&
+                <Button className="bg-blue-500 text-white" onClick={handleSignOut}>Sign in</Button>
+            }
             </div>
         
     )

@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signIn } from "../auth/authService";
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button} from "@/components/ui/button"
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -19,20 +22,20 @@ export default function Login() {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            <p>Not a signed up user? Click <a href="/signup">here</a> to sign up.</p>
+        <div className="bg-blue-100 flex flex-col content-center items-center">
+            <h1 className="m-10" >Login</h1>
+            <p className="m-4">Not a signed up user? Click <a href="/signup">here</a> to sign up.</p>
             {error && <p>{error}</p>}
             <form onSubmit={handleSignIn}>
                 <div>
-                    <label>Email:</label>
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                    <Label >Email:</Label>
+                    <Input style={{  marginTop:"4px" }} className="bg-grey-100" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
                 </div>
                 <div>
-                    <label>Password:</label>
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                    <Label>Password:</Label>
+                    <Input style={{ marginTop: "4px" }} className="bg-grey-100" type="password" value={password} onChange={e => setPassword(e.target.value)} required />
                 </div>
-                <button type="submit">Sign In</button>
+                <Button className="bg-blue-300 border mb-4" type="submit">Sign In</Button>
             </form>
         </div>
     )

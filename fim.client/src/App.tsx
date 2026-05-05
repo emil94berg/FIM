@@ -21,9 +21,10 @@ export default function App() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<SideBarLayout component={ <Home /> } />} />
+                <Route path="/" element={<SideBarLayout component={<InfoPage /> } />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/info" element={<SideBarLayout component={< InfoPage />} />} />
                 <Route element={<ProtectedRoute />}>
                 <Route path="/create-spool" element={<SpoolProvider><SideBarLayout component={<CreateSpool />} /> </SpoolProvider> } />
                     <Route path="/create-print" element={<SideBarLayout component={<CreatePrint />} />} />
@@ -33,7 +34,7 @@ export default function App() {
                     <Route path="/forum" element={<SideBarLayout component={<ForumHomePage />} />} />
                     <Route path="/forum/create" element={<SideBarLayout component={<CreateForumPostPage />} />} />
                     <Route path="/forum/post/:id" element={<SideBarLayout component={< ForumPost />} />} />
-                    <Route path="/info" element={<SideBarLayout component={< InfoPage />} />} />
+                    
                 </Route>
             </Routes>
             <Toaster richColors closeButton position="top-right" />
