@@ -145,7 +145,7 @@ export const EditPrintForm = ({ print, onSubmit, onCancel }: EditPrintFormProps)
                 )}
                 <DialogFooter>
                     <Button className="bg-blue-500 text-white" type="submit">Save</Button>
-                    <Button className="bg-red-500 text-white" type="button" onClick={onCancel} >Cancel</Button>
+                    <Button className="bg-transparent border border-gray-300 text-gray-700" type="button" onClick={onCancel}>Cancel</Button>
                 </DialogFooter>
             </form>
             </DialogContent>

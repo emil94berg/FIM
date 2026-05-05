@@ -170,7 +170,7 @@ export const EditSpoolForm = ({ spool, onSubmit, onCancel }: EditSpoolFormProps)
                     {/* Actions */}
                     <DialogFooter className="pt-4">
                         <Button className="bg-blue-500 text-white" type="submit">Edit Spool</Button>
-                        <Button className="bg-red-500 text-white" type="button" onClick={onCancel}>
+                        <Button className="bg-transparent border border-gray-300 text-gray-700" type="button" onClick={onCancel}>
                         Cancel
                         </Button>
                     </DialogFooter>

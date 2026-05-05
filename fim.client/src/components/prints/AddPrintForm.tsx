@@ -114,7 +114,7 @@ export const AddPrintForm = ({ onSubmit, onCancel }: AddPrintFormProps) => {
                         </div>
                         <DialogFooter>
                             <Button className="bg-blue-500 text-white" variant="ghost" type="submit">Create print</Button>
-                            <Button className="bg-red-500 text-white" type="button" onClick={onCancel}>Cancel</Button>
+                            <Button className="bg-transparent border border-gray-300 text-gray-700" type="button" onClick={onCancel}>Cancel</Button>
                         </DialogFooter>
                     </form>
             </DialogContent>

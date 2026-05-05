@@ -3,7 +3,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import {  ChevronsUpDown } from "lucide-react"
+import {  ChevronsUpDown, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Table,
@@ -31,7 +31,7 @@ const hasUrl = (s: Spool) => !!s.productUrl;
 
 const handleOpen = (s: Spool) => {
     if (!hasUrl(s)) return;
-    window.open(s.productUrl);
+    window.open(s.productUrl!);
 }
 
 
@@ -95,14 +95,14 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
                                         <TableCell>
                                             <Button className="bg-green-500 text-white" onClick={() => onSetExisting(s)}>Copy</Button>
                                             <Button className="bg-blue-500 text-white" onClick={() => onEditSpool(s)}>Edit</Button>
-                                            <Button className={`${hasUrl(s) ? "bg-yellow-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`} type="link" onClick={() => handleOpen(s)}>Link</Button>
+                                            <Button className={`${hasUrl(s) ? "bg-yellow-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`} type="button" onClick={() => handleOpen(s)}>Link<ExternalLink className="h-3 w-3" /></Button>
                                                 <ConfirmDialog
                                                     onConfirm={async () => { await onDelete(s.id); handleGrouped(gs, Number(s.id)) }}
                                                     title={`Delete ${s.identifier}`}
                                                     description="This will remove the spool, you can later reactivate it in the deleted spools tab. Do you want to proceed?"
                                                     confirmText="Delete"
                                                     confirmButtonClassName="bg-red-500 text-white"
-                                                    cancelButtonClassName="bg-blue-500 text-white"
+                                                    cancelButtonClassName="bg-transparent border border-gray-300 text-gray-700"
                                                     ><Button className="bg-red-500 text-white">Delete</Button>
                                                 </ConfirmDialog>
                                             </TableCell>

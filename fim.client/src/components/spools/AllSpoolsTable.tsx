@@ -78,7 +78,7 @@ export function AllSpoolsTable({spools, onDelete, onEditSpool }: AllSpoolsTableP
                                     description="You activate your deleted spools for up to 1 week after removal"
                                     confirmText="Delete"
                                     confirmButtonClassName="bg-red-500 text-white"
-                                    cancelButtonClassName="bg-red-500 text-white"
+                                    cancelButtonClassName="bg-transparent border border-gray-300 text-gray-700"
                                 ><Button className="bg-red-500 text-white">Delete</Button></ConfirmDialog>
 
 
