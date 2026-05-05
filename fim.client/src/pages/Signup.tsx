@@ -29,7 +29,7 @@ export default function Signup() {
             {success && (
                 <div>
                     <p>Sign up successful! Please check your email to confirm your account.</p>
-                    <button onClick={() => navigate("/login")}>Go to Login</button>
+                    <Button className="bg-blue-300 border mb-4" onClick={() => navigate("/login")}>Go to Login</Button>
                 </div>
             )}
             {!success && (
