@@ -64,7 +64,7 @@ export function StartPrintPopup({
                 <DialogFooter>
                     <Button  className="bg-blue-500 text-black" onClick={() => startPrint(print)}>Start {print.name}</Button>
                     <DialogClose asChild>
-                        <Button className="bg-red-500 text-black">Cancel</Button>
+                        <Button className="bg-transparent border border-gray-300 text-gray-700">Cancel</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

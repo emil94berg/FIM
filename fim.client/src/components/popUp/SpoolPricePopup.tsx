@@ -61,7 +61,7 @@ export function SetSpoolPrice({
                         className="bg-blue-500 text-white">
                         Set Price
                     </AlertDialogAction>
-                    <AlertDialogCancel className="bg-red-500 text-white">Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="bg-transparent border border-gray-300 text-gray-700">Cancel</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

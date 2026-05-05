@@ -41,7 +41,7 @@ export function CancelPrint({
                         <Input type="number" id="gramsUsed" placeholder="Grams used" onChange={(e) => setGramsUsed(Number(e.target.value))}></Input>
                     <AlertDialogFooter>
                         <AlertDialogAction className="bg-blue-500 text-white" onClick={() => onConfirm(gramsUsed)}>Cancel Print</AlertDialogAction>
-                        <AlertDialogCancel className="bg-red-500 text-black">Back</AlertDialogCancel>
+                        <AlertDialogCancel className="bg-transparent border border-gray-300 text-gray-700">Back</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
