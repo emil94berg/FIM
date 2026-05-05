@@ -117,7 +117,7 @@ export function CreateForumPost({ tags, onCancel, onSubmitSuccess }: createForum
 
                 <div className="flex gap-3 pt-2">
                     <Button className="bg-blue-500" type="submit">Save</Button>
-                    <Button className="bg-red-500" type="button" onClick={onCancel}>Cancel</Button>
+                    <Button className="bg-transparent border border-gray-300 text-gray-700" type="button" onClick={onCancel}>Cancel</Button>
                 </div>
             </form>
         </div>

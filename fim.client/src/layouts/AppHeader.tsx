@@ -30,7 +30,7 @@ export default function AppHeader() {
                     </Link>
                 </nav>
                 {user &&
-                    <Button className="bg-red-500 text-white" onClick={handleSignOut}>Sign out</Button>
+                <Button className="bg-transparent border border-gray-300 text-gray-700" onClick={handleSignOut}>Sign out</Button>
             }
             {
                 !user &&

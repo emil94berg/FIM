@@ -125,7 +125,7 @@ export function CreateComment({ forumPost, commentId, children, handleUpdateList
                         </div>
                         <div className="flex gap-2">
                             <Button className="bg-green-500 text-white" type="submit">Create Comment</Button>
-                            <Button className="bg-red-500 text-white" type="button" onClick={closeForm}>Cancel</Button>
+                            <Button className="bg-transparent border border-gray-300 text-gray-700" type="button" onClick={closeForm}>Cancel</Button>
                         </div>
                     </form>
                 </div>

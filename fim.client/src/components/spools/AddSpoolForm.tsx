@@ -163,7 +163,7 @@ export const AddSpoolForm = ({ onSubmit, onCancel }: AddSpoolFormProps) => {
                     {/* Actions */}
                     <DialogFooter className="pt-4">
                         <Button className="bg-blue-500 text-white" type="submit">Create Spool</Button>
-                        <Button className="bg-red-500 text-white" type="button" onClick={() => { setFormData(defaultSpool); onCancel(); }}>
+                        <Button className="bg-transparent border border-gray-300 text-gray-700" type="button" onClick={() => { setFormData(defaultSpool); onCancel(); }}>
                         Cancel
                         </Button>
                     </DialogFooter>

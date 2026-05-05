@@ -247,7 +247,7 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                                 description={`Are you sure you want to delete this comment, the action cannot be undone`}
                                 confirmText="Delete"
                                 cancelText="Cancel"
-                                cancelButtonClassName="bg-red-300"
+                                cancelButtonClassName="bg-transparent border border-gray-300 text-gray-700"
                                 confirmButtonClassName="bg-red-500"
                                 onConfirm={() => onDeleteComment(comment)}>
                                 <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Delete</Button>

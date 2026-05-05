@@ -58,18 +58,18 @@ export function AllPrintsTable({ Print, statusMap, onEdit, onDelete, onStart }: 
                                     <StartPrintPopup
                                         print={p}
                                         onStarted={onStart}
-                                    ><Button className="bg-green-500">Start Print</Button>
+                                    ><Button className="bg-green-500 text-white">Start Print</Button>
                                     </StartPrintPopup>
                                 )}
                                 {p.id !== undefined && (
-                                    <Button variant="default" className="bg-blue-500 text-black" onClick={() => onEdit(p)}>Edit</Button>
+                                    <Button variant="default" className="bg-blue-500 text-white" onClick={() => onEdit(p)}>Edit</Button>
                                 )}
                                 {p.id !== undefined && (
                                     <ConfirmDialog title="Delete Print"
                                         description={`Are you sure you want to delete ${p.name ?? "this item"}?`}
                                         confirmText="Delete"
                                         confirmButtonClassName="bg-red-500 text-white"
-                                        cancelButtonClassName="bg-blue-500 text-black"
+                                        cancelButtonClassName="bg-blue-500 text-white"
                                         onConfirm={() => onDelete(p)}>
                                         <Button variant="destructive" className="bg-red-500 text-white">Delete</Button>
                                     </ConfirmDialog>
