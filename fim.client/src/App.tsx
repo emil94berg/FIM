@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/sonner"
 import ForumHomePage from './pages/ForumHomePage'
 import ForumPost from '@/pages/ForumPost'
 import CreateForumPostPage from '@/pages/CreateForumPostPage'
+import InfoPage from '@/pages/InfoPage';
 
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
                     <Route path="/forum" element={<SideBarLayout component={<ForumHomePage />} />} />
                     <Route path="/forum/create" element={<SideBarLayout component={<CreateForumPostPage />} />} />
                     <Route path="/forum/post/:id" element={<SideBarLayout component={< ForumPost />} />} />
+                    <Route path="/info" element={<SideBarLayout component={< InfoPage />} />} />
                 </Route>
             </Routes>
             <Toaster richColors closeButton position="top-right" />

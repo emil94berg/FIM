@@ -17,7 +17,7 @@ export default function AppHeader() {
     }
 
     return (
-        <div style={{ display: "flex", width: "100%", position: "fixed" }}>
+       
             <div className="w-full flex items-center justify-between border bg-gray-100 px-2 fixed top-0 left-0 z-50 h-16">
                 <nav>
                     <Link to="/">
@@ -26,6 +26,6 @@ export default function AppHeader() {
                 </nav>
                 <Button className="bg-red-500 text-white" onClick={handleSignOut}>Sign out</Button>
             </div>
-        </div>
+        
     )
 }
