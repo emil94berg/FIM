@@ -18,6 +18,8 @@ namespace FIM.Server.Services.Interfaces
         Task<List<PrintDto>> GetAllDeletedPrintsAsync(string userId);
         Task<PrintDto> UpdatePrintStatusAsync(string userId, UpdatePrintStatusDto statusDto);
         Task<bool> HardDeletePrintAsync(PrintDto dto, string userId);
+        Task<List<PrintDto>> GetAllFinishedPrintsAsync(string userId);
+        Task<PrintDto> RegretFinishedPrint(int printId, string userId);
 
     }
 }

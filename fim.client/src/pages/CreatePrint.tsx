@@ -8,11 +8,13 @@ import { HandleDeletedPrints } from "@/components/prints/DeletedPrints"
 import { AllPrintsTable } from "@/components/prints/AllPrintsTable"
 import { Button } from "../components/ui/button";
 import { TrashIcon } from "@/components/icons/mynaui-trash"
+import { FinishedPrints } from "../components/prints/FinishedPrints";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 type Print = components["schemas"]["PrintDto"];  
-type CreatePrindDto = components["schemas"]["CreatePrintDto"]; 
+type CreatePrindDto = components["schemas"]["CreatePrintDto"];
+type test = components["schemas"]["PrintStatus"];
 
 
 type UpdatePrintResponse = Print | { print: Print; warning?: string };
@@ -38,6 +40,8 @@ export default function CreatePrint() {
     const [addingPrint, setAddingPrint] = useState(false);
     const [deletedPrints, setDeletedPrints] = useState<Print[]>([]);
     const [showDeleted, setShowDeleted] = useState<boolean>(false);
+    const [showFinished, setShowFinished] = useState<boolean>(false);
+    const [finishedPrints, setFinishedPrints] = useState<Print[]>([]);
 
     
 
@@ -53,6 +57,19 @@ export default function CreatePrint() {
         };
         loadPrints();
     }, []);
+
+    useEffect(() => {
+        const loadFinishedPrints = async () => {
+            try {
+                const data: Print[] = await authFetch(`${apiUrl}/Print/GetAllFinishedPrints`)
+                setFinishedPrints(data);
+            }
+            catch (error) {
+                console.log("Failed to fetch from prints... " + error);
+            }
+        };
+        loadFinishedPrints();
+        }, [])
 
 
     const handleStartPrint = (updatedPrint: Print) => {
@@ -145,6 +162,24 @@ export default function CreatePrint() {
     const handleHardDeleteFromComponent = (print: Print) => {
         setDeletedPrints(prev => prev.filter(prev => prev.id !== print.id));
     }
+    const handleFinishedPrints = () => {
+        setShowFinished(prev => !prev);
+    }
+    const regretFinishedPrint = async (print: Print) => {
+        try {
+            const data = await authFetch(`${apiUrl}/Print/RegretFinishedPrint/${print.id}`, {
+                method: "PUT"
+            });
+            setPrint(prev => prev.map(p => (p.id === data.id ? data : p)));
+            setFinishedPrints(prev => prev.filter(p => p.id !== data.id));
+            toast.success("Print marked as pending");
+        }
+        catch (error) {
+            console.log("Failed to fetch from Prints" + error);
+            toast.error("Failed to mark print as pending");
+        }
+    }
+    
     
 
     return (
@@ -155,6 +190,7 @@ export default function CreatePrint() {
                 </div>
                 <div className="flex flex-grow gap-4 m-4">
                     <Button className="bg-green-500 text-white" onClick={() => setAddingPrint(true)}>Add Print</Button>
+                    <Button className="bg-blue-400 text-white" onClick={handleFinishedPrints}>Finished prints</Button>
                     <Button className="bg-red-500 text-white" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
                 </div>
             </div>
@@ -186,7 +222,14 @@ export default function CreatePrint() {
                         onHandlePrintsHardDelete={handleHardDeleteFromComponent}
                         onCancel={() => setShowDeleted(prev => !prev)}
                     ></HandleDeletedPrints>
-                ): null}
+                ) : null}
+                {showFinished ? (
+                    <FinishedPrints
+                        prints={finishedPrints}
+                        onCancel={handleFinishedPrints}
+                        onRegretPrint={regretFinishedPrint}
+                    ></FinishedPrints>
+                ): null }
             </div>
         </div>
     )

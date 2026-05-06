@@ -24,6 +24,11 @@ type AllPrintsListProps = {
 
 export function AllPrintsTable({ Print, statusMap, onEdit, onDelete, onStart }: AllPrintsListProps) {
 
+    const printsOrderedByStatus = (prints: Print[]) => {
+        const orderNumber = [0, 1, 3, 4, 2] //Pending = 0, Printing = 1, Completed = 2, Failed = 3, Cancelled = 4
+        return [...prints].sort((a, b) => orderNumber.indexOf(a.status) - orderNumber.indexOf(b.status))
+    }
+
     return (
         <div className="bg-gray-50 p-4 rounded">
             <Table border={1}>
@@ -38,7 +43,7 @@ export function AllPrintsTable({ Print, statusMap, onEdit, onDelete, onStart }: 
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {Print.map(p => (
+                    {printsOrderedByStatus(Print).map(p => (
                         <TableRow key={p.id}>
                             <TableCell>{p.name}</TableCell>
                             <TableCell>{p.spool?.brand}</TableCell>

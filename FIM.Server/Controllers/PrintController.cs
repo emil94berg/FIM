@@ -106,7 +106,7 @@ namespace FIM.Server.Controllers
         public async Task<IActionResult> GetAllDeletedPrintsAsync()
         {
             var result = await _printService.GetAllDeletedPrintsAsync(UserId);
-            if(result != null && result.Count != 0) return Ok(result);  
+            if(result != null) return Ok(result);  
             else return NotFound();
         }
         [HttpPost("UpdateStatus")]
@@ -122,6 +122,20 @@ namespace FIM.Server.Controllers
             var result = await _printService.HardDeletePrintAsync(printDto, UserId);
             if(result) return Ok();
             else return BadRequest();
+        }
+        [HttpGet("GetAllFinishedPrints")]
+        public async Task<IActionResult> GetAllFinishedPrintsAsync()
+        {
+            var result = await _printService.GetAllFinishedPrintsAsync(UserId);
+            if(result != null && result.Count != 0) return Ok(result);  
+            return NotFound();
+        }
+        [HttpPut("RegretFinishedPrint/{printId}")]
+        public async Task<IActionResult> RegretFinishedPrintAsync(int printId)
+        {
+           var result = await _printService.RegretFinishedPrint(printId, UserId);
+           if(result != null) return Ok(result);
+           else return BadRequest();
         }
     }
 }
