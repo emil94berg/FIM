@@ -20,18 +20,18 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
         icon: <SquareDashedKanbanIcon className="w-5 h-5" ></SquareDashedKanbanIcon>
     },
     {
-        title: "Create Print",
-        href: "/create-print",
+        title: "Handle Prints",
+        href: "/handle-prints",
         icon: <AddQueueIcon className="w-5 h-5" ></AddQueueIcon>
     },
     {
-        title: "Create Spool",
-        href: "/create-spool",
+        title: "Handle Spools",
+        href: "/handle-spools",
         icon: <AddQueueIcon className="w-5 h-5" ></AddQueueIcon>
     },
     {
         title: "Active Prints",
-        href: "/ACtivePrints",
+        href: "/active-prints",
         icon: <ActivitySquareIcon className="w-5 h-5" ></ActivitySquareIcon>
     },
     {
@@ -49,9 +49,10 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
 
 export default function SideBar({open, setOpen} : {open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>}) {
     const { user } = useAuth();
-    const avatarUrl = user
-        ? `https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/${user.id}/profilepictures/avatar`
-        : null;
+
+    if (!user) return null;
+
+    const avatarUrl = `https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/${user.id}/profilepictures/avatar`;
 
     return (
         <div className="flex">
@@ -92,17 +93,18 @@ export default function SideBar({open, setOpen} : {open: boolean, setOpen: React
                 <div className={`border-t border-gray-200 p-2 shrink-0 ${open ? "" : "flex justify-center"}`}>
                     {open ? (
                         <div className="flex items-center gap-2 px-1">
-                            {avatarUrl && (
-                                <img src={avatarUrl} alt="User avatar" className="w-8 h-8 rounded-full object-cover ring-1 ring-gray-300 shrink-0" />
-                            )}
-                            <p className="text-xs text-gray-500 truncate" title={user?.user_metadata.username ?? ""}>
-                                {user?.user_metadata.username ?? "Unknown User"}
-                            </p>
+                            <img src={avatarUrl} alt="User avatar" className="w-9 h-9 rounded-full object-cover ring-1 ring-gray-300 shrink-0" />
+                            <div className="flex flex-col min-w-0">
+                                <p className="text-xs font-medium text-gray-700 truncate" title={user.user_metadata.username ?? ""}>
+                                    {user.user_metadata.username ?? "No username"}
+                                </p>
+                                <p className="text-xs text-gray-400 truncate" title={user.email}>
+                                    {user.email}
+                                </p>
+                            </div>
                         </div>
                     ) : (
-                        avatarUrl && (
-                            <img src={avatarUrl} alt="User avatar" className="w-8 h-8 rounded-full object-cover ring-1 ring-gray-300" />
-                        )
+                        <img src={avatarUrl} alt="User avatar" className="w-8 h-8 rounded-full object-cover ring-1 ring-blue-300" />
                     )}
                 </div>
             </div>
