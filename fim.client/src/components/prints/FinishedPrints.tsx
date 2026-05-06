@@ -63,7 +63,7 @@ export function FinishedPrints({ onCancel, prints, onRegretPrint }: FinishedPrin
                                   <TableCell>
                                       <Button className="bg-blue-500 text-white"
                                           onClick={() => onRegretPrint(p)}
-                                      >Regret</Button>
+                                      >Undo</Button>
                                   </TableCell>
                               </TableRow>
                           ))}
