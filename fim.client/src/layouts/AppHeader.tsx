@@ -4,12 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button"
 import { useAuth } from '@/auth/useAuth';
 
-
-
-
-
-
-
 export default function AppHeader() {
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -30,12 +24,12 @@ export default function AppHeader() {
                     </Link>
                 </nav>
                 {user &&
-                <Button className="bg-transparent border border-gray-300 text-gray-700" onClick={handleSignOut}>Sign out</Button>
-            }
-            {
-                !user &&
-                <Button className="bg-blue-500 text-white" onClick={handleSignOut}>Sign in</Button>
-            }
+                    <Button className="bg-transparent border border-gray-300 text-gray-700" onClick={handleSignOut}>Sign out</Button>
+                }
+                {
+                    !user &&
+                    <Button className="bg-blue-500 text-white" onClick={handleSignOut}>Sign in</Button>
+                }
             </div>
         
     )

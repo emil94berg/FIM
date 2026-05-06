@@ -18,5 +18,14 @@ namespace FIM.Server.Helpers.DTOMapper
         {
             return new UpdatePrintDto(print.Name, print.SpoolId, print.GramsUsed, print.Status, print.StartedAt, null);
         }
+        public static List<PrintDto> ToPrintDtoList(this List<Print> prints)
+        {
+            var returnList = new List<PrintDto>();
+            foreach(var p in prints)
+            {
+                returnList.Add(p.ToPrintDto());
+            }
+            return returnList;
+        }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
+using System.Formats.Asn1;
 using System.Net.NetworkInformation;
 
 namespace FIM.Server.Services
@@ -269,6 +270,40 @@ namespace FIM.Server.Services
             }
             else return false;
         }
-        
+        public async Task<List<PrintDto>> GetAllFinishedPrintsAsync(string userId)
+        {
+            var result = await _context.Prints.Where(p => p.Status == PrintStatus.Completed && p.UserId == userId).ToListAsync();
+            if(result != null && result.Count != 0)
+            {
+                return result.ToPrintDtoList();
+            }
+            else
+            {
+                return new List<PrintDto>();
+            }
+        }
+        public async Task<PrintDto> RegretFinishedPrint(int printId, string userId)
+        {
+            var updatePrint = await _context.Prints.FirstOrDefaultAsync(p => p.UserId == userId && p.Id == printId);
+            if(updatePrint != null)
+            {
+                var updateSpool = await _context.Spools.FirstOrDefaultAsync(s => s.Id == updatePrint.SpoolId && s.UserId == userId);
+                if(updateSpool != null)
+                {
+                    updateSpool.RemainingWeight += updatePrint.GramsUsed;
+                    _context.Spools.Update(updateSpool);
+                    await _context.SaveChangesAsync();
+                }
+                updatePrint.Status = PrintStatus.Pending;
+                updatePrint.EstimatedEndTime = null;
+                updatePrint.StartedAt = new DateTime();
+                _context.Update(updatePrint);
+                await _context.SaveChangesAsync();
+                return updatePrint.ToPrintDto();
+            }
+            else return null;
+        }
+
+
     }
 }
