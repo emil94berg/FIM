@@ -56,17 +56,15 @@ export default function SideBar({open, setOpen} : {open: boolean, setOpen: React
 
     return (
         <div className="flex">
-            <div className={`fixed top-16 left-0 flex flex-col bg-gray-100 h-[calc(100vh-4rem)] transition-all duration-300 z-40 border-r border-gray-200 ${open ? "w-48" : "w-12"}`}>
+            <div className={`fixed top-16 left-0 flex flex-col bg-gray-100 h-[calc(100vh-4rem)] transition-all duration-300 z-40 border-r border-gray-200 overflow-hidden ${open ? "w-48" : "w-12"}`}>
 
                 {/* Sidebar header */}
                 <div className={`flex items-center px-2 py-3 border-b border-gray-200 shrink-0 ${open ? "justify-between" : "justify-center"}`}>
-                    {open && (
-                        <span className="text-sm font-semibold text-gray-700 truncate px-1">Navigation</span>
-                    )}
+                    {open && <span className="text-sm font-semibold text-gray-700 truncate px-1">Navigation</span>}
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="shrink-0 bg-blue-500 text-white hover:bg-blue-600"
+                        className={`shrink-0 bg-blue-500 text-white hover:bg-blue-600 ${open ? "m-0" : " justify-center"}`}
                         onClick={() => setOpen(!open)}
                         title={open ? "Collapse sidebar" : "Expand sidebar"}
                     >
@@ -79,33 +77,27 @@ export default function SideBar({open, setOpen} : {open: boolean, setOpen: React
                     {components.map(c => (
                         <Link title={c.title} key={c.title}
                             to={c.href}
-                            className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded mx-1 hover:bg-gray-200 transition ${
-                                !open ? "justify-center" : ""
-                            }`}
+                            className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded mx-1 hover:bg-gray-200 transition"
                         >
                             <span className="shrink-0">{c.icon}</span>
-                            {open && <span className="truncate">{c.title}</span>}
+                            <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${open ? "max-w-xs opacity-100" : "max-w-0 opacity-0"}`}>{c.title}</span>
                         </Link>
                     ))}
                 </nav>
 
                 {/* Footer */}
-                <div className={`border-t border-gray-200 p-2 shrink-0 ${open ? "" : "flex justify-center"}`}>
-                    {open ? (
-                        <div className="flex items-center gap-2 px-1">
-                            <img src={avatarUrl} alt="User avatar" className="w-9 h-9 rounded-full object-cover ring-1 ring-gray-300 shrink-0" />
-                            <div className="flex flex-col min-w-0">
-                                <p className="text-xs font-medium text-gray-700 truncate" title={user.user_metadata.username ?? ""}>
-                                    {user.user_metadata.username ?? "No username"}
-                                </p>
-                                <p className="text-xs text-gray-400 truncate" title={user.email}>
-                                    {user.email}
-                                </p>
-                            </div>
+                <div className="border-t border-gray-200 p-2 shrink-0">
+                    <div className="flex items-center gap-2">
+                        <img src={avatarUrl} alt="User avatar" className="w-8 h-8 rounded-full object-cover ring-1 ring-gray-300 shrink-0" />
+                        <div className={`flex flex-col min-w-0 overflow-hidden transition-all duration-300 ${open ? "max-w-xs opacity-100" : "max-w-0 opacity-0"}`}>
+                            <p className="text-xs font-medium text-gray-700 truncate" title={user.user_metadata.username ?? ""}>
+                                {user.user_metadata.username ?? "No username"}
+                            </p>
+                            <p className="text-xs text-gray-400 truncate" title={user.email}>
+                                {user.email}
+                            </p>
                         </div>
-                    ) : (
-                        <img src={avatarUrl} alt="User avatar" className="w-8 h-8 rounded-full object-cover ring-1 ring-blue-300" />
-                    )}
+                    </div>
                 </div>
             </div>
         </div>

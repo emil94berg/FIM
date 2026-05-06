@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
 import SideBarLayout from './layouts/SidebarLayout';
 import CreateSpool from './pages/CreateSpool';
 import Login from './pages/Login';
