@@ -23,10 +23,49 @@ export default function SseStream() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
    
 
+    //useEffect(() => {
+    //    const connect = async () => {
+    //        const token = await getToken();
+
+    //        const response = await fetch(`${apiUrl}/SSE/stream`, {
+    //            headers: {
+    //                Authorization: `Bearer ${token}`,
+    //                Accept: "text/event-stream"
+    //            }
+    //        });
+
+    //        const reader = response.body?.getReader();
+
+    //        if (!reader) return;
+
+    //        const decoder = new TextDecoder();
+
+    //        while (true) {
+
+    //            const { done, value } = await reader.read();
+
+    //            if (done) break;
+
+    //            const chunk = decoder.decode(value);
+
+    //            if (chunk.startsWith("data: ")) {
+
+    //                const json = chunk.replace("data: ", "").toLowerCase();
+
+    //                const notification: Notification = JSON.parse(json);
+
+    //                console.log(notification.message);
+
+    //                setNotifications(prev => [...prev, notification]);
+    //            }
+    //        }
+    //    };
+    //    connect();
+    //}, [apiUrl]);
+
     useEffect(() => {
         const connect = async () => {
             const token = await getToken();
-
             const response = await fetch(`${apiUrl}/SSE/stream`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -36,27 +75,23 @@ export default function SseStream() {
 
             const reader = response.body?.getReader();
 
-            if (!reader) return;
-
             const decoder = new TextDecoder();
 
-            while (true) {
+            if (!reader) return;
 
-                const { done, value } = await reader.read();
+            const data = await reader.read();
 
-                if (done) break;
+            const chunk = decoder.decode(data.value);
 
-                const chunk = decoder.decode(value);
+            const notificationStrings = chunk.split("\n");
 
-                if (chunk.startsWith("data: ")) {
-
-                    const json = chunk.replace("data: ", "").toLowerCase();
-
-                    const notification: Notification = JSON.parse(json);
-
-                    console.log(notification.message);
-
-                    setNotifications(prev => [...prev, notification]);
+            for (let note of notificationStrings) {
+                if (note.startsWith("data: ")) {
+                    note = note.replace("data: ", "");
+                    const notificationToAdd = JSON.parse(note.toLowerCase());
+                    if (notificationToAdd !== undefined) {
+                        setNotifications(prev => [...prev, notificationToAdd]);
+                    }
                 }
             }
         };
@@ -96,7 +131,7 @@ export default function SseStream() {
                                 key={notification.id}
                                 className="rounded-md border px-4 py-2 text-sm bg-white"
                             >
-                                <p>{notification.message.toString()}</p>
+                                <p>{notification.message}</p>
                             </div>
                         ))}
                     </CollapsibleContent>

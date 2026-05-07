@@ -24,13 +24,19 @@ namespace FIM.Server.Controllers
 
             Response.ContentType = "text/event-stream";
 
-            foreach(var notification in notificationList)
+            string jsonString = "";
+
+            foreach (var notification in notificationList)
             {
                 var json = JsonSerializer.Serialize(notification);
-                await Response.WriteAsync($"data: {json}\n\n");
-                await Response.Body.FlushAsync();
-                await Task.Delay(1000);
+
+                var jsonAdd = $"data: {json}\n\n";
+
+                jsonString += jsonAdd;
             }
+
+            await Response.WriteAsync(jsonString);
+            await Response.Body.FlushAsync();
         }
     }
 }
