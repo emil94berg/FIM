@@ -27,7 +27,7 @@ namespace FIM.Server.Controllers
             foreach(var notification in notificationList)
             {
                 var json = JsonSerializer.Serialize(notification);
-                await Response.WriteAsync($"data: Notification {json}\n\n");
+                await Response.WriteAsync($"data: {json}\n\n");
                 await Response.Body.FlushAsync();
                 await Task.Delay(1000);
             }
