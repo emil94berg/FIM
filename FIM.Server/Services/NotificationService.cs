@@ -1,8 +1,9 @@
-using FIM.Server.Models;
 using FIM.Server.Data;
 using FIM.Server.DTOs;
-using Microsoft.EntityFrameworkCore;
+using FIM.Server.Migrations;
+using FIM.Server.Models;
 using FIM.Server.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FIM.Server.Services
 {
@@ -20,6 +21,15 @@ namespace FIM.Server.Services
             return await _dbContext.Notifications
                 .Where(n => n.UserId == userId)
                 .OrderByDescending(n => n.CreatedAt)
+                .Select(n => new NotificationDto(n.Id, n.Message, n.Type, n.IsRead, n.CreatedAt))
+                .ToListAsync();
+        }
+        public async Task<List<NotificationDto>> GetLatestNotificationsAsync(string userId, int numberOfNotificationsToTake)
+        {
+            return await _dbContext.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.CreatedAt)
+                .Take(numberOfNotificationsToTake)
                 .Select(n => new NotificationDto(n.Id, n.Message, n.Type, n.IsRead, n.CreatedAt))
                 .ToListAsync();
         }

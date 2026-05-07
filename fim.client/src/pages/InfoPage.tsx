@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 
 
 
+
 export default function InfoPage() {
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function InfoPage() {
                 </div>
 
 
-                <div style={{borderLeft: "1px solid black" } }>
+                <div style={{ borderLeft: "1px solid black" }}>
                     <p className="ml-4 mt-20">FIM was created as a project for an internship and is free for everyone to use.
                     It was made for tracking you inventory of filaments and make it easier to know what you have in stock.</p>
                 </div>
