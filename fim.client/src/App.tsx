@@ -25,7 +25,7 @@ export default function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/info" element={<SideBarLayout component={< InfoPage />} />} />
                 <Route element={<ProtectedRoute />}>
-                <Route path="/handle-spools" element={<SpoolProvider><SideBarLayout component={<CreateSpool />} /> </SpoolProvider> } />
+                    <Route path="/handle-spools" element={<SpoolProvider><SideBarLayout component={<CreateSpool />} /> </SpoolProvider> } />
                     <Route path="/handle-prints" element={<SideBarLayout component={<CreatePrint />} />} />
                     <Route path="/dashboard" element={<SideBarLayout component={<DashBoard />} />} />
                     <Route path="/active-prints" element={<SideBarLayout component={<ActivePrints />} />} />

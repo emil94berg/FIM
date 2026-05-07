@@ -91,7 +91,7 @@ export default function EditActivePrints() {
     useEffect(() => {
         const interval = setInterval(() => {
             setActivePrints(prev => [...prev]);
-        }, 10000);
+        }, 1000);
         return () => clearInterval(interval);
     }, []);
     
@@ -111,30 +111,43 @@ export default function EditActivePrints() {
     }, []);
    
     return (
-        <div>
-        <h1>Active Prints</h1>
-            <Table border={1}>
-                <TableHeader>
-                <TableRow>
-                        <TableHead>Print Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Progress bar</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
+        <div className="flex flex-col p-4 gap-4">
+            <div className="flex items-start bg-blue-500 text-white rounded-lg px-4 py-4 flex-col">
+                <h1 className="text-3xl font-bold tracking-tight">Active Prints</h1>
+                <p className="text-blue-100 text-sm mt-1">{activePrints.length} print{activePrints.length !== 1 ? "s" : ""} currently running</p>
+            </div>
+
+            <div className="rounded-xl border bg-slate-100 p-4 shadow-sm">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Print Name</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Progress</TableHead>
+                            <TableHead>Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
                         {activePrints.map(p => (
                             <UpdatePercentageBar
+                                key={p.id}
                                 print={p}
                                 shortDate={shortDate}
                                 parseDate={parseDate}
                                 UpdateGramsUsed={UpdateGramsUsed}
                                 progressBarWidth={progressBarWidth}
-                            ></UpdatePercentageBar> 
+                            />
                         ))}
-                </TableBody>
-            </Table>
+                    </TableBody>
+                </Table>
+
+                {activePrints.length === 0 && (
+                    <div className="py-12 text-center text-sm text-muted-foreground">
+                        No active prints right now.
+                    </div>
+                )}
+            </div>
         </div>
-    ) 
+    )
 }
 
