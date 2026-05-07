@@ -120,7 +120,7 @@ export default function DashboardHome() {
                     <div className="pt-4 px-4 mb-4 gap-2 bg-slate-100 p-4 rounded-lg">
                         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                             <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
-                                <Link to="/create-spool">Create Spool</Link>
+                                <Link to="/handle-spools">Create Spool</Link>
                             </Button>
                             <Input
                                 className="w-full sm:max-w-xs bg-white border-slate-400"
