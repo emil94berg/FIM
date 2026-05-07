@@ -43,16 +43,14 @@ export default function SseStream() {
 
                 const chunk = decoder.decode(data.value);
 
-                  console.log(chunk);
-
                 const notificationStrings = chunk.split("\n");
 
                 for (let note of notificationStrings) {
                     if (note.startsWith("data: ")) {
                         note = note.replace("data: ", "");
-
+                        console.log(note);
                         try {
-                            const notification = JSON.parse(note.toLowerCase());
+                            const notification: Notification = JSON.parse(note.toLowerCase());
 
                             console.log(notification);
 
@@ -60,7 +58,7 @@ export default function SseStream() {
                                 const exists = prev.some(p => p.id === notification.id);
 
                                 if (exists) return prev;
-
+                                notification.message = notification.message.charAt(0).toUpperCase() + notification.message.slice(1);
                                 return [...prev, notification]
                             });
                             
