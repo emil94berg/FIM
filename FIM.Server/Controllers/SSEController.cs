@@ -46,7 +46,6 @@ namespace FIM.Server.Controllers
                     }
                     await Response.WriteAsync(jsonString);
 
-                    
                 }
                 await Response.Body.FlushAsync();
                 await Task.Delay(10000);
