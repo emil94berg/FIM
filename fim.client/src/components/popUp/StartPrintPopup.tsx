@@ -62,7 +62,7 @@ export function StartPrintPopup({
                 <Label>Estimated print time (minutes):</Label>
                 <Input type="number" placeholder="e.g. 120" onChange={(e) => setEstimatedTime(Number(e.target.value))}></Input>
                 <DialogFooter>
-                    <Button  className="bg-blue-500 text-black" onClick={() => startPrint(print)}>Start {print.name}</Button>
+                    <Button  className="bg-blue-500 text-white" onClick={() => startPrint(print)}>Start {print.name}</Button>
                     <DialogClose asChild>
                         <Button className="bg-transparent border border-gray-300 text-gray-700">Cancel</Button>
                     </DialogClose>
