@@ -3,6 +3,7 @@ import { signOut } from "../auth/authService";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button"
 import { useAuth } from '@/auth/useAuth';
+import SseStream from "@/components/notifications/sse/SseStream"
 
 export default function AppHeader() {
     const navigate = useNavigate();
@@ -14,6 +15,8 @@ export default function AppHeader() {
         }
         navigate("/login");
     }
+
+
 
     return (
        
@@ -30,6 +33,7 @@ export default function AppHeader() {
                     !user &&
                     <Button className="bg-blue-500 text-white" onClick={handleSignOut}>Sign in</Button>
                 }
+                <SseStream />
             </div>
         
     )
