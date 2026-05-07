@@ -75,22 +75,41 @@ export default function SseStream() {
 
             const reader = response.body?.getReader();
 
-            const decoder = new TextDecoder();
-
             if (!reader) return;
 
-            const data = await reader.read();
+            const decoder = new TextDecoder();
 
-            const chunk = decoder.decode(data.value);
+            while (true) {
+                const data = await reader.read();
 
-            const notificationStrings = chunk.split("\n");
+                const chunk = decoder.decode(data.value);
 
-            for (let note of notificationStrings) {
-                if (note.startsWith("data: ")) {
-                    note = note.replace("data: ", "");
-                    const notificationToAdd = JSON.parse(note.toLowerCase());
-                    if (notificationToAdd !== undefined) {
-                        setNotifications(prev => [...prev, notificationToAdd]);
+                  console.log(chunk);
+
+                const notificationStrings = chunk.split("\n");
+
+                for (let note of notificationStrings) {
+                    if (note.startsWith("data: ")) {
+                        note = note.replace("data: ", "");
+
+                        try {
+                            const notification = JSON.parse(note.toLowerCase());
+
+                            console.log(notification);
+
+                            setNotifications(prev => {
+                                const exists = prev.some(p => p.id === notification.id);
+
+                                if (exists) return prev;
+
+                                return [...prev, notification]
+                            });
+                            
+                        }
+                        catch (error) {
+                            console.log("JSON parse error...", error);
+                        }
+                        
                     }
                 }
             }

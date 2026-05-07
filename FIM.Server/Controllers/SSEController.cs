@@ -20,23 +20,37 @@ namespace FIM.Server.Controllers
         [HttpGet("stream")]
         public async Task GetNotification()
         {
-            var notificationList = await _notificationService.GetNotificationsForUserAsync(UserId);
+            var sentNotificationIds = new HashSet<int>();
 
             Response.ContentType = "text/event-stream";
 
-            string jsonString = "";
-
-            foreach (var notification in notificationList)
+            while (!HttpContext.RequestAborted.IsCancellationRequested)
             {
-                var json = JsonSerializer.Serialize(notification);
+                var notifications = await _notificationService.GetLatestNotificationsAsync(UserId, 10);
 
-                var jsonAdd = $"data: {json}\n\n";
+                var newNotifications = notifications.Where(n => !sentNotificationIds.Contains(n.Id)).ToList();
 
-                jsonString += jsonAdd;
+                if(newNotifications.Any())
+                {
+                    string jsonString = "";
+
+                    foreach (var notification in newNotifications)
+                    {
+                        sentNotificationIds.Add(notification.Id);
+
+                        var json = JsonSerializer.Serialize(notification);
+
+                        var jsonAdd = $"data: {json}\n\n";
+
+                        jsonString += jsonAdd;
+                    }
+                    await Response.WriteAsync(jsonString);
+
+                    
+                }
+                await Response.Body.FlushAsync();
+                await Task.Delay(10000);
             }
-
-            await Response.WriteAsync(jsonString);
-            await Response.Body.FlushAsync();
         }
     }
 }
