@@ -4,16 +4,17 @@ import type { components } from "@/types/schema"
 import {
     Avatar,
     AvatarBadge,
-    AvatarFallback,
-    AvatarImage,
+    AvatarFallback
 } from "@/components/ui/avatar"
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import logo from "@/assets/Pictures/FimLogga.png"
 import { authFetch } from "@/auth/authFetch";
+import { BookIcon } from "@/components/icons/mynaui-book"
+import { NotificationSolidIcon } from "@/components/icons/mynaui-notification-solid"
+
 
 
 type Notification = components["schemas"]["NotificationDto"];
@@ -23,10 +24,6 @@ export default function SseStream() {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const firstLetterToLower = (str: string) => {
-        const returnString: string = str[0].toLowerCase + str.slice(1);
-        return returnString;
-    }
    
     useEffect(() => {
         const connect = async () => {
@@ -118,20 +115,19 @@ export default function SseStream() {
                 onClick={handleNotificationsRead}
             >
                 <div className="flex flex-col items-start gap-2">
-                    <CollapsibleTrigger className="bg-transparent border border-black">
+                    <CollapsibleTrigger className="bg-transparent">
                         <Avatar>
-                            <AvatarImage
-                                src={logo}
-                                alt="notification"
+                            <NotificationSolidIcon
+                                color="rgba(255,0,0,1)"
                                 className={notificationsNotReadCount() === 0 ? "grayscale" : ""}
-
-                            ></AvatarImage>
-                            <AvatarFallback>NF</AvatarFallback>
-                            <AvatarBadge className={notificationsNotReadCount() === 0
-                                ? "bg-grey-200"
-                                : "bg-red-500 text-white text-xs"}>
-                                {notificationsNotReadCount() === 0 ? "" : notificationsNotReadCount()}
-                            </AvatarBadge>
+                                size={30}
+                            ></NotificationSolidIcon>
+                            {notificationsNotReadCount() > 0 ? (
+                                <AvatarBadge className="bg-red-500 text-white text-xs">
+                                    {notificationsNotReadCount() === 0 ? "" : notificationsNotReadCount()}
+                                </AvatarBadge>
+                            ): (null)}
+                            
                         </Avatar>
                     </CollapsibleTrigger>
 
