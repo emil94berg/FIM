@@ -22,6 +22,11 @@ export default function SseStream() {
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const firstLetterToLower = (str: string) => {
+        const returnString: string = str[0].toLowerCase + str.slice(1);
+        return returnString;
+    }
    
     useEffect(() => {
         const connect = async () => {
@@ -49,11 +54,16 @@ export default function SseStream() {
                 for (let note of notificationStrings) {
                     if (note.startsWith("data: ")) {
                         note = note.replace("data: ", "");
-                        console.log(note);
                         try {
-                            const notification: Notification = JSON.parse(note.toLowerCase());
+                            const parsed = JSON.parse(note);
 
-                            console.log(notification);
+                            const notification: Notification = {
+                                id: parsed.Id,
+                                message: parsed.Message,
+                                type: parsed.Type,
+                                isRead: parsed.IsRead,
+                                createdAt: parsed.CreatedAt
+                            }
 
                             setNotifications(prev => {
                                 const exists = prev.some(p => p.id === notification.id);
@@ -92,9 +102,11 @@ export default function SseStream() {
     }
 
     const notificationsNotReadCount = () => {
-        const numberOfUnreadNotifications = notifications.filter(n => n.isRead == false).length;
+        const numberOfUnreadNotifications = notifications.filter(n => n.isRead === false).length;
         return numberOfUnreadNotifications;
     }
+
+    
     
 
     return (
@@ -129,14 +141,13 @@ export default function SseStream() {
                         {notifications.map(notification => (
                             <div
                                 key={notification.id}
-                                className="rounded-md border px-4 py-2 text-sm bg-blue-100"
+                                className="rounded-md border px-4 py-2 text-sm bg-blue-100 overflow-x-clip"
                             >
                                 <p>{notification.message}</p>
                             </div>
                         ))}
                     </CollapsibleContent>
                 </div>
-                
             </Collapsible>            
         </div>
     )
