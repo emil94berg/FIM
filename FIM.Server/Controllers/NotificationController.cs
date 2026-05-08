@@ -25,5 +25,15 @@ namespace FIM.Server.Controllers
             var notifications = await _notificationService.GetNotificationsForUserAsync(UserId);
             return Ok(notifications);
         }
+        [HttpPut("Mark-as-read")]
+        public async Task<IActionResult> UpdateNotificationIsReadAsync([FromBody] List<int> notificationsIds)
+        {
+            var result = await _notificationService.MarkNotificationsAsReadAsync(notificationsIds);
+            if(result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest();
+        }
     }
 }
