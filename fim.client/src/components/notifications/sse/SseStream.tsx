@@ -4,15 +4,17 @@ import type { components } from "@/types/schema"
 import {
     Avatar,
     AvatarBadge,
-    AvatarFallback,
-    AvatarImage,
+    AvatarFallback
 } from "@/components/ui/avatar"
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import logo from "@/assets/Pictures/FimLogga.png"
+import { authFetch } from "@/auth/authFetch";
+import { BookIcon } from "@/components/icons/mynaui-book"
+import { NotificationSolidIcon } from "@/components/icons/mynaui-notification-solid"
+
 
 
 type Notification = components["schemas"]["NotificationDto"];
@@ -21,6 +23,7 @@ export default function SseStream() {
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
    
     useEffect(() => {
         const connect = async () => {
@@ -48,17 +51,23 @@ export default function SseStream() {
                 for (let note of notificationStrings) {
                     if (note.startsWith("data: ")) {
                         note = note.replace("data: ", "");
-                        console.log(note);
                         try {
-                            const notification: Notification = JSON.parse(note.toLowerCase());
+                            const parsed = JSON.parse(note);
 
-                            console.log(notification);
+                            const notification: Notification = {
+                                id: parsed.Id,
+                                message: parsed.Message,
+                                type: parsed.Type,
+                                isRead: parsed.IsRead,
+                                createdAt: parsed.CreatedAt
+                            }
 
                             setNotifications(prev => {
                                 const exists = prev.some(p => p.id === notification.id);
 
                                 if (exists) return prev;
                                 notification.message = notification.message.charAt(0).toUpperCase() + notification.message.slice(1);
+                                
                                 return [...prev, notification]
                             });
                             
@@ -74,54 +83,68 @@ export default function SseStream() {
         connect();
     }, [apiUrl]);
 
+    const handleNotificationsRead = async () => {
+        try {
+            const data: Notification[] = await authFetch(`${apiUrl}/Notification/Mark-as-read`, {
+                method: "PUT",
+                body: JSON.stringify(notifications.map(n => n.id))
+            });
+            if(data != null && data.length > 0) {
+                setNotifications(data);
+            }
+        }
+        catch (error) {
+            console.log("Error marking notifications as read...", error);
+        }
+    }
+
+    const notificationsNotReadCount = () => {
+        const numberOfUnreadNotifications = notifications.filter(n => n.isRead === false).length;
+        return numberOfUnreadNotifications;
+    }
+
+    
+    
+
     return (
         <div>
             <Collapsible
                 open={isOpen}
                 onOpenChange={() => setIsOpen(prev => !prev)}
                 className="relative"
+                onClick={handleNotificationsRead}
             >
                 <div className="flex flex-col items-start gap-2">
-                    <CollapsibleTrigger className="bg-transparent border border-black">
+                    <CollapsibleTrigger className="bg-transparent">
                         <Avatar>
-                            <AvatarImage
-                                src={logo}
-                                alt="notification"
-                                className={notifications.length === 0 ? "grayscale" : ""}
-
-                            ></AvatarImage>
-                            <AvatarFallback>NF</AvatarFallback>
-                            <AvatarBadge className={notifications.length === 0
-                                ? "bg-grey-200"
-                                : "bg-red-500 text-white text-xs"}>
-                                {notifications.length === 0 ? "" : notifications.length}
-                            </AvatarBadge>
+                            <NotificationSolidIcon
+                                color="rgba(255,0,0,1)"
+                                className={notificationsNotReadCount() === 0 ? "grayscale" : ""}
+                                size={30}
+                            ></NotificationSolidIcon>
+                            {notificationsNotReadCount() > 0 ? (
+                                <AvatarBadge className="bg-red-500 text-white text-xs">
+                                    {notificationsNotReadCount() === 0 ? "" : notificationsNotReadCount()}
+                                </AvatarBadge>
+                            ): (null)}
+                            
                         </Avatar>
                     </CollapsibleTrigger>
 
                     <CollapsibleContent className="absolute top-14 right-0 z-50 flex flex-col gap-2 w-64 rounded-md
-                                                    border bg-white p-2 shadow-lg data-[state=closed]:hidden
+                                                    border bg-gray-100 p-2 shadow-lg data-[state=closed]:hidden
                                                     overflow-y-scroll max-h-64">
                         {notifications.map(notification => (
                             <div
                                 key={notification.id}
-                                className="rounded-md border px-4 py-2 text-sm bg-white"
+                                className="rounded-md border px-4 py-2 text-sm bg-blue-100 overflow-x-clip"
                             >
                                 <p>{notification.message}</p>
                             </div>
                         ))}
                     </CollapsibleContent>
                 </div>
-                
-            </Collapsible>
-
-
-
-
-
-            
-
-            
+            </Collapsible>            
         </div>
     )
     

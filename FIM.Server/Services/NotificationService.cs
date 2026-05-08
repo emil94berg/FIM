@@ -33,5 +33,16 @@ namespace FIM.Server.Services
                 .Select(n => new NotificationDto(n.Id, n.Message, n.Type, n.IsRead, n.CreatedAt))
                 .ToListAsync();
         }
+        public async Task<List<NotificationDto>> MarkNotificationsAsReadAsync(List<int> notificationsIds)
+        {
+            var result = await _dbContext.Notifications.Where(n => notificationsIds.Contains(n.Id)).ToListAsync();
+            foreach(var n in result)
+            {
+                n.IsRead = true;
+            }
+            _dbContext.UpdateRange(result);
+            await _dbContext.SaveChangesAsync();
+            return result.ToNotificationDtoList();
+        }
     }
 }
