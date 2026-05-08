@@ -14,7 +14,6 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 type Print = components["schemas"]["PrintDto"];  
 type CreatePrindDto = components["schemas"]["CreatePrintDto"];
-type test = components["schemas"]["PrintStatus"];
 
 
 type UpdatePrintResponse = Print | { print: Print; warning?: string };
@@ -35,6 +34,7 @@ const handleSubmit = async (print: CreatePrindDto): Promise<Print> => {
 
 
 export default function CreatePrint() {
+    //Todo
     const [print, setPrint] = useState<Print[]>([]);
     const [editingPrint, setEditingPrint] = useState<Print | null>(null);
     const [addingPrint, setAddingPrint] = useState(false);

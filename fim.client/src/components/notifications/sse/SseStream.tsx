@@ -3,16 +3,14 @@ import { getToken } from "@/auth/authService"
 import type { components } from "@/types/schema"
 import {
     Avatar,
-    AvatarBadge,
-    AvatarFallback
+    AvatarBadge
 } from "@/components/ui/avatar"
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { authFetch } from "@/auth/authFetch";
-import { BookIcon } from "@/components/icons/mynaui-book"
+import { authFetch } from "@/auth/authFetch"
 import { NotificationSolidIcon } from "@/components/icons/mynaui-notification-solid"
 
 
