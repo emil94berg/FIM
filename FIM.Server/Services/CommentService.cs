@@ -65,5 +65,22 @@ namespace FIM.Server.Services
             }
             else return 0;
         }
+        public async Task<CommentDto> DeleteToGhostCommentAsync(string userId, int commentId)
+        {
+            var ghostComment = await _dbContext.Comments.FirstOrDefaultAsync(
+                c => c.UserId == userId && c.Id == commentId
+                );
+            if (ghostComment != null)
+            {
+                ghostComment.IsDeleted = true;
+                ghostComment.Content = "This comment has been deleted.";
+                ghostComment.Username = "Unknown User";
+                ghostComment.IsDeleted = true;
+                _dbContext.Update(ghostComment);
+                await _dbContext.SaveChangesAsync();
+                return ghostComment.ToCommentDto();
+            }
+            else return null;
+        }
     }
 }

@@ -55,5 +55,12 @@ namespace FIM.Server.Controllers
             if (result != 0) return Ok(result);
             return BadRequest();
         }
+        [HttpPut("GhostComment/{commentId}")]
+        public async Task<IActionResult> DeleteToGhostCommentAsync(int commentId)
+        {
+            var result = await _commentService.DeleteToGhostCommentAsync(UserId, commentId);
+            if (result != null) return Ok(result);
+            return BadRequest();
+        }
     }
 }
