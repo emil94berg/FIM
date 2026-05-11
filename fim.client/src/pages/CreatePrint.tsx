@@ -179,6 +179,21 @@ export default function CreatePrint() {
             toast.error("Failed to mark print as pending");
         }
     }
+    //const handleDeleteAllPrints = async (prints: Print[]) => {
+    //    try {
+    //        const data: boolean = await authFetch(`${apiUrl}/Print/HardDeleteAllPrints`, {
+    //            method: "DELETE",
+    //            body: JSON.stringify(prints.map(p => p.id))
+    //        });
+    //        if (data) setDeletedPrints([]);
+    //    }
+    //    catch (error) {
+    //        console.log("Failed to delete all prints: " + error);
+    //        toast.error("Failed to delete all prints");
+    //    }
+    //}
+
+    1
     
     
 
