@@ -1,10 +1,12 @@
 import type { components } from "@/types/schema"
 import { authFetch } from "@/auth/authFetch"
 import { useState, useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 import { ForumHeader } from "@/components/forum/ForumHeader"
 import { ForumHomeBody } from "@/components/forum/ForumHomeBody"
 import { Button } from "@/components/ui/button"
-
+import BreadcrumbsForum from "@/components/forum/BreadcrumbsForum"
+import { useNavigate } from "react-router-dom"
 
 type ForumPost = components["schemas"]["ForumPostDto"]
 type ForumTag = components["schemas"]["ForumPostTags"]
@@ -13,6 +15,8 @@ type PagedForumPost = components["schemas"]["PagedForumPostResult"]
 export default function ForumHomePage() {
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
     const url = "https://localhost:7035/ForumPost";
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const [currentTag, setCurrentTag] = useState<ForumTag | null>(null);
     const [allPosts, setAllPosts] = useState<ForumPost[]>([]);
@@ -57,6 +61,8 @@ export default function ForumHomePage() {
     }, [])
 
     useEffect(() => {
+        if (searchParams.get("tag")) return;
+
         const loadLatestPosts = async () => {
             try {
                 const data: ForumPost[] = await authFetch(url + "/GetLatestPosts");
@@ -67,9 +73,7 @@ export default function ForumHomePage() {
             }
         };
         loadLatestPosts();
-    }, [])
-
-    
+    }, [searchParams])
 
     
 
@@ -84,19 +88,18 @@ export default function ForumHomePage() {
     //    }
     //}
 
-    const displayPagedPostsOnTag = async (tag: ForumTag) => {     
-        setCurrentTag(tag);
-        try {
-            const data: PagedForumPost = await authFetch(`${apiUrl}/ForumPost/GetPagedPostOnTag?pageNumber=${pagedForumPost.pageNumber}&pageSize=${pagedForumPost.pageSize}&tag=${tag}`);
+    useEffect(() => {
+        const tagFromUrl = searchParams.get("tag") as ForumTag | null;
+        if (!tagFromUrl || allTags.length === 0 || !allTags.includes(tagFromUrl)) return;
+
+        const loadTaggedPosts = async () => {
+            const data: PagedForumPost = await authFetch(`${apiUrl}/ForumPost/GetPagedPostOnTag?pageNumber=1&pageSize=10&tag=${tagFromUrl}`);
+            setCurrentTag(tagFromUrl);
             setPagedForumPost(data);
-            if (data.items !== undefined) {
-                updatePagedPosts(data.items);
-            }
-        }
-        catch (error) {
-            console.log("Failed to fetch from forumpost..." + error);
-        }
-    }
+            if (data.items !== undefined) setLatestPosts(data.items);
+        };
+        loadTaggedPosts();
+    }, [searchParams, allTags, apiUrl])
 
     const updatePagedPosts = (forumPosts: ForumPost[]) => {
         setLatestPosts(forumPosts);
@@ -112,13 +115,16 @@ export default function ForumHomePage() {
         }
     }
 
-
-
-
-
     return (
         <div className="flex flex-col items-center">
-            <ForumHeader onDisplayPostOnForumTag={displayPagedPostsOnTag} tags={allTags}></ForumHeader>
+            <ForumHeader onDisplayPostOnForumTag={tag => navigate(`/forum?tag=${encodeURIComponent(tag)}`)} tags={allTags}></ForumHeader>
+            <div className="justify-start w-full max-w-7xl px-4 mt-4">
+                <BreadcrumbsForum activeTag={currentTag} onClearTag={() => {
+                    setCurrentTag(null);
+                    setLatestPosts(allPosts);
+                    navigate("/forum", { replace: true });
+                }} />
+            </div>
             <div className="mx-auto my-6 w-full max-w-7xl rounded-xl border bg-slate-100 p-4 shadow-sm md:p-6">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <section className="lg:col-span-8">

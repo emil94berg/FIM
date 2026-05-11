@@ -14,7 +14,6 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 type Print = components["schemas"]["PrintDto"];  
 type CreatePrindDto = components["schemas"]["CreatePrintDto"];
-type test = components["schemas"]["PrintStatus"];
 
 
 type UpdatePrintResponse = Print | { print: Print; warning?: string };
