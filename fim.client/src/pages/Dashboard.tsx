@@ -89,10 +89,10 @@ export default function DashboardHome() {
                 <div className="flex items-start bg-blue-500 text-white rounded-lg px-4 py-4 flex-col">
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
                     <TabsList className="w-fit gap-4">
-                        <TabsTrigger value="overview" className="bg-transparent bg-green-500">Overview</TabsTrigger>
-                        <TabsTrigger value="inventory" className="bg-transparent bg-green-500">Inventory</TabsTrigger>
-                        <TabsTrigger value="stats" className="bg-transparent bg-green-500">Statistics</TabsTrigger>
-                        <TabsTrigger value="fun-stats" className="bg-transparent bg-green-500">Fun Stats</TabsTrigger>
+                        <TabsTrigger value="overview" className={activeTab === "overview" ? "bg-blue-100 text-black" : "bg-green-500 text-white" }>Overview</TabsTrigger>
+                        <TabsTrigger value="inventory" className={activeTab === "inventory" ? "bg-blue-100 text-black" : "bg-green-500 text-white"}>Inventory</TabsTrigger>
+                        <TabsTrigger value="stats" className={activeTab === "stats" ? "bg-blue-100 text-black" : "bg-green-500 text-white"}>Statistics</TabsTrigger>
+                        <TabsTrigger value="fun-stats" className={activeTab === "fun-stats" ? "bg-blue-100 text-black" : "bg-green-500 text-white"}>Fun Stats</TabsTrigger>
                     </TabsList>
                 </div>
 
