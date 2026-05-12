@@ -9,5 +9,6 @@ namespace FIM.Server.Services.Interfaces
         Task<CommentDto> CreateCommentAsync(CreateCommentDto createDto, string userId);
         Task<CommentDto> SoftDeleteCommentsAsync(int commentId, string userId);
         Task<int> HardDeleteCommentsAsync(int commentId, string userId);
+        Task<CommentDto> DeleteToGhostCommentAsync(string userId, int commentId);
     }
 }

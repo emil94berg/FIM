@@ -26,6 +26,7 @@ type DisplayCommentsProps = {
     onAddComment: (comment: Comment) => void
     onUpdateUpvotes: (comment: Comment) => void
     onUpdateDeleteComment: (commentid: number) => void
+    handleCreateGhostComment: (comment: Comment) => void
 }
 
 interface CommentNode extends Comment {
@@ -37,11 +38,12 @@ interface Props {
     depth?: number;
 }
 
-export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes, onUpdateDeleteComment }: DisplayCommentsProps) {
+export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpvotes, onUpdateDeleteComment, handleCreateGhostComment }: DisplayCommentsProps) {
     const [userVotes, setUserVotes] = useState<UserVote[]>([]);
     const [currentUserId, setCurrentUserId] = useState<string>("");
     const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
     const [activeReplyQuote, setActiveReplyQuote] = useState<string>("");
+
 
     // const handleReplyClick = (commentId: number) => {
     //     if (activeReplyId === commentId) {
@@ -146,12 +148,24 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
         }
     }
 
-    const onDeleteComment = async (comment: Comment) => { 
+    //const onDeleteComment = async (comment: Comment) => { 
+    //    try {
+    //        const data: number = await authFetch(apiUrl + "/Comment/HardDelete/" + comment.id, {
+    //            method: "DELETE"
+    //        });
+    //        onUpdateDeleteComment(data);
+    //    }
+    //    catch (error) {
+    //        console.log("Failed to delete comment..." + error);
+    //    }
+    //}
+
+    const onCreateGhostComment = async (comment: Comment) => { 
         try {
-            const data: number = await authFetch(apiUrl + "/Comment/HardDelete/" + comment.id, {
-                method: "DELETE"
+            const data: Comment = await authFetch(apiUrl + "/Comment/GhostComment/" + comment.id, {
+                method: "PUT"
             });
-            onUpdateDeleteComment(data);
+            handleCreateGhostComment(data);
         }
         catch (error) {
             console.log("Failed to delete comment..." + error);
@@ -208,7 +222,8 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
         return (
             <div className="mt-3 ">
                 <div className="flex items-start gap-3">
-                    <img className={`${avatarClass} flex-shrink-0 rounded-full object-cover ring-1 ring-border`} src={`https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/${comment.userId}/profilepictures/avatar`}></img>
+                    <img className={`${avatarClass} flex-shrink-0 rounded-full object-cover ring-1 ring-border`} 
+                        src={comment.isDeleted === true ? "/src/assets/Pictures/unknownUser.png" : `https://zjsclbapwgnhrslrmark.supabase.co/storage/v1/object/public/ProfilesImages/${comment.userId}/profilepictures/avatar` } ></img>
 
                     <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -226,36 +241,37 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                         <div ref={contentRef} 
                         className="forum-rich-text mt-1 break-words text-sm leading-6 text-slate-800" 
                         dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }} />
+                        {!comment.isDeleted && 
+                            <div className="mt-2 flex items-center gap-3 text-sm text-slate-500">
+                                {upVoted(comment) ? (
+                                    <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onRemoveUpvotedComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
+                                ) : (
+                                    <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
+                                )}
 
-                        <div className="mt-2 flex items-center gap-3 text-sm text-slate-500">
-                            {upVoted(comment) ? (
-                                <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onRemoveUpvotedComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
-                            ) : (
-                                <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
-                            )}
+                                <span className="font-medium text-slate-700">{comment.upVotes}</span>
 
-                            <span className="font-medium text-slate-700">{comment.upVotes}</span>
-
-                            <Button
-                                className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900"
-                                onClick={handleReply}
-                            >
-                                Reply
-                            </Button>
-                            {currentUserId === comment.userId ? (<ConfirmDialog
-                                title="Delete comment!"
-                                description={`Are you sure you want to delete this comment, the action cannot be undone`}
-                                confirmText="Delete"
-                                cancelText="Cancel"
-                                cancelButtonClassName="bg-transparent border border-gray-300 text-gray-700"
-                                confirmButtonClassName="bg-red-500"
-                                onConfirm={() => onDeleteComment(comment)}>
-                                <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Delete</Button>
+                                <Button
+                                    className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900"
+                                    onClick={handleReply}
+                                >
+                                    Reply
+                                </Button>
+                                {currentUserId === comment.userId ? (<ConfirmDialog
+                                    title="Delete comment!"
+                                    description={`Are you sure you want to delete this comment, the action cannot be undone`}
+                                    confirmText="Delete"
+                                    cancelText="Cancel"
+                                    cancelButtonClassName="bg-transparent border border-gray-300 text-gray-700"
+                                    confirmButtonClassName="bg-red-500"
+                                    onConfirm={() => onCreateGhostComment(comment)}>
+                                    <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Delete</Button>
                                 </ConfirmDialog>)
-                                :
-                                (null)}
-                            
-                        </div>
+                                    :
+                                    (null)}
+                            </div>
+                        }
+                        
 
                         <div className="mt-2">
                             <CreateComment
