@@ -38,10 +38,10 @@ export default function InfoPage() {
                 <div className="relative mx-auto grid min-h-[72vh] max-w-7xl grid-cols-1 gap-10 px-6 py-16 md:grid-cols-2 md:items-center">
                     <FadeInSection>
                         <div className="max-w-2xl">
-                            <div className="inline-flex items-center gap-3 rounded-full border border-sky-300/40 bg-sky-500/10 px-4 py-1.5 text-sm text-sky-200">
-                                {/* <img src={logo} alt="FIM" className="h-5 w-5 object-contain" /> */}
+                            {/* <div className="inline-flex items-center gap-3 rounded-full border border-sky-300/40 bg-sky-500/10 px-4 py-1.5 text-sm text-sky-200">
+                                <img src={logo} alt="FIM" className="h-5 w-5 object-contain" />
                                 Built for practical 3D printing workflows
-                            </div>
+                            </div> */}
 
                             <h1 className="mt-6 text-4xl font-semibold leading-tight text-white sm:text-5xl md:text-6xl">
                                 Keep filament inventory, print status, and planning in one place
@@ -52,19 +52,19 @@ export default function InfoPage() {
                             </p>
 
                             <div className="mt-8 flex flex-wrap gap-2 text-sm text-slate-100">
-                                <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1">Inventory tracking</span>
-                                <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1">Active print updates</span>
-                                <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1">Community forum</span>
+                                <span className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1">Inventory tracking</span>
+                                <span className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1">Active print updates</span>
+                                <span className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1">Community forum</span>
                             </div>
 
                             {!user && (
                                 <div className="mt-8 flex flex-wrap items-center gap-3">
-                                    <Button className="bg-sky-500 text-white hover:bg-sky-600" onClick={handleCreateAccount}>
+                                    <Button className="border-white/30 bg-white/10 hover:bg-white/20" onClick={handleCreateAccount}>
                                         Create account
                                     </Button>
                                     <Button
                                         variant="outline"
-                                        className="border-white/30 bg-white/10 text-white hover:bg-white/20"
+                                        className="bg-sky-500 text-white hover:bg-sky-600"
                                         onClick={handleSignIn}
                                     >
                                         Sign in
@@ -73,21 +73,6 @@ export default function InfoPage() {
                             )}
                         </div>
                     </FadeInSection>
-
-                    {/* <FadeInSection>
-                        <div className="ml-auto w-full max-w-xl rounded-3xl border border-white/15 bg-white/10 p-4 backdrop-blur-md">
-                            <img
-                                src={spoolExample}
-                                alt="Spool inventory screen"
-                                className="h-[320px] w-full rounded-2xl object-cover object-top shadow-2xl"
-                            />
-                            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs text-slate-200">
-                                <div className="rounded-xl bg-white/10 px-2 py-2">Inventory</div>
-                                <div className="rounded-xl bg-white/10 px-2 py-2">Activity</div>
-                                <div className="rounded-xl bg-white/10 px-2 py-2">Community</div>
-                            </div>
-                        </div>
-                    </FadeInSection> */}
                 </div>
             </section>
 
@@ -118,7 +103,7 @@ export default function InfoPage() {
                         <FadeInSection>
                             <article className="h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                                 <MessageSquare className="h-6 w-6 text-sky-700" />
-                                <h3 className="mt-4 text-lg font-semibold">Forum support</h3>
+                                <h3 className="mt-4 text-lg font-semibold">Community Forum</h3>
                                 <p className="mt-2 text-sm text-slate-600">Share setups, ask questions, and learn from other 3D printing users.</p>
                             </article>
                         </FadeInSection>
@@ -175,7 +160,7 @@ export default function InfoPage() {
                     <div className="mx-auto max-w-3xl px-6">
                         <h2 className="text-3xl font-semibold sm:text-4xl">Ready to organize your 3D printing workflow?</h2>
                         <p className="mt-3 text-slate-200">Track spools, monitor prints, and plan projects in one system.</p>
-
+ 
                         {!user && (
                             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                                 <Button className="bg-sky-500 text-white hover:bg-sky-600" onClick={handleCreateAccount}>
@@ -192,6 +177,9 @@ export default function InfoPage() {
                         )}
                     </div>
                 </FadeInSection>
+                <div className="mr-10 flex justify-end">
+                    <img src={logo} alt="FIM" className="h-16 w-16" />
+                </div>
             </section>
         </main>
     )

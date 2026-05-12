@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { HomeIcon } from "@/components/icons/mynaui-home"
-import { AddQueueIcon } from "@/components/icons/mynaui-add-queue"
 import { ActivitySquareIcon } from "@/components/icons/mynaui-activity-square"
 import { SquareDashedKanbanIcon } from "@/components/icons/mynaui-square-dashed-kanban"
 import { BookIcon } from "@/components/icons/mynaui-book"
-import { SmileSquareIcon } from "@/components/icons/mynaui-smile-square"
 import { useAuth } from "@/auth/useAuth"
 import { UserCog, Layers, Spool } from "lucide-react"
 
