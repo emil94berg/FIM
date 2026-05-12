@@ -269,7 +269,6 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                                 </ConfirmDialog>)
                                     :
                                     (null)}
-
                             </div>
                         }
                         
