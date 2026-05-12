@@ -172,13 +172,20 @@ export default function GetSpools() {
                 <div className="gap-4 m-4">
                     <h1 className="text-3xl font-bold mb-4 text-white">Spools</h1>
                 </div>
-                <div className="flex flex-row gap-4 m-4">
-                    <Button className={activeView === "inventory" ? "bg-gray-500 text-white" : "bg-green-500 text-white"} onClick={() => setActiveView("inventory")}>Inventory</Button>
-                    <Button className={activeView === "catalog" ? "bg-gray-500 text-white" : "bg-green-500 text-white"} onClick={() => setActiveView("catalog")}>Catalog</Button>
-                    <Button className="bg-green-500 text-white" onClick={() => {
-                        setFormData(defaultSpool);
-                        setAddingSpool(true)}}>Add Spool</Button>
-                    <Button className="bg-red-500 text-white" onClick={() => setShowDeleted(prev => !prev)}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
+                <div className="flex flex-row gap-4 m-4 justify-between">
+                    <div>
+                        <Button className={activeView === "inventory" ? "bg-blue-100 text-black mr-2" : "bg-green-500 text-white mr-2"} onClick={() => setActiveView("inventory")}>My Inventory</Button>
+                        <Button className={activeView === "catalog" ? "bg-blue-100 text-black mr-2" : "bg-green-500 text-white mr-2"} onClick={() => setActiveView("catalog")}>Public Catalog</Button>
+                        <Button className="bg-green-500 text-white" onClick={() => {
+                            setFormData(defaultSpool);
+                            setAddingSpool(true)
+                        }}>Add Spool</Button>
+                        
+                    </div>
+                    <div>
+                        <Button className="bg-red-500 text-white" onClick={() => setShowDeleted(prev => !prev)}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
+                    </div>
+                    
                 </div>
             </div>
             {activeView === "inventory" ? (

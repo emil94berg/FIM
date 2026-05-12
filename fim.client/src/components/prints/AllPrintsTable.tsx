@@ -59,7 +59,7 @@ export function AllPrintsTable({ Print, statusMap, onEdit, onDelete, onStart }: 
                                 })}
                             </TableCell>
                             <TableCell>
-                                {p.id !== undefined && (
+                                {p.status !== 1 && (
                                     <StartPrintPopup
                                         print={p}
                                         onStarted={onStart}
