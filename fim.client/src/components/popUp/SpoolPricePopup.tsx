@@ -32,7 +32,7 @@ export function SetSpoolPrice({
     return (
         <AlertDialog>
             <AlertDialogTrigger className="bg-transparent" asChild>
-                <Button variant="outline" className="bg-blue-500 text-yellow">Add to spools</Button>
+                <Button variant="outline" className="bg-blue-500 text-white">Add to spools</Button>
             </AlertDialogTrigger>
 
             <AlertDialogContent className="bg-white text black">
