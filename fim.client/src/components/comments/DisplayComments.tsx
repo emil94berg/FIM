@@ -241,36 +241,38 @@ export function DisplayComments({ comments, forumPost, onAddComment, onUpdateUpv
                         <div ref={contentRef} 
                         className="forum-rich-text mt-1 break-words text-sm leading-6 text-slate-800" 
                         dangerouslySetInnerHTML={{ __html: cleanContent(comment.content) }} />
+                        {!comment.isDeleted && 
+                            <div className="mt-2 flex items-center gap-3 text-sm text-slate-500">
+                                {upVoted(comment) ? (
+                                    <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onRemoveUpvotedComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
+                                ) : (
+                                    <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
+                                )}
 
-                        <div className="mt-2 flex items-center gap-3 text-sm text-slate-500">
-                            {upVoted(comment) ? (
-                                <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onRemoveUpvotedComment(comment)} ><FatArrowUpSolidIcon className="text-green-500"></FatArrowUpSolidIcon></Button>
-                            ) : (
-                                <Button className="h-auto bg-transparent px-1 py-0 text-slate-600 hover:bg-transparent" onClick={() => onUpvoteComment(comment)} ><FatArrowUpIcon></FatArrowUpIcon></Button>
-                            )}
+                                <span className="font-medium text-slate-700">{comment.upVotes}</span>
 
-                            <span className="font-medium text-slate-700">{comment.upVotes}</span>
-
-                            <Button
-                                className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900"
-                                onClick={handleReply}
-                            >
-                                Reply
-                            </Button>
-                            {currentUserId === comment.userId ? (<ConfirmDialog
-                                title="Delete comment!"
-                                description={`Are you sure you want to delete this comment, the action cannot be undone`}
-                                confirmText="Delete"
-                                cancelText="Cancel"
-                                cancelButtonClassName="bg-transparent border border-gray-300 text-gray-700"
-                                confirmButtonClassName="bg-red-500"
-                                onConfirm={() => onCreateGhostComment(comment)}>
-                                <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Delete</Button>
+                                <Button
+                                    className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900"
+                                    onClick={handleReply}
+                                >
+                                    Reply
+                                </Button>
+                                {currentUserId === comment.userId ? (<ConfirmDialog
+                                    title="Delete comment!"
+                                    description={`Are you sure you want to delete this comment, the action cannot be undone`}
+                                    confirmText="Delete"
+                                    cancelText="Cancel"
+                                    cancelButtonClassName="bg-transparent border border-gray-300 text-gray-700"
+                                    confirmButtonClassName="bg-red-500"
+                                    onConfirm={() => onCreateGhostComment(comment)}>
+                                    <Button className="h-auto bg-transparent px-1 py-0 text-sm font-medium text-slate-600 hover:bg-transparent hover:text-slate-900">Delete</Button>
                                 </ConfirmDialog>)
-                                :
-                                (null)}
-                            
-                        </div>
+                                    :
+                                    (null)}
+
+                            </div>
+                        }
+                        
 
                         <div className="mt-2">
                             <CreateComment
