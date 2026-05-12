@@ -188,10 +188,16 @@ export default function CreatePrint() {
                 <div className="gap-4 m-4">
                     <h1 className="text-3xl font-bold text-white">Prints</h1>
                 </div>
-                <div className="flex flex-grow gap-4 m-4">
-                    <Button className="bg-green-500 text-white" onClick={() => setAddingPrint(true)}>Add Print</Button>
-                    <Button className="bg-blue-400 text-white" onClick={handleFinishedPrints}>Finished prints</Button>
-                    <Button className="bg-red-500 text-white" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
+                <div className="flex flex-grow gap-4 m-4 justify-between">
+                    <div>
+                        <Button className="bg-green-500 text-white" onClick={() => setAddingPrint(true)}>Add Print</Button>
+                        <Button className="bg-blue-400 text-white" onClick={handleFinishedPrints}>Finished prints</Button>
+                    </div>
+                    <div>
+                        <Button className="bg-red-500 text-white" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>
+                    </div>
+                    
+                   
                 </div>
             </div>
                 <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">

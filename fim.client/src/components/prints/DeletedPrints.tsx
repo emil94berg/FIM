@@ -94,7 +94,7 @@ export function HandleDeletedPrints({ prints, onPrintsChanged, onHandlePrintsHar
                                 <TableCell>{ p.name}</TableCell>
                                 <TableCell>{ p.createdAt}</TableCell>
                                 <TableCell>
-                                    <Button className="bg-blue-500 text-black"
+                                    <Button className="bg-blue-500 text-white"
                                         onClick={() => deleteToActiveAsync(p)} 
                                     >Activate</Button>
                                     <ConfirmDialog
@@ -106,7 +106,7 @@ export function HandleDeletedPrints({ prints, onPrintsChanged, onHandlePrintsHar
                                         cancelButtonClassName={"bg-gray-400 text-white"}
                                         onConfirm={() => HandleHardDeleteAsync(p)}
                                     >
-                                    <Button className="bg-red-500">Delete</Button></ConfirmDialog>
+                                    <Button className="bg-red-500 text-white">Delete</Button></ConfirmDialog>
                                 </TableCell>
                             </TableRow>
                             ))}
