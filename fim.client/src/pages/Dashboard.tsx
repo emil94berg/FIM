@@ -84,8 +84,8 @@ export default function DashboardHome() {
         s.material.toLowerCase().includes(searchString.toLowerCase())
     );
     return (
-        <div className="flex flex-col h-screen p-4 gap-4 overflow-hidden"> 
-            <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden w-full">
+        <div className="flex min-h-screen flex-col gap-4 overflow-y-auto p-4"> 
+            <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col w-full">
                 <div className="flex items-start bg-blue-500 text-white rounded-lg px-4 py-4 flex-col">
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
                     

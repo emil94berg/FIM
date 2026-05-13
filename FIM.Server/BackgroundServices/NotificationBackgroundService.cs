@@ -56,10 +56,11 @@ public class NotificationBackgroundService : BackgroundService
         
         foreach (var spool in lowSpools)
         {
+            var lowSpoolType = $"LOW_SPOOL:{spool.Id}";
+
             var exists = await dbContext.Notifications.AnyAsync( n =>
                 n.UserId == spool.UserId &&
-                n.Type == "LowSpool" &&
-                n.Message.Contains($"Spool {spool.Brand} is low")
+                n.Type == lowSpoolType
             );
 
             if (!exists)
@@ -68,7 +69,7 @@ public class NotificationBackgroundService : BackgroundService
                 dbContext.Notifications.Add(new Notification
                 {
                     UserId = spool.UserId,
-                    Type = "LowSpool",
+                    Type = lowSpoolType,
                     Message = $"Spool {spool.Brand} is low on material. Remaining weight: {spool.RemainingWeight}g",
                     IsRead = false,
                     CreatedAt = DateTime.UtcNow
@@ -94,9 +95,11 @@ public class NotificationBackgroundService : BackgroundService
 
         foreach (var print in finishedPrints)
         {
+            var printFinishedType = $"PRINT_FINISHED:{print.Id}";
+
             var exists = await dbContext.Notifications.AnyAsync(n =>
-                n.Type == "PRINT_FINISHED" &&
-                n.Message.Contains($"Print '{print.Name}' is finished")
+                n.UserId == print.UserId &&
+                n.Type == printFinishedType
             );
 
             if (!exists)
@@ -106,7 +109,7 @@ public class NotificationBackgroundService : BackgroundService
                 {
                     UserId = print.UserId,
                     Message = $"Print '{print.Name}' is finished",
-                    Type = "PRINT_FINISHED",
+                    Type = printFinishedType,
                     IsRead = false,
                     CreatedAt = DateTime.UtcNow,
                 });
@@ -140,7 +143,6 @@ public class NotificationBackgroundService : BackgroundService
 
         var filamentCatalogList = new List<PublicFilamentCatalog>();
 
-        string uri = "filaments.json";
         var client = new HttpClient();
         //string baseAddress = "https://donkie.github.io/SpoolmanDB/";
         //client.BaseAddress = new Uri(baseAddress);

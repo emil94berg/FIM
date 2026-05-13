@@ -117,9 +117,9 @@ export default function EditActivePrints() {
                 <p className="text-blue-100 text-sm mt-1">{activePrints.length} print{activePrints.length !== 1 ? "s" : ""} currently running</p>
             </div>
 
-            <div className="rounded-xl border bg-slate-100 p-4 shadow-sm">
-                <Table>
-                    <TableHeader>
+            <div className="rounded-xl border bg-slate-200 p-4 shadow-sm">
+                <Table className="table-fixed" containerClassName="overflow-auto">
+                    <TableHeader className="bg-slate-100 [&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-slate-100">
                         <TableRow>
                             <TableHead>Print Name</TableHead>
                             <TableHead>Status</TableHead>
@@ -127,7 +127,7 @@ export default function EditActivePrints() {
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody className="bg-slate-50">
                         {activePrints.map(p => (
                             <UpdatePercentageBar
                                 key={p.id}
@@ -142,7 +142,7 @@ export default function EditActivePrints() {
                 </Table>
 
                 {activePrints.length === 0 && (
-                    <div className="py-12 text-center text-sm text-muted-foreground">
+                    <div className="py-12 text-center text-sm text-muted-foreground bg-slate-50">
                         No active prints right now.
                     </div>
                 )}
