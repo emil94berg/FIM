@@ -77,8 +77,12 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
                 groupedData.push({ month: monthOrder[i], numberOfPrints: 0 });
             }
         }
-
+        
         groupedData.sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month))
+
+        for (const data of groupedData) {
+            data.month = data.month.slice(0,3);
+        }
 
         return groupedData
     }, [prints, monthOrder])
@@ -87,7 +91,7 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
     
     
     return (
-        <Card style={{maxWidth: "30%"}}>
+        <Card>
             <CardHeader>
                 <CardTitle>Completed prints</CardTitle>
                 <CardDescription>Completed prints per month</CardDescription>
@@ -95,7 +99,7 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
             <CardContent className="pb-0">
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="h-[250px] bg-slate-200"
                 >
                     <RadarChart data={data} >
                         <ChartTooltip cursor={false}></ChartTooltip>
