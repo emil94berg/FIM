@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { HomeIcon } from "@/components/icons/mynaui-home"
-import { AddQueueIcon } from "@/components/icons/mynaui-add-queue"
 import { ActivitySquareIcon } from "@/components/icons/mynaui-activity-square"
-import { SquareDashedKanbanIcon } from "@/components/icons/mynaui-square-dashed-kanban"
 import { BookIcon } from "@/components/icons/mynaui-book"
-import { SmileSquareIcon } from "@/components/icons/mynaui-smile-square"
 import { useAuth } from "@/auth/useAuth"
+import { UserCog, Layers, Spool, LayoutDashboard } from "lucide-react"
 
 const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
@@ -17,17 +15,17 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
         title: "Dashboard",
         href: "/dashboard",
-        icon: <SquareDashedKanbanIcon className="w-5 h-5" ></SquareDashedKanbanIcon>
+        icon: <LayoutDashboard className="w-5 h-5" ></LayoutDashboard>
     },
     {
         title: "Handle Prints",
         href: "/handle-prints",
-        icon: <AddQueueIcon className="w-5 h-5" ></AddQueueIcon>
+        icon: <Layers className="w-5 h-5" ></Layers>
     },
     {
         title: "Handle Spools",
         href: "/handle-spools",
-        icon: <AddQueueIcon className="w-5 h-5" ></AddQueueIcon>
+        icon: <Spool className="w-5 h-5" ></Spool>
     },
     {
         title: "Active Prints",
@@ -42,7 +40,7 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
         title: "Profile Page",
         href: "/profile",
-        icon: <SmileSquareIcon className="w-5 h-5" ></SmileSquareIcon>
+        icon: <UserCog className="w-5 h-5" ></UserCog>
     }
 ]
 

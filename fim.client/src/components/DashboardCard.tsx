@@ -23,7 +23,7 @@ export default function DashCard<T>({title, typeName, items, renderItem, emptyMe
             <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-5 py-4">
                 <div className="flex items-center justify-between gap-3">
                     <h3 className="text-sm font-semibold tracking-wide text-slate-800 uppercase">{title}</h3>
-                    <span className="inline-flex min-w-7 items-center justify-center rounded-full bg-slate-900 px-2.5 py-1 text-xs font-semibold text-white">
+                    <span className="inline-flex min-w-7 items-center justify-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-900 border border-slate-200">
                         {items.length}
                     </span>
                 </div>

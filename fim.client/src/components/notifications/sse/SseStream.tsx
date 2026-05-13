@@ -42,9 +42,11 @@ export default function SseStream() {
             while (true) {
                 const data = await reader.read();
 
-                const chunk = decoder.decode(data.value);
+                if (data.done) break;
 
-                const notificationStrings = chunk.split("\n");
+                    const chunk = decoder.decode(data.value);
+
+                    const notificationStrings = chunk.split("\n");
 
                 for (let note of notificationStrings) {
                     if (note.startsWith("data: ")) {
@@ -101,9 +103,7 @@ export default function SseStream() {
         return numberOfUnreadNotifications;
     }
 
-    
-    
-
+    // Redo with a popover instead of collapsible
     return (
         <div>
             <Collapsible

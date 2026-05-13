@@ -44,8 +44,8 @@ export function AllSpoolsGrouped({ groupedSpools, onEditSpool, onDelete, handleG
             {groupedSpools.map(gs => (
                 <Collapsible key={gs.identifier} className="mb-3">
                     
-                    <div className="border-2 border-gray-400 rounded">
-                        <CollapsibleTrigger className="bg-transparent w-full flex items-center gap-2 px-3 py-2">
+                    <div>
+                        <CollapsibleTrigger className="bg-slate-50 w-full flex items-center gap-2 px-3 py-2">
                             <ChevronsUpDown className="h-4 w-4"/>
                             
                             <span>{gs.identifier}</span>
