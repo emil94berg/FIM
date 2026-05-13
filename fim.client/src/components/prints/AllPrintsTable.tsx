@@ -1,16 +1,5 @@
 import { useState } from "react"
 import type { components } from "@/types/schema"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button"
-import { ConfirmDialog } from "@/components/popUp/ConfirmPopup"
-import { StartPrintPopup } from "@/components/popUp/StartPrintPopup"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RenderPrints } from "@/components/prints/ShowPrints"
 

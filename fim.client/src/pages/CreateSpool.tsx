@@ -10,7 +10,7 @@ import { TrashIcon } from "@/components/icons/mynaui-trash"
 import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
 import { ExistingSpoolContext, defaultSpool } from "@/components/context/AddSpoolContextType"
 import { CatalogList } from "@/components/FilamentCatalog"
-import { Tabs, TabsList, TabsTrigger, tabsListVariants } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
 
