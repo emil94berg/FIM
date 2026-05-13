@@ -191,7 +191,6 @@ export default function CreatePrint() {
                 <div className="flex flex-grow gap-4 m-4 justify-between">
                     <div>
                         <Button className="bg-green-500 text-white mr-2" onClick={() => setAddingPrint(true)}>Add Print</Button>
-                        <Button className="bg-blue-400 text-white" onClick={handleFinishedPrints}>Finished prints</Button>
                     </div>
                     <div>
                         <Button className="bg-red-500 text-white" onClick={handleSetShowDeleted}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedPrints.length})</Button>

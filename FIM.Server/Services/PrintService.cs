@@ -136,7 +136,19 @@ namespace FIM.Server.Services
 
                 if (dto.Name != null) update.Name = dto.Name;
                 if (dto.SpoolId != null) update.SpoolId = dto.SpoolId.Value;
-                if (dto.GramsUsed != null) update.GramsUsed = dto.GramsUsed.Value;
+                if (dto.GramsUsed != null)
+                {
+                    var updateSpool = await _context.Spools.FirstOrDefaultAsync(s => s.Id == dto.SpoolId);
+                    if(updateSpool != null)
+                    {
+                        var updatedGrams = update.GramsUsed - dto.GramsUsed;
+                        if(updatedGrams != null && updateSpool.RemainingWeight != 0) updateSpool.RemainingWeight = (double)(updateSpool.RemainingWeight + updatedGrams);
+
+                    }
+                    
+                    update.GramsUsed = dto.GramsUsed.Value;
+                    
+                } 
                 if (dto.Status != null) update.Status = dto.Status.Value;
 
 
