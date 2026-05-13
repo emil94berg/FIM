@@ -30,6 +30,7 @@ export function StartPrintPopup({
     onStarted,
 }: StartPrintPopupPropts) { 
     const [estimatedTime, setEstimatedTime] = useState<number>(0);
+    const [open, setOpen] = useState(false);
 
     const startPrint = async (print: Print) => {
         try {
@@ -42,6 +43,7 @@ export function StartPrintPopup({
             });
             onStarted(data);
             toast.success(`Print "${print.name}" started`);
+            setOpen(false);
         }
         catch (error) {
             console.log("Failed to fetch from print..." + error);
@@ -50,7 +52,7 @@ export function StartPrintPopup({
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
@@ -62,7 +64,7 @@ export function StartPrintPopup({
                 <Label>Estimated print time (minutes):</Label>
                 <Input type="number" placeholder="e.g. 120" onChange={(e) => setEstimatedTime(Number(e.target.value))}></Input>
                 <DialogFooter>
-                    <Button  className="bg-blue-500 text-white" onClick={() => startPrint(print)}>Start {print.name}</Button>
+                <Button className="bg-blue-500 text-white" onClick={() => startPrint(print)}>Start {print.name}</Button>
                     <DialogClose asChild>
                         <Button className="bg-transparent border border-gray-300 text-gray-700">Cancel</Button>
                     </DialogClose>

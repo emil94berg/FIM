@@ -53,8 +53,8 @@ export function RenderPrints({ printsOrderedByStatus, statusMap, Print, onEdit, 
                                     minute: "2-digit"
                                 })}
                             </TableCell>
-                            <TableCell>
-                                {p.status !== 2 && (
+                        <TableCell>
+                            {p.status !== 1 && p.status !== 2 && (
                                     <StartPrintPopup
                                         print={p}
                                         onStarted={onStart}
