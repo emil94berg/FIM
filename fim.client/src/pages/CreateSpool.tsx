@@ -10,6 +10,8 @@ import { TrashIcon } from "@/components/icons/mynaui-trash"
 import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
 import { ExistingSpoolContext, defaultSpool } from "@/components/context/AddSpoolContextType"
 import { CatalogList } from "@/components/FilamentCatalog"
+import { Tabs, TabsList, TabsTrigger, tabsListVariants } from "@/components/ui/tabs"
+
 
 
 
@@ -174,22 +176,35 @@ export default function GetSpools() {
                 </div>
                 <div className="flex flex-row gap-4 m-4 justify-between">
                     <div>
-                        <Button className={activeView === "inventory" ? "bg-blue-100 text-black mr-2" : "bg-green-500 text-white mr-2"} onClick={() => setActiveView("inventory")}>My Inventory</Button>
-                        <Button className={activeView === "catalog" ? "bg-blue-100 text-black mr-2" : "bg-green-500 text-white mr-2"} onClick={() => setActiveView("catalog")}>Public Catalog</Button>
-                        <Button className="bg-green-500 text-white" onClick={() => {
-                            setFormData(defaultSpool);
-                            setAddingSpool(true)
-                        }}>Add Spool</Button>
+                        
+
+                       
+                        {activeView === "inventory" && 
+                            <Button className="bg-green-500 text-white" onClick={() => {
+                                setFormData(defaultSpool);
+                                setAddingSpool(true)
+                            }}>Add Spool</Button>
+                        }
+                        
                         
                     </div>
                     <div>
-                        <Button className="bg-red-500 text-white" onClick={() => setShowDeleted(prev => !prev)}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
+                        {activeView === "inventory" &&
+                            <Button className="bg-red-500 text-white" onClick={() => setShowDeleted(prev => !prev)}><TrashIcon className="size-8"></TrashIcon>Deleted ({deletedSpools.length})</Button>
+                        }
+                        
                     </div>
                     
                 </div>
             </div>
             {activeView === "inventory" ? (
                 <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
+                    <Tabs value={activeView} onValueChange={(value) => setActiveView(value as "inventory" | "catalog")}>
+                        <TabsList variant="line">
+                            <TabsTrigger value="inventory">My Inventory</TabsTrigger>
+                            <TabsTrigger value="catalog">Public Catalog</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
                     <AllSpoolsGrouped
                         groupedSpools={groupedSpools}
                         onEditSpool={setEditingSpool}
@@ -199,7 +214,13 @@ export default function GetSpools() {
                     ></AllSpoolsGrouped>
                 </div>
             ) : (
-                <div className="gap-4 m-4 bg-slate-200 p-4 rounded">
+                    <div className="gap-4 m-4 bg-slate-200 p-4 rounded">
+                        <Tabs value={activeView} onValueChange={(value) => setActiveView(value as "inventory" | "catalog")}>
+                            <TabsList variant="line">
+                                <TabsTrigger value="inventory">My Inventory</TabsTrigger>
+                                <TabsTrigger value="catalog">Public Catalog</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
                     <CatalogList />
                 </div>
             )}

@@ -267,7 +267,7 @@ export function CatalogList() {
                                 <div className="flex flex-wrap gap-1">
                                     {s.colorHexes != null ? (
                                         s.colorHexes.slice(0, 6).map((hex, i) => (
-                                            <div key={i}
+                                            <span><div key={i}
                                                 title={`#${hex}`}
                                                 style={{
                                                 backgroundColor: `#${hex}`,
@@ -276,18 +276,19 @@ export function CatalogList() {
                                                 border: "1px solid black",
                                                 borderRadius: "3px"
                                                 }}
-                                            />
+                                            ></div>#{hex}</span>
                                         )) 
                                     ) : (
                                         s.colorHex && (
-                                            <div title={`#${s.colorHex}`}
+                                            <span><div title={`#${s.colorHex}`}
                                                 style={{
                                                 width: "32px",
                                                 height: "16px",
                                                 backgroundColor: `#${s.colorHex}`,
                                                 border: "1px solid black",
-                                                borderRadius: "3px"
-                                            }}></div>
+                                                        borderRadius: "3px"
+                                                    }}></div>
+                                                    #{s.colorHex}</span>
                                         )     
                                     )
                                 }

@@ -190,13 +190,16 @@ export default function DashboardHome() {
 
                         <div className="mb-4 pt-4 gap-4 px-4">
                             {/* Show Stats */}
-                            <div className="flex-[3] mb-4"> 
-                                <CompletedPrintsChart
-                                    prints={data.allCompletedPrints}
-                                ></CompletedPrintsChart>
+                            <div className="flex flex-column m-4"> 
+                                    <CompletedPrintsChart
+                                        prints={data.allCompletedPrints}
+                                    ></CompletedPrintsChart>
+                                <div className="ml-4">
+                                    <CardTotalSpoolCost spools={data.allSpools} />
+                                    <CardTotalPrintCost prints={data.allCompletedPrints} />
+                                </div>
                             </div>
-                            <CardTotalSpoolCost spools={data.allSpools} />
-                            <CardTotalPrintCost prints={data.allCompletedPrints} />
+                            
                         </div>
                     </div>
                 </TabsContent>

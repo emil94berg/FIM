@@ -37,37 +37,11 @@ const chartConfig = {
 
 
 export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
-    /*const [data, setData] = useState<charData[]>([]);*/
-
-    //const monthOrder = [
-    //    "January", "February", "March", "April", "May", "June",
-    //    "July", "August", "September", "October", "November", "December"
-    //]
-
+    
     const monthOrder = useMemo(() => [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ], [])
-
-    //useEffect(() => {
-    //    const groupedData = prints.reduce((acc: charData[], print) => {
-    //        const date = new Date(String(print.estimatedEndTime))
-    //        const month = date.toLocaleString("en-US", { month: "long" })
-
-    //        const existing = acc.find((item: charData) => item.month === month)
-
-    //        if (existing) {
-    //            existing.numberOfPrints += 1
-    //        }
-    //        else {
-    //            acc.push({ month, numberOfPrints: 1 })
-    //        }
-
-    //        return acc
-    //    }, [] as charData[]);
-    //    groupedData.sort((a: charData, b: charData) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
-    //    setData(groupedData);
-    //}, [prints]);
 
     const completedPrintsNumber = () => {
         return prints.filter(print =>
@@ -91,7 +65,25 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
             }
             return acc
         }, [])
+        
+        const existingMonths:string[] = [];
+        for (const cD of groupedData) {
+            if (!existingMonths.includes(cD.month)) {
+                existingMonths.push(cD.month);
+            }
+        }
+        for (let i = 0; i < monthOrder.length; i++) {
+            if (!existingMonths.includes(monthOrder[i])) {
+                groupedData.push({ month: monthOrder[i], numberOfPrints: 0 });
+            }
+        }
+        
         groupedData.sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month))
+
+        for (const data of groupedData) {
+            data.month = data.month.slice(0,3);
+        }
+
         return groupedData
     }, [prints, monthOrder])
 
@@ -99,7 +91,7 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
     
     
     return (
-        <Card style={{maxWidth: "30%"}}>
+        <Card>
             <CardHeader>
                 <CardTitle>Completed prints</CardTitle>
                 <CardDescription>Completed prints per month</CardDescription>
@@ -107,7 +99,7 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
             <CardContent className="pb-0">
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="h-[250px] bg-slate-200"
                 >
                     <RadarChart data={data} >
                         <ChartTooltip cursor={false}></ChartTooltip>
