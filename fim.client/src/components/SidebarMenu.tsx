@@ -2,10 +2,9 @@ import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { HomeIcon } from "@/components/icons/mynaui-home"
 import { ActivitySquareIcon } from "@/components/icons/mynaui-activity-square"
-import { SquareDashedKanbanIcon } from "@/components/icons/mynaui-square-dashed-kanban"
 import { BookIcon } from "@/components/icons/mynaui-book"
 import { useAuth } from "@/auth/useAuth"
-import { UserCog, Layers, Spool } from "lucide-react"
+import { UserCog, Layers, Spool, LayoutDashboard } from "lucide-react"
 
 const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
@@ -16,7 +15,7 @@ const components: { title: string; href: string; icon?: React.ReactNode }[] = [
     {
         title: "Dashboard",
         href: "/dashboard",
-        icon: <SquareDashedKanbanIcon className="w-5 h-5" ></SquareDashedKanbanIcon>
+        icon: <LayoutDashboard className="w-5 h-5" ></LayoutDashboard>
     },
     {
         title: "Handle Prints",
