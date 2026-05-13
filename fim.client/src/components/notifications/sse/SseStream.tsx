@@ -2,16 +2,12 @@ import { useEffect, useState } from "react"
 import { getToken } from "@/auth/authService"
 import type { components } from "@/types/schema"
 import {
-    Avatar,
-    AvatarBadge
-} from "@/components/ui/avatar"
-import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { authFetch } from "@/auth/authFetch"
-import { NotificationSolidIcon } from "@/components/icons/mynaui-notification-solid"
+import { Bell } from "lucide-react"
 
 
 
@@ -103,43 +99,69 @@ export default function SseStream() {
         return numberOfUnreadNotifications;
     }
 
+    const formatNotificationDate = (createdAt: string | null | undefined) => {
+        if (!createdAt) return "Unknown time";
+
+        const parsedDate = new Date(createdAt);
+        if (Number.isNaN(parsedDate.getTime())) return "Unknown time";
+
+        return parsedDate.toLocaleString("sv-SE", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+    const unreadCount = notificationsNotReadCount();
+    const notificationsSortedByLatest = [...notifications].sort((a, b) => {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return timeB - timeA;
+    });
+
     // Redo with a popover instead of collapsible
     return (
         <div>
             <Collapsible
                 open={isOpen}
-                onOpenChange={() => setIsOpen(prev => !prev)}
+                onOpenChange={(open) => {
+                    setIsOpen(open);
+                    if (open) {
+                        void handleNotificationsRead();
+                    }
+                }}
                 className="relative"
-                onClick={handleNotificationsRead}
             >
                 <div className="flex flex-col items-start gap-2">
-                    <CollapsibleTrigger className="bg-transparent">
-                        <Avatar>
-                            <NotificationSolidIcon
-                                color="rgba(255,0,0,1)"
-                                className={notificationsNotReadCount() === 0 ? "grayscale" : ""}
-                                size={30}
-                            ></NotificationSolidIcon>
-                            {notificationsNotReadCount() > 0 ? (
-                                <AvatarBadge className="bg-red-500 text-white text-xs">
-                                    {notificationsNotReadCount() === 0 ? "" : notificationsNotReadCount()}
-                                </AvatarBadge>
-                            ): (null)}
-                            
-                        </Avatar>
+                    <CollapsibleTrigger className="relative inline-flex items-center justify-center rounded-md border border-slate-300 bg-white p-2 transition-colors hover:bg-slate-100">
+                        <Bell className={unreadCount > 0 ? "h-6 w-6 text-blue-500" : "h-6 w-6 text-slate-600"} />
+                        {unreadCount > 0 ? (
+                            <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-500 px-1 text-xs font-semibold text-white">
+                                {unreadCount > 99 ? "99+" : unreadCount}
+                            </span>
+                        ) : null}
                     </CollapsibleTrigger>
 
                     <CollapsibleContent className="absolute top-14 right-0 z-50 flex flex-col gap-2 w-64 rounded-md
-                                                    border bg-gray-100 p-2 shadow-lg data-[state=closed]:hidden
+                                                    border border-slate-200 bg-white p-2 shadow-lg data-[state=closed]:hidden
                                                     overflow-y-scroll max-h-64">
-                        {notifications.map(notification => (
-                            <div
-                                key={notification.id}
-                                className="rounded-md border px-4 py-2 text-sm bg-blue-100 overflow-x-clip"
-                            >
-                                <p>{notification.message}</p>
-                            </div>
-                        ))}
+                        {notifications.length === 0 ? (
+                            <p className="rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-500">No notifications yet.</p>
+                        ) : (
+                            notificationsSortedByLatest.map(notification => (
+                                <div
+                                    key={notification.id}
+                                    className="rounded-md border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 overflow-x-clip"
+                                >
+                                    <p>{notification.message}</p>
+                                    <p className="mt-1 text-xs text-slate-500">
+                                        {formatNotificationDate(notification.createdAt)}
+                                    </p>
+                                </div>
+                            ))
+                        )}
                     </CollapsibleContent>
                 </div>
             </Collapsible>            
