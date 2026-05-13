@@ -2,7 +2,7 @@ import { FadeInSection } from "@/components/popUp/FadeInSection"
 import { Button } from "@/components/ui/button"
 import { useAuth } from '@/auth/useAuth'
 import { useNavigate } from "react-router-dom"
-import { Boxes, Printer, MessageSquare, CircleGauge } from "lucide-react"
+import { Boxes, Printer, MessageSquare, CircleGauge, ShelvingUnit } from "lucide-react"
 import logo from "@/assets/Pictures/FimLogga.png"
 import activePrintsExample from "@/assets/Pictures/activeprintsexample2.png"
 import HeroSection from "@/assets/Pictures/HeroSection.png"
@@ -52,9 +52,9 @@ export default function InfoPage() {
                             </p>
 
                             <div className="mt-8 flex flex-wrap gap-2 text-sm text-slate-100">
-                                <span className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1">Inventory tracking</span>
-                                <span className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1">Active print updates</span>
-                                <span className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1">Community forum</span>
+                                <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1"><ShelvingUnit className="h-4 w-4" />Inventory tracking</span>
+                                <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1"><CircleGauge className="h-4 w-4" />Active print updates</span>
+                                <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1"><MessageSquare className="h-4 w-4" />Community forum</span>
                             </div>
 
                             {!user && (

@@ -85,33 +85,39 @@ export default function DashboardHome() {
     );
     return (
         <div className="flex flex-col h-screen p-4 gap-4 overflow-hidden"> 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden w-full">
+            <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden w-full">
                 <div className="flex items-start bg-blue-500 text-white rounded-lg px-4 py-4 flex-col">
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                    <TabsList className="w-fit gap-4">
-                        <TabsTrigger value="overview" className={activeTab === "overview" ? "bg-blue-100 text-black" : "bg-green-500 text-white" }>Overview</TabsTrigger>
-                        <TabsTrigger value="inventory" className={activeTab === "inventory" ? "bg-blue-100 text-black" : "bg-green-500 text-white"}>Inventory</TabsTrigger>
-                        <TabsTrigger value="stats" className={activeTab === "stats" ? "bg-blue-100 text-black" : "bg-green-500 text-white"}>Statistics</TabsTrigger>
-                        <TabsTrigger value="fun-stats" className={activeTab === "fun-stats" ? "bg-blue-100 text-black" : "bg-green-500 text-white"}>Fun Stats</TabsTrigger>
-                    </TabsList>
+                    
+                    
                 </div>
 
+                <div className="bg-slate-200 rounded-xl p-2">
+                    <TabsList className="w-fit gap-4" variant="line">
+                        <TabsTrigger value="overview">Overview</TabsTrigger>
+                        <TabsTrigger value="inventory">Inventory</TabsTrigger>
+                        <TabsTrigger value="stats">Statistics</TabsTrigger>
+                        <TabsTrigger value="fun-stats">Fun Stats</TabsTrigger>
+                    </TabsList>
+                
                 <TabsContent value="overview" className="flex-1 overflow-auto mt-4">
-                    <div className="mb-4 flex flex-wrap gap-2 bg-slate-100 p-4 rounded-lg">
-                        <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
-                            <Link to="/handle-prints">Create Print</Link>
-                        </Button>
-                        <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
-                            <Link to="/active-prints">Active Prints</Link>
-                        </Button>
-                    </div>
+                    <div className="mb-4 bg-slate-100 p-4 rounded-lg">
+                        <div className="flex flex-wrap gap-2">
+                            <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
+                                <Link to="/handle-prints">Create Print</Link>
+                            </Button>
+                            <Button asChild variant="outline" className="border-slate-200 bg-white hover:bg-slate-50">
+                                <Link to="/active-prints">Active Prints</Link>
+                            </Button>
+                        </div>
 
-                    <div className="p-4">
-                        <OverviewTab 
-                        pending={data.pending}
-                        printing={data.printing}
-                        lowSpools={data.lowSpools}
-                        />
+                        <div className="pt-4">
+                            <OverviewTab 
+                                pending={data.pending}
+                                printing={data.printing}
+                                lowSpools={data.lowSpools}
+                            />
+                        </div>
                     </div>
                    
                 </TabsContent>
@@ -194,7 +200,9 @@ export default function DashboardHome() {
                         </div>
                     </div>
                 </TabsContent>
+                </div>
             </Tabs>
+            
             {editingSpool && (
                 <SpoolProvider>
                     <EditSpoolForm 
