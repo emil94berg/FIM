@@ -37,37 +37,11 @@ const chartConfig = {
 
 
 export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
-    /*const [data, setData] = useState<charData[]>([]);*/
-
-    //const monthOrder = [
-    //    "January", "February", "March", "April", "May", "June",
-    //    "July", "August", "September", "October", "November", "December"
-    //]
-
+    
     const monthOrder = useMemo(() => [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ], [])
-
-    //useEffect(() => {
-    //    const groupedData = prints.reduce((acc: charData[], print) => {
-    //        const date = new Date(String(print.estimatedEndTime))
-    //        const month = date.toLocaleString("en-US", { month: "long" })
-
-    //        const existing = acc.find((item: charData) => item.month === month)
-
-    //        if (existing) {
-    //            existing.numberOfPrints += 1
-    //        }
-    //        else {
-    //            acc.push({ month, numberOfPrints: 1 })
-    //        }
-
-    //        return acc
-    //    }, [] as charData[]);
-    //    groupedData.sort((a: charData, b: charData) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
-    //    setData(groupedData);
-    //}, [prints]);
 
     const completedPrintsNumber = () => {
         return prints.filter(print =>
@@ -91,7 +65,21 @@ export function CompletedPrintsChart({ prints }: CompletedPrintsProps) {
             }
             return acc
         }, [])
+        
+        const existingMonths:string[] = [];
+        for (const cD of groupedData) {
+            if (!existingMonths.includes(cD.month)) {
+                existingMonths.push(cD.month);
+            }
+        }
+        for (let i = 0; i < monthOrder.length; i++) {
+            if (!existingMonths.includes(monthOrder[i])) {
+                groupedData.push({ month: monthOrder[i], numberOfPrints: 0 });
+            }
+        }
+
         groupedData.sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month))
+
         return groupedData
     }, [prints, monthOrder])
 
