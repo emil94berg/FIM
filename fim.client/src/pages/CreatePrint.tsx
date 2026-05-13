@@ -184,7 +184,7 @@ export default function CreatePrint() {
 
     return (
         <div className="gap-4">
-            <div className="bg-blue-500 p-4 rounded gap-4 m-4">
+            <div className="bg-blue-500 p-4 rounded-lg gap-4 m-4">
                 <div className="gap-4 m-4">
                     <h1 className="text-3xl font-bold text-white">Prints</h1>
                 </div>
@@ -200,7 +200,7 @@ export default function CreatePrint() {
                    
                 </div>
             </div>
-                <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
+                <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded-lg">
                     <AllPrintsTable
                         Print={print}
                         statusMap={statusMap}

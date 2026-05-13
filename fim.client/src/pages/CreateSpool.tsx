@@ -10,7 +10,7 @@ import { TrashIcon } from "@/components/icons/mynaui-trash"
 import { AllSpoolsGrouped } from "@/components/spools/SpoolsGrouped"
 import { ExistingSpoolContext, defaultSpool } from "@/components/context/AddSpoolContextType"
 import { CatalogList } from "@/components/FilamentCatalog"
-import { Tabs, TabsList, TabsTrigger, tabsListVariants } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
 
@@ -170,7 +170,7 @@ export default function GetSpools() {
 
     return (
         <div className="gap-4">
-            <div className="bg-blue-500 p-4 rounded gap-4 m-4">
+            <div className="bg-blue-500 p-4 rounded-lg gap-4 m-4">
                 <div className="gap-4 m-4">
                     <h1 className="text-3xl font-bold mb-4 text-white">Spools</h1>
                 </div>
@@ -198,7 +198,7 @@ export default function GetSpools() {
                 </div>
             </div>
             {activeView === "inventory" ? (
-                <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded">
+                <div className="flex flex-col gap-4 m-4 bg-slate-200 p-4 rounded-lg">
                     <Tabs value={activeView} onValueChange={(value) => setActiveView(value as "inventory" | "catalog")}>
                         <TabsList variant="line">
                             <TabsTrigger value="inventory">My Inventory</TabsTrigger>
@@ -214,7 +214,7 @@ export default function GetSpools() {
                     ></AllSpoolsGrouped>
                 </div>
             ) : (
-                    <div className="gap-4 m-4 bg-slate-200 p-4 rounded">
+                    <div className="gap-4 m-4 bg-slate-200 p-4 rounded-lg">
                         <Tabs value={activeView} onValueChange={(value) => setActiveView(value as "inventory" | "catalog")}>
                             <TabsList variant="line">
                                 <TabsTrigger value="inventory">My Inventory</TabsTrigger>

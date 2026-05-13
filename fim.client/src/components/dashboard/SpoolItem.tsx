@@ -28,7 +28,10 @@ export function SpoolItem ({ spool, onEdit }: Props) {
     const percentage = getRemainingPercentage();
 
     return (
-        <button onClick={() => onEdit(spool)} className="block bg-blue-300 text-left w-full hover:bg-orange-300 p-3 space-y-2 rounded-md transition-colors">
+        <button
+            onClick={() => onEdit(spool)}
+            className="block w-full space-y-2 rounded-md border border-slate-300 bg-white p-3 text-left transition-colors hover:bg-slate-100"
+        >
             <div className="flex items-center justify-between gap-3">
                 <span className="font-medium text-slate-900">
                     {spool.identifier}, {spool.material}, {spool.diameter}mm, {spool.colorName}
@@ -38,7 +41,7 @@ export function SpoolItem ({ spool, onEdit }: Props) {
                 </span>
             </div>
 
-            <div className="h-3 w-full overflow-hidden rounded-full bg-white/70">
+            <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200">
                 <div className={`h-full rounded-full transition-all ${getBarColorClass()}`} style={{ width: `${percentage}%` }}/>
             </div>
 
