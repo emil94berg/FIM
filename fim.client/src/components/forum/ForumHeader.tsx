@@ -15,12 +15,20 @@ export function ForumHeader({ tags, onDisplayPostOnForumTag } : ForumHeaderProps
     
 
     return (
-        <div style={{ width: "100%", border: "2px solid lightgray", borderRadius: "10px", backgroundColor: "rgba(0,0,0,0.1)" }}>
-            <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px", textAlign: "center" }}>
-                <h1>Welcome to the Forum page</h1>
-                <ul style={{ display: "flex", justifyContent: "center", gap: "16px", listStyle: "none", padding: 0 }}>
+        <div className="w-full rounded-xl border border-slate-300 bg-slate-100">
+            <div className="mx-auto max-w-4xl px-4 py-5 text-center">
+                <h1 className="text-5xl font-semibold text-slate-900">Welcome to the Forum page</h1>
+                <ul className="mt-4 flex flex-wrap justify-center gap-3 p-0">
                     {tags.map(tag =>
-                        <li key={tag}><Button onClick={() => onDisplayPostOnForumTag(tag)} className="bg-transparent">{tag}</Button></li>
+                        <li key={tag}>
+                            <Button
+                                onClick={() => onDisplayPostOnForumTag(tag)}
+                                variant="outline"
+                                className="cursor-pointer border-slate-400 bg-white px-4 py-2 text-slate-800 shadow-sm hover:border-slate-500 hover:bg-slate-50 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-sky-500"
+                            >
+                                {tag}
+                            </Button>
+                        </li>
                     )}
                 </ul>
             </div>

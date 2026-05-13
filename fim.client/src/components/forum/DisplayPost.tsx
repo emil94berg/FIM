@@ -7,6 +7,7 @@ import DOMPurify from "dompurify";
 import { Button } from "@/components/ui/button"
 import { ChatIcon } from "@/components/icons/mynaui-chat"
 import { Badge } from "@/components/ui/badge";
+import BreadcrumbsForum from "@/components/forum/BreadcrumbsForum";
 
 
 type ForumPost = components["schemas"]["ForumPostDto"];
@@ -67,6 +68,9 @@ export function DisplayPost({ post }: DisplayPostProps) {
 
     return (
         <div className="mx-auto max-w-5xl">
+            <div className="mx-4 mt-4">
+                <BreadcrumbsForum postTitle={post.title} postTag={post.tag} />
+            </div>
             <div className="mx-4 my-2 mt-4 bg-blue-200 p-2 rounded-xl">
                 <div className="flex flex-row">
                     <h1 className="m-4">{post.title}</h1>
